@@ -402,13 +402,17 @@ input[type=range]{accent-color:var(--text);height:4px}
 .sailor-bot-av svg { display: block; }
 
 .sailor-bubble {
-  max-width: 72%;
+  max-width: 520px;
+  width: fit-content;
   padding: 10px 14px;
   border-radius: 14px;
   font-size: 14px;
   line-height: 1.55;
+
   white-space: pre-wrap;
   word-break: break-word;
+
+  display: inline-block;
 }
 .bot-bubble {
   background: #f0f0f0;
@@ -477,6 +481,8 @@ input[type=range]{accent-color:var(--text);height:4px}
   padding: 40px 24px;
   text-align: center;
 }
+
+
 .sailor-welcome-icon {
   width: 52px;
   height: 52px;
@@ -507,6 +513,7 @@ input[type=range]{accent-color:var(--text);height:4px}
   justify-content: center;
   margin-top: 6px;
 }
+
 .sailor-chip {
   font-size: 12px;
   padding: 6px 12px;
@@ -526,7 +533,7 @@ input[type=range]{accent-color:var(--text);height:4px}
 
 /* input bar */
 .sailor-input-bar {
-  padding: 12px 16px;
+  padding: 14px 16px;
   border-top: 1px solid var(--border);
   background: var(--bg2);
   display: flex;
@@ -535,7 +542,7 @@ input[type=range]{accent-color:var(--text);height:4px}
   flex-shrink: 0;
 }
 .sailor-input {
-  flex: 0.93;
+  flex: 1;
   padding: 10px 14px;
   font-size: 14px;
   border-radius: 10px;
@@ -566,6 +573,9 @@ input[type=range]{accent-color:var(--text);height:4px}
 
 /* Responsive */
 @media(max-width:768px){
+  .sailor-bubble {
+  max-width: 400px;
+  }
   #sidebar{display:none}
   #bottombar{display:block}
   #main{padding-bottom:72px}
@@ -622,7 +632,7 @@ input[type=range]{accent-color:var(--text);height:4px}
         Feed
       </div>
       <div class="nav-item" data-page="sailor" onclick="navigate('sailor')">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <svg id="sailor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sailboat-icon lucide-sailboat"><path d="M10 2v15"/><path d="M7 22a4 4 0 0 1-4-4 1 1 0 0 1 1-1h16a1 1 0 0 1 1 1 4 4 0 0 1-4 4z"/><path d="M9.159 2.46a1 1 0 0 1 1.521-.193l9.977 8.98A1 1 0 0 1 20 13H4a1 1 0 0 1-.824-1.567z"/></svg>
         Sailor
       </div>
       <div class="nav-item" data-page="collab" onclick="navigate('collab')">
@@ -809,7 +819,7 @@ input[type=range]{accent-color:var(--text);height:4px}
         Feed
       </div>
       <div class="bb-item" data-page="sailor" onclick="navigate('sailor')">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sailboat-icon lucide-sailboat"><path d="M10 2v15"/><path d="M7 22a4 4 0 0 1-4-4 1 1 0 0 1 1-1h16a1 1 0 0 1 1 1 4 4 0 0 1-4 4z"/><path d="M9.159 2.46a1 1 0 0 1 1.521-.193l9.977 8.98A1 1 0 0 1 20 13H4a1 1 0 0 1-.824-1.567z"/></svg>
         Sailor
       </div>
       <div class="bb-item" data-page="collab" onclick="navigate('collab')">
@@ -1090,7 +1100,20 @@ function navigate(page) {
 
   if (page === 'profile') renderProfile();
 
+  if (page === 'sailor') {
+  setTimeout(() => {
+    const input = document.getElementById('sailor-input');
+    if (input) input.focus();
+  }, 100);
+}
+
   document.getElementById('fab-menu').classList.remove('open');
+
+  // 🔥 ADD THIS (FAB visibility control)
+  const fab = document.getElementById('fab');
+  if (fab) {
+    fab.style.display = (page === 'sailor') ? 'none' : 'flex';
+  }
 }
 
 function goToProfile() { navigate('profile'); }
