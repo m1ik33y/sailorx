@@ -1,0 +1,2164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SailorX Market</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f7f4;
+  --bg2: #ffffff;
+  --bg3: #f0ede8;
+  --border: #e5e0d8;
+  --text: #1a1714;
+  --text2: #6b6560;
+  --text3: #9e9891;
+  --accent: #1a1714;
+  --accent2: #f0ede8;
+  --interest: #1a1714;
+  --chat-self: #1a1714;
+  --chat-other: #f0ede8;
+  --chat-self-text: #ffffff;
+  --chat-other-text: #1a1714;
+  --sidebar-w: 240px;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+}
+[data-theme="dark"] {
+  --bg: #111010;
+  --bg2: #1c1b1a;
+  --bg3: #252422;
+  --border: #2e2c2a;
+  --text: #f0ede8;
+  --text2: #9e9891;
+  --text3: #6b6560;
+  --accent: #f0ede8;
+  --accent2: #252422;
+  --interest: #f0ede8;
+  --chat-self: #f0ede8;
+  --chat-other: #252422;
+  --chat-self-text: #1a1714;
+  --chat-other-text: #f0ede8;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .2s,color .2s}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;font-size:14px;outline:none;width:100%;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--text)}
+textarea{resize:vertical;min-height:80px}
+label{font-size:13px;font-weight:500;color:var(--text2);margin-bottom:4px;display:block}
+h1,h2,h3,h4{font-family:'Syne',sans-serif}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* Layout */
+#app{display:flex;height:100vh;overflow:hidden}
+#sidebar{width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:50}
+#main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+#content{flex:1;padding:24px;max-width:680px;margin:0 auto;width:100%}
+
+/* Sidebar */
+.brand{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+.brand-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.5px;line-height:1}
+.brand-sub{font-size:10px;font-weight:400;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-top:2px}
+.sidebar-user{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer}
+.sidebar-user:hover{background:var(--bg3)}
+.user-av{width:36px;height:36px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;flex-shrink:0;overflow:hidden}
+.user-av img{width:100%;height:100%;object-fit:cover}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-handle{font-size:12px;color:var(--text3)}
+.nav-section{padding:8px 12px;flex:1;overflow-y:auto}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:8px 8px 4px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:2px;transition:background .15s}
+.nav-item:hover{background:var(--bg3)}
+.nav-item.active{background:var(--accent);color:var(--bg)}
+.nav-item svg{flex-shrink:0;opacity:.8}
+.nav-item.active svg{opacity:1}
+.sidebar-bottom{padding:12px;border-top:1px solid var(--border)}
+
+/* Mobile bottom bar */
+#bottombar{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:100;padding:8px 0 max(8px,env(safe-area-inset-bottom))}
+.bb-items{display:flex;justify-content:space-around;align-items:center}
+.bb-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;border-radius:8px;font-size:10px;color:var(--text3);cursor:pointer;transition:color .15s}
+.bb-item.active{color:var(--text)}
+.bb-item svg{width:22px;height:22px}
+
+/* Top bar */
+#topbar{padding:16px 24px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40}
+.page-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;border:none;font-family:'DM Sans',sans-serif}
+.btn-primary{background:var(--text);color:var(--bg)}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-ghost:hover{background:var(--bg3)}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-icon{width:36px;height:36px;padding:0;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border)}
+.btn-icon:hover{background:var(--border)}
+
+/* FAB */
+#fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:14px;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-md);z-index:90;transition:transform .15s}
+#fab:hover{transform:scale(1.05)}
+#fab-menu{position:fixed;bottom:86px;right:24px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:6px;box-shadow:var(--shadow-md);z-index:91;display:none;flex-direction:column;gap:2px;min-width:160px}
+#fab-menu.open{display:flex}
+.fab-opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s}
+.fab-opt:hover{background:var(--bg3)}
+
+/* Pages */
+.page{display:none}
+.page.active{display:block}
+
+/* Cards */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.card + .card{margin-top:12px}
+
+/* Feed post */
+.post-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}
+.post-header{padding:14px 16px 0;display:flex;align-items:center;gap:10px}
+.post-av{width:34px;height:34px;border-radius:9px;background:var(--bg3);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;cursor:pointer}
+.post-av img{width:100%;height:100%;object-fit:cover}
+.post-meta{flex:1}
+.post-author{font-size:13px;font-weight:600;cursor:pointer}
+.post-author:hover{text-decoration:underline}
+.post-time{font-size:11px;color:var(--text3)}
+.follow-btn-sm{font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;color:var(--text);transition:all .15s}
+.follow-btn-sm:hover{background:var(--text);color:var(--bg)}
+.follow-btn-sm.following{background:var(--bg3)}
+.post-body{padding:12px 16px}
+.post-code-preview{background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden;position:relative}
+.post-code-preview iframe{width:100%;height:220px;border:none;display:block}
+.post-code-badge{position:absolute;top:8px;right:8px;background:var(--text);color:var(--bg);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;font-family:'Syne',sans-serif;letter-spacing:1px}
+.post-image-wrap{border-radius:8px;overflow:hidden;background:var(--bg3)}
+.post-image-wrap img{width:100%;display:block;max-height:400px;object-fit:cover}
+.pitch-bold{font-size:16px;font-weight:700;font-family:'Syne',sans-serif;line-height:1.4;margin-bottom:8px}
+.pitch-sub{font-size:13px;color:var(--text2);margin-bottom:12px}
+.poll-opts{display:flex;flex-direction:column;gap:6px}
+.poll-opt{border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;position:relative;overflow:hidden;transition:border-color .15s}
+.poll-opt:hover{border-color:var(--text)}
+.poll-opt.voted{border-color:var(--text)}
+.poll-bar{position:absolute;left:0;top:0;height:100%;background:var(--bg3);z-index:0;transition:width .4s}
+.poll-opt span{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center}
+.post-actions{padding:10px 16px 14px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);margin-top:8px}
+.action-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .15s;border:1px solid transparent}
+.action-btn:hover{background:var(--bg3);color:var(--text)}
+.action-btn.interested{color:var(--text)}
+.interest-icon svg{width:18px;height:18px}
+.comment-section{border-top:1px solid var(--border);padding:12px 16px}
+.comment-input-wrap{display:flex;gap:8px;align-items:flex-start;margin-bottom:12px}
+.comment-input-wrap input{flex:1;padding:8px 12px;font-size:13px}
+.comment-list{display:flex;flex-direction:column;gap:8px}
+.comment-item{display:flex;gap:8px}
+.comment-av{width:26px;height:26px;border-radius:7px;background:var(--bg3);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.comment-av img{width:100%;height:100%;object-fit:cover}
+.comment-bubble{background:var(--bg3);border-radius:8px;padding:7px 10px;font-size:13px;flex:1}
+.comment-author{font-size:11px;font-weight:600;margin-bottom:2px}
+
+/* Profile page */
+.profile-header{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+.profile-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px}
+.profile-av-lg{width:72px;height:72px;border-radius:16px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;font-family:'Syne',sans-serif;flex-shrink:0;overflow:hidden}
+.profile-av-lg img{width:100%;height:100%;object-fit:cover}
+.profile-info{flex:1}
+.profile-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;line-height:1.2}
+.profile-stage{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:var(--bg3);color:var(--text2);margin-top:4px}
+.profile-tagline{font-size:14px;color:var(--text2);margin-top:8px}
+.profile-stats{display:flex;gap:20px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.stat-item{text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:20px;font-weight:700}
+.stat-label{font-size:11px;color:var(--text3);font-weight:500}
+.profile-actions{display:flex;gap:8px;margin-top:16px}
+.profile-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px}
+.section-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;font-size:11px}
+.section-content{font-size:14px;line-height:1.6;color:var(--text)}
+
+/* Code editor */
+.editor-wrap{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-top:12px}
+.editor-tabs{display:flex;background:var(--bg3);border-bottom:1px solid var(--border)}
+.editor-tab{padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;transition:all .15s}
+.editor-tab.active{color:var(--text);border-bottom-color:var(--text)}
+#code-editor-ta{width:100%;min-height:300px;border:none;border-radius:0;padding:16px;font-family:'Courier New',monospace;font-size:13px;background:var(--bg2);resize:none}
+#code-preview-frame{width:100%;height:300px;border:none;background:white}
+.editor-actions{padding:10px 12px;background:var(--bg3);border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-md)}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1}
+.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.close-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:background .15s}
+.close-btn:hover{background:var(--bg3)}
+.form-group{margin-bottom:16px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.char-count{font-size:11px;color:var(--text3);text-align:right;margin-top:4px}
+
+/* Settings */
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:14px;font-weight:500}
+.setting-desc{font-size:12px;color:var(--text3);margin-top:2px}
+.toggle{width:44px;height:24px;border-radius:12px;background:var(--border);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--text)}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:9px;background:white;top:3px;left:3px;transition:left .2s}
+.toggle.on::after{left:23px}
+
+/* Chat */
+.chat-list{display:flex;flex-direction:column;gap:2px}
+.chat-item{display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;cursor:pointer;transition:background .15s}
+.chat-item:hover{background:var(--bg3)}
+.chat-item.active{background:var(--bg3)}
+.chat-av{width:40px;height:40px;border-radius:11px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;overflow:hidden}
+.chat-av img{width:100%;height:100%;object-fit:cover}
+.chat-name{font-size:14px;font-weight:600}
+.chat-preview{font-size:12px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-layout{display:flex;gap:0;height:calc(100vh - 60px)}
+.chat-sidebar{width:280px;border-right:1px solid var(--border);padding:16px;overflow-y:auto;flex-shrink:0}
+.chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat-header{padding:14px 20px;border-bottom:1px solid var(--border);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:10px}
+.msg-wrap{display:flex;align-items:flex-end;gap:8px}
+.msg-wrap.self{flex-direction:row-reverse}
+.msg-av{width:28px;height:28px;border-radius:8px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.msg-bubble{padding:9px 13px;border-radius:10px;font-size:13px;max-width:70%;line-height:1.5}
+.msg-wrap.self .msg-bubble{background:var(--chat-self);color:var(--chat-self-text);border-bottom-right-radius:3px}
+.msg-wrap:not(.self) .msg-bubble{background:var(--chat-other);color:var(--chat-other-text);border-bottom-left-radius:3px}
+.chat-input-wrap{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px}
+.chat-input-wrap input{flex:1;padding:10px 14px}
+
+/* Collab */
+.collab-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:10px}
+.collab-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
+.collab-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
+.collab-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.collab-meta{font-size:11px;color:var(--text3);margin-top:8px}
+
+/* Canvas */
+#canvas-modal .modal{max-width:800px;width:95vw}
+#canvas-wrap{position:relative;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;touch-action:none}
+#drawing-canvas{display:block;cursor:crosshair}
+.canvas-toolbar{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;align-items:center}
+.tool-btn{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);background:var(--bg3);cursor:pointer;font-size:14px;transition:all .15s}
+.tool-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.tool-sep{width:1px;height:28px;background:var(--border);margin:0 2px}
+.color-picker-wrap{display:flex;align-items:center;gap:4px}
+input[type=color]{width:32px;height:32px;border:1px solid var(--border);border-radius:7px;cursor:pointer;padding:2px;background:var(--bg3)}
+input[type=range]{accent-color:var(--text);height:4px}
+
+/* Setup profile */
+.setup-step{display:none}
+.setup-step.active{display:block}
+.step-indicator{display:flex;gap:6px;margin-bottom:24px}
+.step-dot{width:8px;height:8px;border-radius:4px;background:var(--border);transition:all .2s}
+.step-dot.active{background:var(--text);width:20px}
+.progress-bar{height:2px;background:var(--border);border-radius:2px;margin-bottom:24px}
+.progress-fill{height:100%;background:var(--text);border-radius:2px;transition:width .3s}
+
+/* Empty state */
+.empty-state{text-align:center;padding:48px 24px;color:var(--text3)}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
+.empty-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text2);margin-bottom:6px}
+.empty-desc{font-size:13px;line-height:1.6}
+
+/* Toast */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:all .3s;z-index:999;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Views badge */
+.views-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text3);margin-top:4px}
+
+/* Code post preview in feed */
+.code-post-frame-wrap{border-radius:8px;overflow:hidden;position:relative;background:#fff}
+.code-post-frame-wrap iframe{width:100%;height:200px;border:none;pointer-events:none}
+.code-overlay{position:absolute;inset:0;cursor:pointer}
+.expand-hint{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.6);color:white;font-size:11px;padding:4px 8px;border-radius:6px}
+
+/* ============================================================
+   SAILOR AI — redesigned
+   ============================================================ */
+#page-sailor {
+  height: 100%;
+  display: none;
+}
+#page-sailor.active {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 61px); /* subtract topbar */
+}
+
+.sailor-topbar {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.sailor-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.sailor-avatar svg { display: block; }
+.sailor-title-wrap { flex: 1 }
+.sailor-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.sailor-subtitle {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 1px;
+}
+.sailor-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+.sailor-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+}
+
+.sailor-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #ffffff;
+}
+[data-theme="dark"] .sailor-messages {
+  background: var(--bg);
+}
+
+/* date / section dividers */
+.sailor-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 8px;
+}
+.sailor-divider span {
+  font-size: 11px;
+  color: var(--text3);
+  white-space: nowrap;
+}
+.sailor-divider::before,
+.sailor-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* message rows */
+.sailor-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.sailor-row.user-row { flex-direction: row-reverse; }
+
+.sailor-bot-av {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--text);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
+.sailor-bot-av svg { display: block; }
+
+.sailor-bubble {
+  max-width: 72%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.bot-bubble {
+  background: #f0f0f0;
+  color: #1a1a1a;
+  border-bottom-left-radius: 4px;
+}
+[data-theme="dark"] .bot-bubble {
+  background: var(--bg3);
+  color: var(--text);
+}
+.user-bubble {
+  background: #1a1714;
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+[data-theme="dark"] .user-bubble {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.sailor-ts {
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 2px;
+  padding: 0 2px;
+}
+.user-row .sailor-ts { text-align: right; }
+
+/* typing indicator */
+.typing-bubble {
+  background: #f0f0f0;
+  color: #1a1a1a;
+  border-radius: 14px;
+  border-bottom-left-radius: 4px;
+  padding: 12px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+[data-theme="dark"] .typing-bubble {
+  background: var(--bg3);
+}
+.typing-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text3);
+  animation: typingBounce 1.2s infinite ease-in-out;
+}
+.typing-dot:nth-child(1) { animation-delay: 0s; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* welcome state */
+.sailor-welcome {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 24px;
+  text-align: center;
+}
+.sailor-welcome-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--text);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.sailor-welcome h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+.sailor-welcome p {
+  font-size: 13px;
+  color: var(--text3);
+  max-width: 260px;
+  line-height: 1.6;
+}
+.sailor-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 6px;
+}
+.sailor-chip {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.sailor-chip:hover {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+/* input bar */
+.sailor-input-bar {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.sailor-input {
+  flex: 0.93;
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.sailor-input:focus { border-color: var(--text); }
+.sailor-send-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity .15s;
+}
+.sailor-send-btn:hover { opacity: .8; }
+.sailor-send-btn:disabled { opacity: .35; cursor: default; }
+
+/* Responsive */
+@media(max-width:768px){
+  #sidebar{display:none}
+  #bottombar{display:block}
+  #main{padding-bottom:72px}
+  #content{padding:16px}
+  .chat-sidebar{display:none}
+  .chat-sidebar.visible{display:block;position:fixed;inset:0;z-index:150;background:var(--bg2);overflow-y:auto}
+  .chat-layout{height:calc(100vh - 132px)}
+  #fab{bottom:80px}
+  #fab-menu{bottom:140px}
+  .form-row{grid-template-columns:1fr}
+  .profile-stats{flex-wrap:wrap;gap:12px}
+  .profile-top{flex-direction:column}
+
+  #page-sailor.active {
+    height: calc(100vh - 61px - 72px);
+  }
+}
+@media(min-width:769px){
+  .chat-main{display:flex!important}
+}
+
+/* Image upload in canvas */
+.img-upload-btn{position:relative;overflow:hidden}
+.img-upload-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+
+/* Text element on canvas */
+.canvas-text-overlay{position:absolute;cursor:move;user-select:none}
+.canvas-text-overlay.selected .text-handle{display:block}
+.text-handle{display:none;position:absolute;bottom:-6px;right:-6px;width:12px;height:12px;background:var(--text);border-radius:2px;cursor:se-resize}
+
+/* Notification dot */
+.notif-dot{width:7px;height:7px;border-radius:50%;background:#e85d4a;flex-shrink:0}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="brand-name">SailorX</div>
+      <div class="brand-sub">Market</div>
+    </div>
+    <div class="sidebar-user" onclick="goToProfile()">
+      <div class="user-av" id="sidebar-av">?</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-name">Set up profile</div>
+        <div class="user-handle" id="sidebar-handle">@username</div>
+      </div>
+    </div>
+    <nav class="nav-section">
+      <div class="nav-label">Main</div>
+      <div class="nav-item active" data-page="feed" onclick="navigate('feed')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+        Feed
+      </div>
+      <div class="nav-item" data-page="sailor" onclick="navigate('sailor')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Sailor
+      </div>
+      <div class="nav-item" data-page="collab" onclick="navigate('collab')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Collab
+      </div>
+      <div class="nav-item" data-page="chats" onclick="navigate('chats')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Chats
+      </div>
+      <div class="nav-label">Account</div>
+      <div class="nav-item" data-page="profile" onclick="navigate('profile')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </div>
+      <div class="nav-item" data-page="settings" onclick="navigate('settings')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <div id="main">
+    <div id="topbar">
+      <div class="page-title" id="topbar-title">Feed</div>
+      <div class="topbar-actions">
+        <button class="btn-icon" onclick="navigate('settings')" title="Settings">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- FEED -->
+    <div id="page-feed" class="page active">
+      <div id="content">
+        <div id="feed-list"></div>
+      </div>
+    </div>
+
+    <!-- COLLAB -->
+    <div id="page-collab" class="page">
+      <div id="content" style="padding-top:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <h2 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700">Collaborate</h2>
+          <button class="btn btn-primary btn-sm" onclick="openCollabPost()">+ Post Offer</button>
+        </div>
+        <div id="collab-list"></div>
+      </div>
+    </div>
+
+    <!-- SAILOR AI — redesigned -->
+    <div id="page-sailor" class="page">
+
+      <!-- Topbar inside Sailor -->
+      <div class="sailor-topbar">
+        <div class="sailor-avatar">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="sailor-title-wrap">
+          <div class="sailor-title">Sailor AI</div>
+          <div class="sailor-subtitle">Your startup co-pilot</div>
+        </div>
+        <div class="sailor-status">
+          <div class="sailor-status-dot"></div>
+          Online
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="sailor-messages" id="sailor-messages">
+        <!-- Welcome shown when no messages -->
+        <div class="sailor-welcome" id="sailor-welcome">
+          <div class="sailor-welcome-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <h3>Hey, I'm Sailor</h3>
+          <p>Your AI co-pilot for building, pitching, and growing your startup.</p>
+          <div class="sailor-chips">
+            <button class="sailor-chip" onclick="sailorChip('Help me write my pitch')">Write my pitch</button>
+            <button class="sailor-chip" onclick="sailorChip('How do I find early customers?')">Find customers</button>
+            <button class="sailor-chip" onclick="sailorChip('Review my business idea')">Review idea</button>
+            <button class="sailor-chip" onclick="sailorChip('What should I post today?')">Content ideas</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input bar -->
+      <div class="sailor-input-bar">
+        <input
+          class="sailor-input"
+          id="sailor-input"
+          placeholder="Ask Sailor anything…"
+          autocomplete="off"
+        />
+        <button class="sailor-send-btn" id="sailor-send-btn" onclick="sendSailorMsg()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- CHATS -->
+    <div id="page-chats" class="page">
+      <div class="chat-layout">
+        <div class="chat-sidebar" id="chat-sidebar">
+          <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:16px">Messages</div>
+          <div class="chat-list" id="chat-list"></div>
+        </div>
+        <div class="chat-main" id="chat-main-area">
+          <div style="display:flex;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--text3)" id="chat-empty">
+            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="opacity:.4"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <div style="font-size:13px">Select a conversation</div>
+          </div>
+          <div id="chat-active" style="display:none;flex-direction:column;height:100%;overflow:hidden">
+            <div class="chat-header">
+              <div style="width:32px;height:32px;border-radius:9px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700" id="chat-active-av"></div>
+              <span id="chat-active-name"></span>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-wrap">
+              <input type="text" id="chat-input" placeholder="Message..." onkeydown="if(event.key==='Enter')sendMsg()">
+              <button class="btn btn-primary btn-sm" onclick="sendMsg()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="page-profile" class="page">
+      <div id="content">
+        <div id="profile-view"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="page-settings" class="page">
+      <div id="content">
+        <h2 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px">Settings</h2>
+        <div class="card" style="padding:0 20px">
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Dark Mode</div>
+              <div class="setting-desc">Switch between light and dark theme</div>
+            </div>
+            <div class="toggle" id="dark-toggle" onclick="toggleDark()"></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Username</div>
+              <div class="setting-desc" id="current-username-disp">@username</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="changeUsername()">Change</button>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Edit Business Profile</div>
+              <div class="setting-desc">Update your business information</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="openEditProfile()">Edit</button>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Clear All Data</div>
+              <div class="setting-desc">Resets everything including profile and posts</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="color:#e85d4a;border-color:#e85d4a" onclick="clearAll()">Reset</button>
+          </div>
+        </div>
+        <div style="margin-top:20px;text-align:center;font-size:12px;color:var(--text3)">
+          <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;margin-bottom:4px">SailorX <span style="font-weight:400;font-size:11px;letter-spacing:2px">Market</span></div>
+          Version 1.0 &mdash; Built for builders
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom bar mobile -->
+  <div id="bottombar">
+    <div class="bb-items">
+      <div class="bb-item active" data-page="feed" onclick="navigate('feed')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+        Feed
+      </div>
+      <div class="bb-item" data-page="sailor" onclick="navigate('sailor')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Sailor
+      </div>
+      <div class="bb-item" data-page="collab" onclick="navigate('collab')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Collab
+      </div>
+      <div class="bb-item" data-page="chats" onclick="navigate('chats')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Chats
+      </div>
+      <div class="bb-item" data-page="profile" onclick="navigate('profile')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<div id="fab" onclick="toggleFab()">
+  <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</div>
+<div id="fab-menu">
+  <div class="fab-opt" onclick="openPostModal('code')">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    Code Post
+  </div>
+  <div class="fab-opt" onclick="openPostModal('image')">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+    Image Post
+  </div>
+  <div class="fab-opt" onclick="openPostModal('pitch')">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+    Pitch
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- SETUP PROFILE MODAL -->
+<div id="setup-modal" class="modal-overlay" style="display:none">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Set Up Your Business</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px">Tell the world what you're building</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="step-indicator" id="step-dots"></div>
+      <div id="setup-steps"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="setup-back" onclick="setupBack()" style="display:none">Back</button>
+      <button class="btn btn-primary" id="setup-next" onclick="setupNext()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- POST MODAL (code) -->
+<div id="post-code-modal" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Code Post</div>
+      <div class="close-btn" onclick="closeModal('post-code-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Caption (optional)</label>
+        <input type="text" id="code-post-caption" placeholder="What's this code about?">
+      </div>
+      <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+        <div class="editor-tabs">
+          <div class="editor-tab active" onclick="switchEditorTab(this,'code-ta-wrap')">Code</div>
+          <div class="editor-tab" onclick="switchEditorTab(this,'code-preview-wrap')">Preview</div>
+        </div>
+        <div id="code-ta-wrap"><textarea id="code-post-ta" style="width:100%;min-height:220px;border:none;padding:14px;font-family:'Courier New',monospace;font-size:13px;background:var(--bg2);color:var(--text);resize:none;outline:none" placeholder="<!-- Paste or write your HTML/CSS/JS here -->" oninput="updateCodePreview()"></textarea></div>
+        <div id="code-preview-wrap" style="display:none"><iframe id="code-preview-iframe" style="width:100%;height:220px;border:none"></iframe></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('post-code-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitCodePost()">Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- POST MODAL (image/canvas) -->
+<div id="post-image-modal" class="modal-overlay" style="display:none">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <div class="modal-title">Canvas Post</div>
+      <div class="close-btn" onclick="closeModal('post-image-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="canvas-toolbar">
+        <button class="tool-btn active" id="tool-brush" title="Brush" onclick="setTool('brush')">✏️</button>
+        <button class="tool-btn" id="tool-fill" title="Fill" onclick="setTool('fill')">🪣</button>
+        <button class="tool-btn" id="tool-eraser" title="Eraser" onclick="setTool('eraser')">⬜</button>
+        <button class="tool-btn" id="tool-text" title="Add Text" onclick="setTool('text')">T</button>
+        <div class="tool-sep"></div>
+        <div class="color-picker-wrap">
+          <label style="font-size:11px;color:var(--text3);margin:0">Color</label>
+          <input type="color" id="brush-color" value="#000000">
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <label style="font-size:11px;color:var(--text3);margin:0">Size</label>
+          <input type="range" id="brush-size" min="1" max="40" value="5" style="width:80px">
+        </div>
+        <div class="tool-sep"></div>
+        <div class="tool-btn img-upload-btn" title="Upload Image">
+          🖼️<input type="file" accept="image/*" onchange="uploadBgImage(event)">
+        </div>
+        <button class="tool-btn" title="Undo" onclick="canvasUndo()">↩️</button>
+        <button class="tool-btn" title="Clear" onclick="clearCanvas()">🗑️</button>
+      </div>
+      <div id="text-tool-opts" style="display:none;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
+        <input type="text" id="canvas-text-input" placeholder="Enter text..." style="flex:1;min-width:120px;max-width:200px;padding:6px 10px;font-size:13px">
+        <select id="canvas-font" style="padding:6px 8px;font-size:13px">
+          <option value="DM Sans">DM Sans</option>
+          <option value="Syne">Syne</option>
+          <option value="Arial">Arial</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Impact">Impact</option>
+        </select>
+        <input type="number" id="canvas-font-size" value="24" min="8" max="120" style="width:60px;padding:6px 8px;font-size:13px">
+        <input type="color" id="canvas-text-color" value="#000000">
+        <button class="tool-btn" onclick="placeText()" style="width:auto;padding:0 10px;font-size:12px">Add</button>
+      </div>
+      <div id="canvas-wrap" style="position:relative">
+        <canvas id="drawing-canvas" width="640" height="360" style="width:100%;display:block;cursor:crosshair;border-radius:8px"></canvas>
+        <div id="text-elements"></div>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label>Caption (optional)</label>
+        <input type="text" id="canvas-caption" placeholder="Add a caption...">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('post-image-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitImagePost()">Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- POST MODAL (pitch) -->
+<div id="post-pitch-modal" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Pitch Post</div>
+      <div class="close-btn" onclick="closeModal('post-pitch-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Your Pitch <span style="color:var(--text3)">(50 words, shown bold)</span></label>
+        <textarea id="pitch-main" rows="3" placeholder="Pitch your idea here..." maxlength="350" oninput="countPitchWords()"></textarea>
+        <div class="char-count" id="pitch-word-count">0 / 50 words</div>
+      </div>
+      <div class="form-group">
+        <label>Additional text <span style="color:var(--text3)">(optional)</span></label>
+        <textarea id="pitch-sub" rows="2" placeholder="More context..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Poll options <span style="color:var(--text3)">(optional, max 5)</span></label>
+        <div id="poll-options-wrap"></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addPollOption()" id="add-poll-btn">+ Add Option</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('post-pitch-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitPitchPost()">Pitch It</button>
+    </div>
+  </div>
+</div>
+
+<!-- COLLAB POST MODAL -->
+<div id="collab-post-modal" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Post Collab Offer</div>
+      <div class="close-btn" onclick="closeModal('collab-post-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Heading</label>
+        <input type="text" id="collab-title-input" placeholder="What are you looking for?">
+      </div>
+      <div class="form-group">
+        <label>Description <span style="color:var(--text3)">(max 100 words)</span></label>
+        <textarea id="collab-desc-input" rows="4" placeholder="Describe what you need help with..." oninput="countCollabWords(this)"></textarea>
+        <div class="char-count" id="collab-word-count">0 / 100 words</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('collab-post-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitCollabPost()">Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW CODE POST MODAL -->
+<div id="view-code-modal" class="modal-overlay" style="display:none">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <div class="modal-title">Code Preview</div>
+      <div class="close-btn" onclick="closeModal('view-code-modal')">✕</div>
+    </div>
+    <div class="modal-body" style="padding:0">
+      <iframe id="view-code-iframe" style="width:100%;height:400px;border:none;border-radius:0 0 16px 16px"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW PROFILE MODAL -->
+<div id="view-profile-modal" class="modal-overlay" style="display:none">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <div class="modal-title" id="vpm-name"></div>
+      <div class="close-btn" onclick="closeModal('view-profile-modal')">✕</div>
+    </div>
+    <div class="modal-body" id="vpm-body"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  theme: 'light',
+  username: 'you',
+  profile: null,
+  posts: [],
+  collabs: [],
+  chats: {},
+  activeChatUser: null,
+  profileCode: '',
+  profileCodePublished: false,
+  profileViews: {}
+};
+
+function save() { localStorage.setItem('sailorx_v2', JSON.stringify(state)); }
+function load() {
+  try {
+    const d = localStorage.getItem('sailorx_v2');
+    if (d) state = Object.assign(state, JSON.parse(d));
+  } catch(e){}
+}
+
+// ============================================================
+// INIT
+// ============================================================
+load();
+applyTheme();
+updateSidebar();
+renderFeed();
+renderCollab();
+renderChats();
+
+if (!state.profile) {
+  setTimeout(() => openSetupModal(), 300);
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+  document.querySelectorAll('.bb-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+
+  const titles = { feed:'Feed', collab:'Collab', chats:'Chats', profile:'Profile', settings:'Settings', sailor:'Sailor AI' };
+  document.getElementById('topbar-title').textContent = titles[page] || page;
+
+  if (page === 'profile') renderProfile();
+
+  document.getElementById('fab-menu').classList.remove('open');
+}
+
+function goToProfile() { navigate('profile'); }
+
+// ============================================================
+// THEME
+// ============================================================
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+  const tog = document.getElementById('dark-toggle');
+  if (tog) tog.classList.toggle('on', state.theme === 'dark');
+}
+
+function toggleDark() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  save();
+}
+
+// ============================================================
+// SIDEBAR / UI UPDATE
+// ============================================================
+function updateSidebar() {
+  const p = state.profile;
+  const av = document.getElementById('sidebar-av');
+  const nm = document.getElementById('sidebar-name');
+  const hd = document.getElementById('sidebar-handle');
+  if (p) {
+    nm.textContent = p.businessName || state.username;
+    hd.textContent = '@' + state.username;
+    if (p.logo) {
+      av.innerHTML = `<img src="${p.logo}" alt="">`;
+    } else {
+      av.textContent = (p.businessName || state.username)[0].toUpperCase();
+      av.innerHTML = av.textContent;
+    }
+  } else {
+    nm.textContent = 'Set up profile';
+    hd.textContent = '@' + state.username;
+    av.textContent = '?';
+  }
+  document.getElementById('current-username-disp').textContent = '@' + state.username;
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// FAB
+// ============================================================
+function toggleFab() {
+  document.getElementById('fab-menu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#fab') && !e.target.closest('#fab-menu')) {
+    document.getElementById('fab-menu').classList.remove('open');
+  }
+});
+
+// ============================================================
+// SAILOR AI
+// ============================================================
+let sailorBusy = false;
+
+function sailorNow() {
+  const now = new Date();
+  return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function sailorHideWelcome() {
+  const w = document.getElementById('sailor-welcome');
+  if (w) w.style.display = 'none';
+}
+
+function appendSailorMsg(text, type) {
+  const box = document.getElementById('sailor-messages');
+
+  const row = document.createElement('div');
+  row.className = 'sailor-row ' + (type === 'user' ? 'user-row' : 'bot-row');
+
+  if (type === 'bot') {
+    row.innerHTML = `
+      <div class="sailor-bot-av">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <div>
+        <div class="sailor-bubble bot-bubble">${escHtml(text)}</div>
+        <div class="sailor-ts">${sailorNow()}</div>
+      </div>`;
+  } else {
+    row.innerHTML = `
+      <div>
+        <div class="sailor-bubble user-bubble">${escHtml(text)}</div>
+        <div class="sailor-ts">${sailorNow()}</div>
+      </div>`;
+  }
+
+  box.appendChild(row);
+  box.scrollTop = box.scrollHeight;
+}
+
+function showTypingIndicator() {
+  const box = document.getElementById('sailor-messages');
+  const row = document.createElement('div');
+  row.className = 'sailor-row bot-row';
+  row.id = 'sailor-typing';
+  row.innerHTML = `
+    <div class="sailor-bot-av">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    </div>
+    <div class="typing-bubble">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>`;
+  box.appendChild(row);
+  box.scrollTop = box.scrollHeight;
+}
+
+function removeTypingIndicator() {
+  const el = document.getElementById('sailor-typing');
+  if (el) el.remove();
+}
+
+async function sendSailorMsg() {
+  if (sailorBusy) return;
+  const input = document.getElementById('sailor-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  sailorHideWelcome();
+  input.value = '';
+  appendSailorMsg(text, 'user');
+
+  sailorBusy = true;
+  const sendBtn = document.getElementById('sailor-send-btn');
+  if (sendBtn) sendBtn.disabled = true;
+
+  showTypingIndicator();
+
+  // 3 second delay then call API
+  await new Promise(r => setTimeout(r, 3000));
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text })
+    });
+
+    const raw = await res.text();
+    let data;
+    try { data = JSON.parse(raw); } catch { data = { reply: 'Sorry, I had trouble reading that response.' }; }
+
+    removeTypingIndicator();
+    appendSailorMsg(data.reply || 'No response received.', 'bot');
+  } catch (err) {
+    removeTypingIndicator();
+    appendSailorMsg('Network error — please check your connection.', 'bot');
+  }
+
+  sailorBusy = false;
+  if (sendBtn) sendBtn.disabled = false;
+  input.focus();
+}
+
+function sailorChip(text) {
+  const input = document.getElementById('sailor-input');
+  input.value = text;
+  sendSailorMsg();
+}
+
+// Enter key for sailor input
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('sailor-input');
+  if (input) {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendSailorMsg();
+      }
+    });
+  }
+});
+
+// expose globally
+window.sendSailorMsg = sendSailorMsg;
+
+// ============================================================
+// SETUP PROFILE MODAL
+// ============================================================
+const setupSteps = [
+  {
+    title: 'Business Details',
+    fields: [
+      {id:'s-bname', label:'Business Name *', type:'input', placeholder:'Your business name'},
+      {id:'s-founder', label:'Founder Name (optional)', type:'input', placeholder:'Your name'},
+      {id:'s-tagline', label:'Tagline (optional)', type:'input', placeholder:'One-liner about your business'},
+    ]
+  },
+  {
+    title: 'Category & Stage',
+    fields: [
+      {id:'s-category', label:'Category / Industry (optional)', type:'input', placeholder:'e.g. Fintech, Health, EdTech'},
+      {id:'s-stage', label:'Stage', type:'select', options:['idea','prototype','launched']},
+      {id:'s-usp', label:'Unique Selling Point (optional)', type:'input', placeholder:'What makes you different?'},
+    ]
+  },
+  {
+    title: 'Problem & Solution',
+    fields: [
+      {id:'s-problem', label:'Problem Statement (100 words)', type:'textarea', placeholder:'What pain exists?', maxwords:100},
+      {id:'s-customer', label:'Target Customer (100 words)', type:'textarea', placeholder:'Who exactly faces this problem?', maxwords:100},
+      {id:'s-solution', label:'Solution (100 words)', type:'textarea', placeholder:'What are you building?', maxwords:100},
+    ]
+  },
+  {
+    title: 'Visual Identity',
+    fields: [
+      {id:'s-logo-url', label:'Logo URL (optional, leave blank for default)', type:'input', placeholder:'https://...'},
+    ]
+  }
+];
+
+let currentStep = 0;
+let tempProfile = {};
+
+function openSetupModal(editing=false) {
+  currentStep = 0;
+  if (editing && state.profile) {
+    tempProfile = {...state.profile};
+  } else {
+    tempProfile = {};
+  }
+  renderSetupStep();
+  document.getElementById('setup-modal').style.display = 'flex';
+}
+
+function openEditProfile() { openSetupModal(true); }
+
+function renderSetupStep() {
+  const step = setupSteps[currentStep];
+  const stepsWrap = document.getElementById('setup-steps');
+  const dots = document.getElementById('step-dots');
+
+  dots.innerHTML = setupSteps.map((_,i) =>
+    `<div class="step-dot ${i===currentStep?'active':''}"></div>`
+  ).join('');
+
+  let html = `<h3 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:16px">${step.title}</h3>`;
+  step.fields.forEach(f => {
+    const val = tempProfile[f.id] || '';
+    html += `<div class="form-group"><label>${f.label}</label>`;
+    if (f.type === 'input') {
+      html += `<input type="text" id="${f.id}" value="${val.replace(/"/g,'&quot;')}" placeholder="${f.placeholder}">`;
+    } else if (f.type === 'textarea') {
+      html += `<textarea id="${f.id}" rows="4" placeholder="${f.placeholder}">${val}</textarea>`;
+      if (f.maxwords) html += `<div class="char-count" id="${f.id}-wc">0 / ${f.maxwords} words</div>`;
+    } else if (f.type === 'select') {
+      html += `<select id="${f.id}">${f.options.map(o=>`<option value="${o}" ${val===o?'selected':''}>${o.charAt(0).toUpperCase()+o.slice(1)}</option>`).join('')}</select>`;
+    }
+    html += '</div>';
+  });
+  stepsWrap.innerHTML = html;
+
+  step.fields.filter(f=>f.maxwords).forEach(f=>{
+    const ta = document.getElementById(f.id);
+    if (ta) {
+      ta.addEventListener('input', () => {
+        const wc = ta.value.trim().split(/\s+/).filter(Boolean).length;
+        document.getElementById(f.id+'-wc').textContent = `${wc} / ${f.maxwords} words`;
+      });
+      ta.dispatchEvent(new Event('input'));
+    }
+  });
+
+  document.getElementById('setup-back').style.display = currentStep > 0 ? 'inline-flex' : 'none';
+  document.getElementById('setup-next').textContent = currentStep === setupSteps.length-1 ? 'Create Profile' : 'Continue';
+}
+
+function saveCurrentStep() {
+  const step = setupSteps[currentStep];
+  step.fields.forEach(f => {
+    const el = document.getElementById(f.id);
+    if (el) tempProfile[f.id] = el.value;
+  });
+}
+
+function setupNext() {
+  saveCurrentStep();
+  if (currentStep === 0 && !tempProfile['s-bname']) { toast('Please enter a business name'); return; }
+  if (currentStep < setupSteps.length - 1) {
+    currentStep++;
+    renderSetupStep();
+  } else {
+    state.profile = {
+      businessName: tempProfile['s-bname'],
+      founder: tempProfile['s-founder'],
+      tagline: tempProfile['s-tagline'],
+      category: tempProfile['s-category'],
+      stage: tempProfile['s-stage'] || 'idea',
+      usp: tempProfile['s-usp'],
+      problem: tempProfile['s-problem'],
+      customer: tempProfile['s-customer'],
+      solution: tempProfile['s-solution'],
+      logo: tempProfile['s-logo-url'] || '',
+    };
+    if (!state.username || state.username === 'you') {
+      state.username = tempProfile['s-bname'].toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'').slice(0,20) || 'user';
+    }
+    save();
+    document.getElementById('setup-modal').style.display = 'none';
+    updateSidebar();
+    renderProfile();
+    toast('Profile created! 🚀');
+  }
+}
+
+function setupBack() {
+  saveCurrentStep();
+  if (currentStep > 0) { currentStep--; renderSetupStep(); }
+}
+
+// ============================================================
+// PROFILE PAGE
+// ============================================================
+function renderProfile() {
+  const container = document.getElementById('profile-view');
+  const p = state.profile;
+  if (!p) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">🚀</div>
+      <div class="empty-title">No profile yet</div>
+      <div class="empty-desc">Set up your business profile to get started</div>
+      <button class="btn btn-primary" style="margin-top:16px" onclick="openSetupModal()">Set Up Profile</button>
+    </div>`;
+    return;
+  }
+
+  const initials = (p.businessName || 'U')[0].toUpperCase();
+  const logoHtml = p.logo
+    ? `<img src="${p.logo}" alt="${p.businessName}" style="width:100%;height:100%;object-fit:cover">`
+    : `<span style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif">${initials}</span>`;
+
+  const myPosts = state.posts.filter(po => po.author === state.username);
+  const tracks = state.profile._tracks || 0;
+  const queue = state.profile._queue || 0;
+  const views = state.profileViews[state.username] || 0;
+
+  container.innerHTML = `
+  <div class="profile-header">
+    <div class="profile-top">
+      <div class="profile-av-lg">${logoHtml}</div>
+      <div class="profile-info">
+        <div class="profile-name">${p.businessName}</div>
+        ${p.category ? `<div style="font-size:12px;color:var(--text3);margin-top:2px">${p.category}</div>` : ''}
+        <span class="profile-stage">${p.stage}</span>
+        ${p.tagline ? `<div class="profile-tagline">${p.tagline}</div>` : ''}
+        <div class="views-badge" style="margin-top:6px">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          ${views} views
+        </div>
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="stat-item"><div class="stat-num">${myPosts.length}</div><div class="stat-label">Posts</div></div>
+      <div class="stat-item"><div class="stat-num">${tracks}</div><div class="stat-label">Tracks</div></div>
+      <div class="stat-item"><div class="stat-num">${queue}</div><div class="stat-label">Queue</div></div>
+    </div>
+    <div class="profile-actions">
+      <button class="btn btn-ghost btn-sm" onclick="openEditProfile()">Edit Profile</button>
+    </div>
+  </div>
+  ${p.usp ? `<div class="profile-section"><div class="section-title">Unique Selling Point</div><div class="section-content" style="font-weight:600">${p.usp}</div></div>` : ''}
+  ${p.problem ? `<div class="profile-section"><div class="section-title">Problem</div><div class="section-content">${p.problem}</div></div>` : ''}
+  ${p.customer ? `<div class="profile-section"><div class="section-title">Target Customer</div><div class="section-content">${p.customer}</div></div>` : ''}
+  ${p.solution ? `<div class="profile-section"><div class="section-title">Solution</div><div class="section-content">${p.solution}</div></div>` : ''}
+  <div class="profile-section">
+    <div class="section-title">Published Web Preview</div>
+    <div class="editor-wrap">
+      <div class="editor-tabs">
+        <div class="editor-tab active" onclick="switchEditorTab(this,'profile-code-tab')">Editor</div>
+        <div class="editor-tab" onclick="switchEditorTab(this,'profile-preview-tab');updateProfilePreview()">Preview</div>
+      </div>
+      <div id="profile-code-tab">
+        <textarea id="profile-code-ta" style="width:100%;min-height:240px;border:none;padding:14px;font-family:'Courier New',monospace;font-size:13px;background:var(--bg2);color:var(--text);resize:none;outline:none" placeholder="<!-- Paste your HTML/CSS/JS here. On publish, this preview will be public on your profile. -->">${escHtml(state.profileCode||'')}</textarea>
+      </div>
+      <div id="profile-preview-tab" style="display:none"><iframe id="profile-preview-iframe" style="width:100%;height:240px;border:none"></iframe></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+      <button class="btn btn-primary btn-sm" onclick="publishProfileCode()">Publish Preview</button>
+      ${state.profileCodePublished ? '<span style="font-size:12px;color:var(--text3)">✓ Published & visible to others</span>' : ''}
+    </div>
+  </div>
+  <div class="profile-section">
+    <div class="section-title" style="margin-bottom:8px">My Posts</div>
+    <div id="my-posts-list">${myPosts.length ? '' : '<div style="font-size:13px;color:var(--text3)">No posts yet</div>'}</div>
+  </div>`;
+
+  const myPostsEl = document.getElementById('my-posts-list');
+  if (myPosts.length) {
+    myPostsEl.innerHTML = myPosts.map(po => renderPostCard(po, true)).join('');
+    bindPostEvents(myPostsEl);
+  }
+}
+
+function updateProfilePreview() {
+  const code = document.getElementById('profile-code-ta')?.value || '';
+  const iframe = document.getElementById('profile-preview-iframe');
+  if (iframe) iframe.srcdoc = code;
+}
+
+function publishProfileCode() {
+  state.profileCode = document.getElementById('profile-code-ta')?.value || '';
+  state.profileCodePublished = true;
+  save();
+  toast('Preview published! 🎉');
+  renderProfile();
+}
+
+// ============================================================
+// POSTS
+// ============================================================
+function openPostModal(type) {
+  if (!state.profile) { toast('Set up your profile first'); openSetupModal(); return; }
+  document.getElementById('fab-menu').classList.remove('open');
+  if (type === 'code') { document.getElementById('post-code-modal').style.display='flex'; }
+  else if (type === 'image') { document.getElementById('post-image-modal').style.display='flex'; initCanvas(); }
+  else if (type === 'pitch') { document.getElementById('post-pitch-modal').style.display='flex'; initPitchModal(); }
+}
+
+function closeModal(id) { document.getElementById(id).style.display='none'; }
+
+function switchEditorTab(btn, showId) {
+  btn.closest('.editor-wrap, .modal-body, #page-profile .profile-section').querySelectorAll('.editor-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  btn.parentElement.querySelectorAll('.editor-tab').forEach(t=>{
+    const targetId = t.onclick?.toString().match(/'([^']+)'\)$/)?.[1];
+    if (targetId) { const el=document.getElementById(targetId); if(el) el.style.display='none'; }
+  });
+  const target = document.getElementById(showId);
+  if (target) target.style.display='block';
+}
+
+function updateCodePreview() {
+  const code = document.getElementById('code-post-ta').value;
+  const iframe = document.getElementById('code-preview-iframe');
+  iframe.srcdoc = code;
+}
+
+function submitCodePost() {
+  const caption = document.getElementById('code-post-caption').value.trim();
+  const code = document.getElementById('code-post-ta').value;
+  if (!code.trim()) { toast('Paste some code first'); return; }
+  const post = {
+    id: Date.now(), type: 'code', author: state.username, caption, code,
+    time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
+  };
+  state.posts.unshift(post);
+  save();
+  closeModal('post-code-modal');
+  document.getElementById('code-post-ta').value = '';
+  document.getElementById('code-post-caption').value = '';
+  renderFeed();
+  toast('Code posted! ✨');
+}
+
+// PITCH
+function initPitchModal() {
+  document.getElementById('pitch-main').value = '';
+  document.getElementById('pitch-sub').value = '';
+  document.getElementById('pitch-word-count').textContent = '0 / 50 words';
+  const wrap = document.getElementById('poll-options-wrap');
+  wrap.innerHTML = '';
+  pollCount = 0;
+  addPollOption();
+  addPollOption();
+}
+
+let pollCount = 0;
+function addPollOption() {
+  if (pollCount >= 5) { toast('Max 5 options'); return; }
+  pollCount++;
+  const wrap = document.getElementById('poll-options-wrap');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;margin-bottom:6px;align-items:center';
+  div.innerHTML = `<input type="text" placeholder="Option ${pollCount}" style="flex:1"> <button onclick="this.parentElement.remove();pollCount--" style="color:var(--text3);font-size:18px;background:none;border:none;cursor:pointer;flex-shrink:0">&times;</button>`;
+  wrap.appendChild(div);
+  if (pollCount >= 5) document.getElementById('add-poll-btn').style.display = 'none';
+  else document.getElementById('add-poll-btn').style.display = '';
+}
+
+function countPitchWords() {
+  const ta = document.getElementById('pitch-main');
+  const wc = ta.value.trim().split(/\s+/).filter(Boolean).length;
+  document.getElementById('pitch-word-count').textContent = `${wc} / 50 words`;
+}
+
+function submitPitchPost() {
+  const pitchText = document.getElementById('pitch-main').value.trim();
+  if (!pitchText) { toast('Enter your pitch'); return; }
+  const sub = document.getElementById('pitch-sub').value.trim();
+  const optEls = document.querySelectorAll('#poll-options-wrap input[type=text]');
+  const options = Array.from(optEls).map(el=>el.value.trim()).filter(Boolean);
+  const post = {
+    id: Date.now(), type: 'pitch', author: state.username, pitchText, sub,
+    options: options.map(o=>({text:o, votes:0})), votedBy: [],
+    time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
+  };
+  state.posts.unshift(post);
+  save();
+  closeModal('post-pitch-modal');
+  renderFeed();
+  toast('Pitched! 🚀');
+}
+
+// IMAGE / CANVAS
+let ctx, canvasTool='brush', canvasHistory=[], isDrawing=false, lastX=0, lastY=0;
+
+function initCanvas() {
+  const canvas = document.getElementById('drawing-canvas');
+  ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  canvasHistory = [ctx.getImageData(0,0,canvas.width,canvas.height)];
+  document.getElementById('text-elements').innerHTML = '';
+
+  canvas.onmousedown = startDraw;
+  canvas.onmousemove = draw;
+  canvas.onmouseup = endDraw;
+  canvas.onmouseleave = endDraw;
+  canvas.ontouchstart = e => { e.preventDefault(); startDraw(e.touches[0]); };
+  canvas.ontouchmove = e => { e.preventDefault(); draw(e.touches[0]); };
+  canvas.ontouchend = endDraw;
+}
+
+function getPos(e) {
+  const r = document.getElementById('drawing-canvas').getBoundingClientRect();
+  const scaleX = 640 / r.width;
+  const scaleY = 360 / r.height;
+  return { x: (e.clientX - r.left) * scaleX, y: (e.clientY - r.top) * scaleY };
+}
+
+function startDraw(e) {
+  if (canvasTool === 'text' || canvasTool === 'fill') { if (canvasTool==='fill') doFill(e); return; }
+  isDrawing = true;
+  const pos = getPos(e);
+  lastX = pos.x; lastY = pos.y;
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+}
+
+function draw(e) {
+  if (!isDrawing) return;
+  const pos = getPos(e);
+  const color = document.getElementById('brush-color').value;
+  const size = parseInt(document.getElementById('brush-size').value);
+  ctx.lineWidth = size;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = canvasTool === 'eraser' ? '#ffffff' : color;
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
+  lastX = pos.x; lastY = pos.y;
+}
+
+function endDraw() {
+  if (!isDrawing) return;
+  isDrawing = false;
+  ctx.beginPath();
+  canvasHistory.push(ctx.getImageData(0,0,640,360));
+  if (canvasHistory.length > 30) canvasHistory.shift();
+}
+
+function doFill(e) {
+  const color = document.getElementById('brush-color').value;
+  ctx.fillStyle = color;
+  ctx.fillRect(0,0,640,360);
+  canvasHistory.push(ctx.getImageData(0,0,640,360));
+}
+
+function canvasUndo() {
+  if (canvasHistory.length > 1) {
+    canvasHistory.pop();
+    ctx.putImageData(canvasHistory[canvasHistory.length-1],0,0);
+  }
+}
+
+function clearCanvas() {
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0,0,640,360);
+  canvasHistory.push(ctx.getImageData(0,0,640,360));
+}
+
+function setTool(t) {
+  canvasTool = t;
+  ['brush','fill','eraser','text'].forEach(n=>{
+    document.getElementById('tool-'+n)?.classList.toggle('active', n===t);
+  });
+  document.getElementById('text-tool-opts').style.display = t==='text'?'flex':'none';
+  document.getElementById('drawing-canvas').style.cursor = t==='text'?'text':'crosshair';
+}
+
+function placeText() {
+  const text = document.getElementById('canvas-text-input').value;
+  if (!text) return;
+  const font = document.getElementById('canvas-font').value;
+  const size = document.getElementById('canvas-font-size').value;
+  const color = document.getElementById('canvas-text-color').value;
+  ctx.font = `${size}px ${font}`;
+  ctx.fillStyle = color;
+  ctx.fillText(text, 40, 80);
+  canvasHistory.push(ctx.getImageData(0,0,640,360));
+  document.getElementById('canvas-text-input').value = '';
+}
+
+function uploadBgImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => { ctx.drawImage(img,0,0,640,360); canvasHistory.push(ctx.getImageData(0,0,640,360)); };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function submitImagePost() {
+  const canvas = document.getElementById('drawing-canvas');
+  const dataUrl = canvas.toDataURL('image/png');
+  const caption = document.getElementById('canvas-caption').value.trim();
+  const post = {
+    id: Date.now(), type: 'image', author: state.username, imageData: dataUrl, caption,
+    time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
+  };
+  state.posts.unshift(post);
+  save();
+  closeModal('post-image-modal');
+  document.getElementById('canvas-caption').value = '';
+  renderFeed();
+  toast('Image posted! 🎨');
+}
+
+// ============================================================
+// FEED
+// ============================================================
+function renderFeed() {
+  const container = document.getElementById('feed-list');
+  if (!state.posts.length) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📡</div>
+      <div class="empty-title">Nothing here yet</div>
+      <div class="empty-desc">Be the first to post something. Tap the + button.</div>
+    </div>`;
+    return;
+  }
+  container.innerHTML = state.posts.map(p => renderPostCard(p)).join('');
+  bindPostEvents(container);
+}
+
+function renderPostCard(post, compact=false) {
+  const p = state.profile;
+  const isOwn = post.author === state.username;
+  const initials = post.author[0].toUpperCase();
+  const logoSrc = isOwn && p?.logo ? `<img src="${p.logo}" style="width:100%;height:100%;object-fit:cover">` : initials;
+  const isInterested = post.interestedBy?.includes(state.username);
+
+  let bodyHtml = '';
+  if (post.type === 'code') {
+    bodyHtml = `
+      ${post.caption ? `<div style="font-size:14px;margin-bottom:10px">${escHtml(post.caption)}</div>` : ''}
+      <div class="code-post-frame-wrap">
+        <iframe srcdoc="${escAttr(post.code)}" style="width:100%;height:200px;border:none;pointer-events:none"></iframe>
+        <div class="code-overlay" onclick="viewCodePost('${post.id}')"></div>
+        <div class="expand-hint">Click to expand</div>
+        <div class="post-code-badge">CODE</div>
+      </div>`;
+  } else if (post.type === 'image') {
+    bodyHtml = `
+      ${post.caption ? `<div style="font-size:14px;margin-bottom:10px">${escHtml(post.caption)}</div>` : ''}
+      <div class="post-image-wrap"><img src="${post.imageData}" alt="post"></div>`;
+  } else if (post.type === 'pitch') {
+    const opts = (post.options||[]).map((o,i) => {
+      const totalVotes = (post.options||[]).reduce((s,x)=>s+x.votes,0);
+      const pct = totalVotes ? Math.round(o.votes/totalVotes*100) : 0;
+      const voted = (post.votedBy||[]).includes(state.username);
+      return `<div class="poll-opt ${voted?'voted':''}" onclick="votePoll('${post.id}',${i})">
+        <div class="poll-bar" style="width:${voted?pct:0}%"></div>
+        <span><span>${escHtml(o.text)}</span>${voted?`<span>${pct}%</span>`:''}</span>
+      </div>`;
+    }).join('');
+    bodyHtml = `
+      <div class="pitch-bold">${escHtml(post.pitchText)}</div>
+      ${post.sub ? `<div class="pitch-sub">${escHtml(post.sub)}</div>` : ''}
+      ${opts ? `<div class="poll-opts">${opts}</div>` : ''}`;
+  }
+
+  const timeAgo = getTimeAgo(post.time);
+  const followingThisUser = (state.profile?._following||[]).includes(post.author);
+
+  return `<div class="post-card" data-postid="${post.id}">
+    <div class="post-header">
+      <div class="post-av" onclick="viewUserProfile('${post.author}')">${logoSrc}</div>
+      <div class="post-meta">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="post-author" onclick="viewUserProfile('${post.author}')">${escHtml(post.author)}</div>
+          ${!isOwn ? `<button class="follow-btn-sm ${followingThisUser?'following':''}" onclick="toggleFollow('${post.author}',this)">${followingThisUser?'Following':'Follow Track'}</button>` : ''}
+        </div>
+        <div class="post-time">${timeAgo}</div>
+      </div>
+    </div>
+    <div class="post-body">${bodyHtml}</div>
+    <div class="post-actions">
+      <button class="action-btn interest-icon ${isInterested?'interested':''}" onclick="toggleInterest('${post.id}',this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="${isInterested?'currentColor':'none'}" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 3l3 6h6l-5 4 2 6-6-4-6 4 2-6-5-4h6z" stroke-linejoin="round"/>
+        </svg>
+        <span class="interest-count">${post.interests||0}</span>
+      </button>
+      <button class="action-btn" onclick="toggleComments('${post.id}',this)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        ${(post.comments||[]).length}
+      </button>
+    </div>
+    <div class="comment-section" id="comments-${post.id}" style="display:none">
+      <div class="comment-input-wrap">
+        <input type="text" placeholder="Add a comment..." id="comment-input-${post.id}" onkeydown="if(event.key==='Enter')submitComment('${post.id}')">
+        <button class="btn btn-primary btn-sm" onclick="submitComment('${post.id}')">Post</button>
+      </div>
+      <div class="comment-list" id="comment-list-${post.id}">
+        ${(post.comments||[]).map(c=>`<div class="comment-item">
+          <div class="comment-av">${c.author[0].toUpperCase()}</div>
+          <div class="comment-bubble"><div class="comment-author">${escHtml(c.author)}</div>${escHtml(c.text)}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function bindPostEvents(container) {}
+
+function toggleInterest(postId, btn) {
+  const post = state.posts.find(p=>p.id==postId);
+  if (!post) return;
+  if (!post.interestedBy) post.interestedBy = [];
+  const idx = post.interestedBy.indexOf(state.username);
+  if (idx >= 0) {
+    post.interestedBy.splice(idx,1);
+    post.interests = Math.max(0,(post.interests||0)-1);
+    btn.classList.remove('interested');
+  } else {
+    post.interestedBy.push(state.username);
+    post.interests = (post.interests||0)+1;
+    btn.classList.add('interested');
+  }
+  btn.querySelector('svg').setAttribute('fill', post.interestedBy.includes(state.username)?'currentColor':'none');
+  btn.querySelector('.interest-count').textContent = post.interests;
+  save();
+}
+
+function toggleComments(postId, btn) {
+  const el = document.getElementById('comments-'+postId);
+  el.style.display = el.style.display==='none' ? 'block' : 'none';
+}
+
+function submitComment(postId) {
+  const input = document.getElementById('comment-input-'+postId);
+  const text = input.value.trim();
+  if (!text) return;
+  const post = state.posts.find(p=>p.id==postId);
+  if (!post) return;
+  if (!post.comments) post.comments = [];
+  const comment = { author: state.username, text, time: new Date().toISOString() };
+  post.comments.push(comment);
+  save();
+  input.value = '';
+  const list = document.getElementById('comment-list-'+postId);
+  const div = document.createElement('div');
+  div.className = 'comment-item';
+  div.innerHTML = `<div class="comment-av">${comment.author[0].toUpperCase()}</div>
+    <div class="comment-bubble"><div class="comment-author">${escHtml(comment.author)}</div>${escHtml(comment.text)}</div>`;
+  list.appendChild(div);
+  const card = document.querySelector(`[data-postid="${postId}"]`);
+  if (card) {
+    const countEl = card.querySelectorAll('.action-btn')[1];
+    if (countEl) countEl.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> ${post.comments.length}`;
+  }
+}
+
+function votePoll(postId, optIdx) {
+  const post = state.posts.find(p=>p.id==postId);
+  if (!post || !post.options) return;
+  if (!post.votedBy) post.votedBy = [];
+  if (post.votedBy.includes(state.username)) { toast('Already voted'); return; }
+  post.votedBy.push(state.username);
+  post.options[optIdx].votes++;
+  save();
+  renderFeed();
+}
+
+function viewCodePost(postId) {
+  const post = state.posts.find(p=>p.id==postId);
+  if (!post) return;
+  document.getElementById('view-code-iframe').srcdoc = post.code;
+  document.getElementById('view-code-modal').style.display='flex';
+}
+
+function toggleFollow(username, btn) {
+  if (!state.profile) return;
+  if (!state.profile._following) state.profile._following = [];
+  if (!state.profileViews._tracks) state.profileViews._tracks = {};
+  const idx = state.profile._following.indexOf(username);
+  if (idx >= 0) {
+    state.profile._following.splice(idx,1);
+    state.profileViews._tracks[username] = Math.max(0,(state.profileViews._tracks[username]||1)-1);
+    btn.textContent = 'Follow Track';
+    btn.classList.remove('following');
+  } else {
+    state.profile._following.push(username);
+    state.profileViews._tracks[username] = (state.profileViews._tracks[username]||0)+1;
+    btn.textContent = 'Following';
+    btn.classList.add('following');
+  }
+  save();
+}
+
+function viewUserProfile(username) {
+  if (username === state.username) { navigate('profile'); return; }
+  if (!state.profileViews[username]) state.profileViews[username] = 0;
+  state.profileViews[username]++;
+  save();
+
+  const isFollowing = (state.profile?._following||[]).includes(username);
+  const userPosts = state.posts.filter(po=>po.author===username);
+  const tracks = state.profileViews._tracks?.[username] || 0;
+  const queue = state.profileViews._queue?.[username] || 0;
+
+  const body = document.getElementById('vpm-body');
+  document.getElementById('vpm-name').textContent = username;
+
+  body.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <div style="width:56px;height:56px;border-radius:14px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;font-family:'Syne',sans-serif">${username[0].toUpperCase()}</div>
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700">@${username}</div>
+        <div style="font-size:12px;color:var(--text3)">${tracks} tracks · ${queue} in queue</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:20px">
+      <button class="btn ${isFollowing?'btn-ghost':'btn-primary'} btn-sm" id="vpm-follow-btn" onclick="vpmFollow('${username}')">${isFollowing?'Following':'Follow Track'}</button>
+      <button class="btn btn-ghost btn-sm" onclick="vpmJoinQueue('${username}')">Join Queue</button>
+      <button class="btn btn-ghost btn-sm" onclick="openChat('${username}');closeModal('view-profile-modal')">Message</button>
+    </div>
+    <div style="font-size:13px;color:var(--text3);margin-bottom:10px">${userPosts.length} posts</div>
+    ${userPosts.map(po=>renderPostCard(po)).join('')}
+  `;
+
+  document.getElementById('view-profile-modal').style.display='flex';
+  bindPostEvents(body);
+}
+
+function vpmFollow(username) {
+  if (!state.profile) return;
+  if (!state.profile._following) state.profile._following = [];
+  if (!state.profileViews._tracks) state.profileViews._tracks = {};
+  const idx = state.profile._following.indexOf(username);
+  const btn = document.getElementById('vpm-follow-btn');
+  if (idx>=0) {
+    state.profile._following.splice(idx,1);
+    state.profileViews._tracks[username] = Math.max(0,(state.profileViews._tracks[username]||1)-1);
+    if(btn){btn.textContent='Follow Track';btn.className='btn btn-primary btn-sm';}
+  } else {
+    state.profile._following.push(username);
+    state.profileViews._tracks[username] = (state.profileViews._tracks[username]||0)+1;
+    if(btn){btn.textContent='Following';btn.className='btn btn-ghost btn-sm';}
+  }
+  save();
+}
+
+function vpmJoinQueue(username) {
+  if (!state.profileViews._queue) state.profileViews._queue = {};
+  state.profileViews._queue[username] = (state.profileViews._queue[username]||0)+1;
+  save();
+  toast("Joined queue! You're on the waitlist.");
+}
+
+// ============================================================
+// COLLAB
+// ============================================================
+function openCollabPost() {
+  if (!state.profile) { toast('Set up your profile first'); return; }
+  document.getElementById('collab-post-modal').style.display='flex';
+}
+
+function countCollabWords(ta) {
+  const wc = ta.value.trim().split(/\s+/).filter(Boolean).length;
+  document.getElementById('collab-word-count').textContent = `${wc} / 100 words`;
+}
+
+function submitCollabPost() {
+  const title = document.getElementById('collab-title-input').value.trim();
+  const desc = document.getElementById('collab-desc-input').value.trim();
+  if (!title || !desc) { toast('Fill in heading and description'); return; }
+  state.collabs.unshift({ id:Date.now(), author:state.username, title, desc, joinedBy:[], time:new Date().toISOString() });
+  save();
+  closeModal('collab-post-modal');
+  renderCollab();
+  toast('Collab offer posted!');
+}
+
+function renderCollab() {
+  const container = document.getElementById('collab-list');
+  if (!container) return;
+  if (!state.collabs.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🤝</div><div class="empty-title">No collab offers yet</div><div class="empty-desc">Post an offer to find collaborators</div></div>`;
+    return;
+  }
+  container.innerHTML = state.collabs.map(c => {
+    const joined = c.joinedBy.includes(state.username);
+    return `<div class="collab-card">
+      <div class="collab-card-head">
+        <div>
+          <div class="collab-title">${escHtml(c.title)}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">by @${escHtml(c.author)} · ${getTimeAgo(c.time)}</div>
+        </div>
+        ${c.author !== state.username ? `<button class="btn ${joined?'btn-ghost':'btn-primary'} btn-sm" onclick="joinCollab('${c.id}',this)">${joined?'Joined':'Join'}</button>` : '<span style="font-size:12px;color:var(--text3)">Your post</span>'}
+      </div>
+      <div class="collab-desc">${escHtml(c.desc)}</div>
+      <div class="collab-meta">${c.joinedBy.length} interested</div>
+    </div>`;
+  }).join('');
+}
+
+function joinCollab(id, btn) {
+  if (!state.profile) { toast('Set up your profile first'); return; }
+  const c = state.collabs.find(x=>x.id==id);
+  if (!c) return;
+  const idx = c.joinedBy.indexOf(state.username);
+  if (idx>=0) {
+    c.joinedBy.splice(idx,1);
+    btn.textContent='Join';
+    btn.className='btn btn-primary btn-sm';
+  } else {
+    c.joinedBy.push(state.username);
+    btn.textContent='Joined';
+    btn.className='btn btn-ghost btn-sm';
+    openChat(c.author);
+    toast('Joined! Opening DM with '+c.author+'...');
+  }
+  save();
+  renderCollab();
+}
+
+// ============================================================
+// CHATS
+// ============================================================
+function renderChats() {
+  const list = document.getElementById('chat-list');
+  if (!list) return;
+  const chatUsers = Object.keys(state.chats);
+  if (!chatUsers.length) {
+    list.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px 0">No messages yet</div>`;
+    return;
+  }
+  list.innerHTML = chatUsers.map(user => {
+    const msgs = state.chats[user] || [];
+    const last = msgs[msgs.length-1];
+    return `<div class="chat-item ${state.activeChatUser===user?'active':''}" onclick="openChat('${user}')">
+      <div class="chat-av">${user[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div class="chat-name">@${user}</div>
+        ${last?`<div class="chat-preview">${last.from===state.username?'You: ':''}${last.text}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openChat(user) {
+  navigate('chats');
+  state.activeChatUser = user;
+  if (!state.chats[user]) state.chats[user] = [];
+
+  document.getElementById('chat-empty').style.display='none';
+  const active = document.getElementById('chat-active');
+  active.style.display='flex';
+  document.getElementById('chat-active-av').textContent = user[0].toUpperCase();
+  document.getElementById('chat-active-name').textContent = '@'+user;
+
+  const messages = document.getElementById('chat-messages');
+  messages.innerHTML = state.chats[user].map(m => `
+    <div class="msg-wrap ${m.from===state.username?'self':''}">
+      ${m.from!==state.username?`<div class="msg-av">${m.from[0].toUpperCase()}</div>`:''}
+      <div class="msg-bubble">${escHtml(m.text)}</div>
+    </div>`).join('');
+  messages.scrollTop = messages.scrollHeight;
+  renderChats();
+}
+
+function sendMsg() {
+  const user = state.activeChatUser;
+  if (!user) return;
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  if (!state.chats[user]) state.chats[user] = [];
+  const msg = { from: state.username, text, time: new Date().toISOString() };
+  state.chats[user].push(msg);
+  save();
+  input.value = '';
+  const messages = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg-wrap self';
+  div.innerHTML = `<div class="msg-bubble">${escHtml(text)}</div>`;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+  renderChats();
+}
+
+// ============================================================
+// SETTINGS
+// ============================================================
+function changeUsername() {
+  const newName = prompt('Enter new username (letters, numbers, underscore):', state.username);
+  if (!newName) return;
+  const clean = newName.toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,20);
+  if (!clean) { toast('Invalid username'); return; }
+  state.username = clean;
+  save();
+  updateSidebar();
+  toast('Username updated!');
+  document.getElementById('current-username-disp').textContent = '@'+clean;
+}
+
+function clearAll() {
+  if (!confirm('This will delete everything. Are you sure?')) return;
+  localStorage.removeItem('sailorx_v2');
+  location.reload();
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(str) {
+  return String(str||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function getTimeAgo(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff/60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins/60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs/24)}d ago`;
+}
+
+// Apply settings on load
+document.getElementById('dark-toggle').classList.toggle('on', state.theme==='dark');
+</script>
+</body>
+</html>
