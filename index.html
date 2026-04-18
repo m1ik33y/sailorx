@@ -1548,7 +1548,27 @@ input[type=range]{accent-color:var(--text);height:4px}
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
 <script>
+// ============================================================
+//AUTH CONFIG (Firebase)
+// ============================================================
+const firebaseConfig = {
+    apiKey: "AIzaSyCbQI7JIE8WR9tmh0L9i6OWNA1yqXBgiJ4",
+    authDomain: "sailorx.firebaseapp.com",
+    projectId: "sailorx",
+    storageBucket: "sailorx.firebasestorage.app",
+    messagingSenderId: "783649147652",
+    appId: "1:783649147652:web:1807c4cbf8660de1bf1e51"
+  };
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
+
+
 // ============================================================
 // STATE
 // ============================================================
@@ -1586,15 +1606,7 @@ load();
 applyTheme();
 initAuthFlow();
 
-function initAuthFlow() {
-  renderAuthAccounts();
-  if (state.currentUser && state.profile) {
-    // Already logged in with profile
-    enterApp();
-  } else {
-    showAuth();
-  }
-}
+
 
 // ============================================================
 // AUTH SCREENS
@@ -1605,15 +1617,7 @@ function showAuth() {
   document.getElementById('auth-screen').classList.remove('hidden');
 }
 
-function showSignup() {
-  hideAll();
-  document.getElementById('signup-screen').classList.add('visible');
-  // Clear fields
-  ['su-name','su-username','su-email','su-password'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-}
+
 
 function showBizProfile() {
   hideAll();
@@ -1669,78 +1673,55 @@ function renderAuthAccounts() {
   }).join('') + `</div>`;
 }
 
-function loginAsAccount(idx) {
-  const acc = state.accounts[idx];
-  if (!acc) return;
-  state.currentUser = acc;
-  // Load that account's profile and posts
-  const saved = localStorage.getItem('sailorx_acct_' + acc.username);
-  if (saved) {
-    const acctData = JSON.parse(saved);
-    state.profile = acctData.profile || null;
-    state.posts = acctData.posts || [];
-    state.collabs = acctData.collabs || [];
-    state.chats = acctData.chats || {};
-    state.profileCode = acctData.profileCode || '';
-    state.profileCodePublished = acctData.profileCodePublished || false;
-    state.profileViews = acctData.profileViews || {};
-  } else {
-    state.profile = null;
-    state.posts = [];
-    state.collabs = [];
-    state.chats = {};
-    state.profileCode = '';
-    state.profileCodePublished = false;
-    state.profileViews = {};
-  }
+
+
+auth.onAuthStateChanged(user => {
+  if (!user) return;
+
+  state.currentUser = {
+    uid: user.uid,
+    name: user.displayName,
+    username: (user.email || "").split("@")[0],
+    email: user.email,
+    logo: user.photoURL
+  };
+
   save();
-  if (state.profile) {
-    enterApp();
-  } else {
-    showBizProfile();
-  }
-}
+
+  if (state.profile) enterApp();
+  else showBizProfile();
+});
 
 function handleGoogleSignIn() {
-  // Simulate Google sign-in by asking for a name
-  const name = prompt('Enter your name for Google sign-in simulation:');
-  if (!name || !name.trim()) return;
-  const username = name.trim().toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'').slice(0,20) || 'user' + Date.now();
-  const email = username + '@gmail.com';
-  const acc = { name: name.trim(), username, email, logo: '', isGoogle: true };
-  // Add to accounts if not already there
-  if (!state.accounts.find(a => a.email === email)) {
-    state.accounts.push(acc);
-  }
-  state.currentUser = acc;
-  state.profile = null;
-  save();
-  showBizProfile();
+  auth.signInWithPopup(provider)
+    .then(result => {
+      const user = result.user;
+
+      state.currentUser = {
+        uid: user.uid,
+        name: user.displayName,
+        username: (user.email || "").split("@")[0],
+        email: user.email,
+        logo: user.photoURL
+      };
+
+      if (!state.accounts.some(a => a.uid === user.uid)) {
+        state.accounts.push(state.currentUser);
+      }
+
+      save();
+      toast("Signed in!");
+
+      if (!state.profile) showBizProfile();
+      else enterApp();
+    })
+    .catch(err => {
+      console.error(err);
+      toast("Login failed");
+    });
 }
 
-function submitSignup() {
-  const name = document.getElementById('su-name').value.trim();
-  const username = document.getElementById('su-username').value.trim();
-  const email = document.getElementById('su-email').value.trim();
-  const password = document.getElementById('su-password').value;
 
-  if (!name) { toast('Please enter your name'); return; }
-  if (!username) { toast('Please enter a username'); return; }
-  if (!email || !email.includes('@')) { toast('Please enter a valid email'); return; }
-  if (!password || password.length < 6) { toast('Password must be at least 6 characters'); return; }
-
-  // Check if username taken
-  if (state.accounts.find(a => a.username === username)) {
-    toast('Username already taken'); return;
-  }
-
-  const acc = { name, username, email, password: btoa(password), logo: '' };
-  state.accounts.push(acc);
-  state.currentUser = acc;
-  state.profile = null;
-  save();
-  showBizProfile();
-}
 
 function signOut() {
   state.currentUser = null;
