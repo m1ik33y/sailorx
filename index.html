@@ -1604,7 +1604,8 @@ let tempLogoDataUrl = '';
 // ============================================================
 load();
 applyTheme();
-initAuthFlow();
+
+
 
 
 
@@ -1615,6 +1616,18 @@ function showAuth() {
   hideAll();
   renderAuthAccounts();
   document.getElementById('auth-screen').classList.remove('hidden');
+}
+function loginAsAccount(i) {
+  const acc = state.accounts[i];
+  if (!acc) return;
+
+  state.currentUser = acc;
+  save();
+
+  if (!state.profile) showBizProfile();
+  else enterApp();
+
+  toast("Logged in as " + acc.username);
 }
 
 
