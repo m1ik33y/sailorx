@@ -1651,28 +1651,13 @@ async function loadUserData(uid) {
       state.profileCode = data.profileCode || '';
       state.profileCodePublished = data.profileCodePublished || false;
       state.profileViews = data.profileViews || {};
+      console.log('✅ Loaded user data from Firestore for UID:', uid);
       save();
-      return;
+    } else {
+      console.log('📝 No Firestore data yet for UID:', uid, '(new user)');
     }
   } catch (err) {
-    console.error('loadUserData error:', err);
-  }
-
-  const localKey = 'sailorx_acct_' + (state.currentUser?.username || '');
-  const localData = localStorage.getItem(localKey);
-  if (localData) {
-    try {
-      const parsed = JSON.parse(localData);
-      state.profile = parsed.profile || null;
-      state.posts = parsed.posts || [];
-      state.collabs = parsed.collabs || [];
-      state.profileCode = parsed.profileCode || '';
-      state.profileCodePublished = parsed.profileCodePublished || false;
-      state.profileViews = parsed.profileViews || {};
-      save();
-    } catch (e) {
-      console.error('loadUserData local fallback error:', e);
-    }
+    console.error('❌ loadUserData error:', err);
   }
 }
 
@@ -1698,14 +1683,22 @@ function showAuth() {
 function loginAsAccount(i) {
   const acc = state.accounts[i];
   if (!acc) return;
-
-  state.currentUser = acc;
-  save();
-
-  if (!state.profile) showBizProfile();
-  else enterApp();
-
-  toast("Logged in as " + acc.username);
+  if (!acc.email) {
+    toast('Account missing email, sign in with Google instead');
+    return;
+  }
+  
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({
+    login_hint: acc.email,
+    prompt: 'select_account'
+  });
+  
+  auth.signInWithPopup(provider)
+    .catch(err => {
+      console.error('Account login failed:', err);
+      toast('Login failed. Try signing in with Google again.');
+    });
 }
 
 
@@ -1769,12 +1762,16 @@ function renderAuthAccounts() {
 auth.onAuthStateChanged(async user => {
 
   if (!user) {
+    console.log('🔓 User logged out');
     state.currentUser = null;
+    resetUserData();
+    save();
     showAuth();
     return;
   }
 
-  await user.reload(); // 🔥 ensures fresh session
+  console.log('✅ Firebase auth user detected:', user.uid, user.email);
+  await user.reload();
 
   state.currentUser = {
     uid: user.uid,
@@ -1784,38 +1781,73 @@ auth.onAuthStateChanged(async user => {
     logo: user.photoURL
   };
 
-  if (!state.accounts.some(a => a.uid === user.uid)) {
+  const existingIdx = state.accounts.findIndex(a => a.uid === user.uid);
+  if (existingIdx < 0) {
     state.accounts.push(state.currentUser);
+    console.log('📌 Added new account to saved accounts');
+  } else {
+    state.accounts[existingIdx] = state.currentUser;
+    console.log('🔄 Updated existing account');
   }
 
   resetUserData();
+  console.log('⏳ Loading Firestore data for uid:', user.uid);
   await loadUserData(user.uid);
 
   save();
-  enterApp();
+  
+  if (!state.profile) {
+    console.log('🆕 No profile found, showing setup');
+    showBizProfile();
+  } else {
+    console.log('✨ Profile loaded, entering app');
+    enterApp();
+  }
 });
 
 setInterval(() => {
   if (auth.currentUser && !state.currentUser) {
-    console.warn("Auth mismatch detected, forcing sync");
+    console.warn("⚠️ Auth mismatch detected (Firebase user exists but app not synced), reloading...");
     location.reload();
+  }
+  if (!auth.currentUser && state.currentUser) {
+    console.warn("⚠️ Auth mismatch detected (app has user but Firebase doesn't), signing out...");
+    state.currentUser = null;
+    resetUserData();
+    save();
+    showAuth();
   }
 }, 5000);
 
 function handleGoogleSignIn() {
-  auth.signInWithPopup(provider)
+  console.log('🔐 Initiating Google sign-in...');
+  const p = new firebase.auth.GoogleAuthProvider();
+  p.setCustomParameters({
+    prompt: 'select_account'
+  });
+  
+  auth.signInWithPopup(p)
+    .then(result => {
+      console.log('✅ Google sign-in successful:', result.user.uid);
+    })
     .catch(err => {
-      console.error(err);
-      toast("Login failed");
+      console.error('❌ Google sign-in error:', err);
+      toast("Login failed: " + err.message);
     });
 }
 
 
 
 async function signOut() {
-  await auth.signOut();   // clears Firebase session
+  console.log('🔓 Signing out from Firebase');
+  try {
+    await auth.signOut();
+  } catch (err) {
+    console.error('Sign out error:', err);
+  }
 
   state.currentUser = null;
+  resetUserData();
   save();
 
   showAuth();
@@ -1914,6 +1946,11 @@ function bpStep2Finish() {
 
 function saveAccountData() {
   if (!state.currentUser) return;
+  if (!state.currentUser.uid) {
+    console.error('⚠️ saveAccountData: currentUser has no uid, skipping');
+    return;
+  }
+  
   const acctData = {
     profile: state.profile,
     posts: state.posts,
@@ -1923,6 +1960,7 @@ function saveAccountData() {
     profileCodePublished: state.profileCodePublished,
     profileViews: state.profileViews
   };
+  
   localStorage.setItem('sailorx_acct_' + state.currentUser.username, JSON.stringify(acctData));
   void saveUserData();
 }
@@ -2650,7 +2688,7 @@ function viewUserProfile(username) {
   if (username === myUsername) { navigate('profile'); return; }
   if (!state.profileViews[username]) state.profileViews[username] = 0;
   state.profileViews[username]++;
-  save();
+  save(); saveAccountData();
   const isFollowing = (state.profile?._following||[]).includes(username);
   const userPosts = state.posts.filter(po=>po.author===username);
   const tracks = state.profileViews._tracks?.[username] || 0;
@@ -2696,7 +2734,7 @@ function vpmFollow(username) {
 function vpmJoinQueue(username) {
   if (!state.profileViews._queue) state.profileViews._queue = {};
   state.profileViews._queue[username] = (state.profileViews._queue[username]||0)+1;
-  save();
+  save(); saveAccountData();
   toast("Joined queue! You're on the waitlist.");
 }
 
