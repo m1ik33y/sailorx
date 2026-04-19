@@ -2606,7 +2606,7 @@ function viewUserProfile(username) {
     <div style="display:flex;gap:8px;margin-bottom:20px">
       <button class="btn ${isFollowing?'btn-ghost':'btn-primary'} btn-sm" id="vpm-follow-btn" onclick="vpmFollow('${username}')">${isFollowing?'Following':'Follow Track'}</button>
       <button class="btn btn-ghost btn-sm" onclick="vpmJoinQueue('${username}')">Join Queue</button>
-      <button class="btn btn-ghost btn-sm" onclick="openChat('${username}');closeModal('view-profile-modal')">Message</button>
+      <button class="btn btn-ghost btn-sm" onclick="openChat('${uid}', '${username}')";closeModal('view-profile-modal')">Message</button>
     </div>
     <div style="font-size:13px;color:var(--text3);margin-bottom:10px">${userPosts.length} posts</div>
     ${userPosts.map(po=>renderPostCard(po)).join('')}`;
@@ -2743,9 +2743,10 @@ async function renderChats() {
   }
 }
 
-function openChat(user) {
+function openChat(otherUid, otherUsername) {
   navigate('chats');
-  state.activeChatUser = user;
+  state.activeChatUser = otherUid;
+state.activeChatName = otherUsername;
 
   const me = state.currentUser?.uid;
   if (!me) return;
@@ -2780,7 +2781,8 @@ function openChat(user) {
 }
 
 async function sendMsg() {
-  const otherUser = state.activeChatUser;
+
+  const otherUser = state.activeChatUser; // ✅ ADD THIS
   if (!otherUser) return;
 
   const input = document.getElementById('chat-input');
@@ -2812,6 +2814,7 @@ async function sendMsg() {
     }
 
     renderChats();
+
   } catch (err) {
     console.error('sendMsg error:', err);
     toast('Failed to send message');
