@@ -1550,8 +1550,11 @@ input[type=range]{accent-color:var(--text);height:4px}
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
 <script>
+  let unsubscribeChat = null;
+
 // ============================================================
 //AUTH CONFIG (Firebase)
 // ============================================================
@@ -1566,7 +1569,19 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db = firebase.firestore();
 const provider = new firebase.auth.GoogleAuthProvider();
+
+provider.setCustomParameters({
+  prompt: "select_account"
+});
+provider.setCustomParameters({
+  prompt: 'select_account'
+});
+
+function getChatId(uidA, uidB) {
+  return [uidA, uidB].sort().join("_");
+}
 
 
 // ============================================================
@@ -1605,8 +1620,71 @@ let tempLogoDataUrl = '';
 load();
 applyTheme();
 
+async function saveUserData() {
+  if (!state.currentUser?.uid) return;
+  try {
+    await db.collection('users').doc(state.currentUser.uid).set({
+      username: state.currentUser.username,
+      email: state.currentUser.email,
+      profile: state.profile || null,
+      posts: state.posts || [],
+      collabs: state.collabs || [],
+      profileCode: state.profileCode || '',
+      profileCodePublished: state.profileCodePublished || false,
+      profileViews: state.profileViews || {},
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+  } catch (err) {
+    console.error('saveUserData error:', err);
+  }
+}
 
+async function loadUserData(uid) {
+  if (!uid) return;
+  try {
+    const doc = await db.collection('users').doc(uid).get();
+    if (doc.exists) {
+      const data = doc.data();
+      state.profile = data.profile || null;
+      state.posts = data.posts || [];
+      state.collabs = data.collabs || [];
+      state.profileCode = data.profileCode || '';
+      state.profileCodePublished = data.profileCodePublished || false;
+      state.profileViews = data.profileViews || {};
+      save();
+      return;
+    }
+  } catch (err) {
+    console.error('loadUserData error:', err);
+  }
 
+  const localKey = 'sailorx_acct_' + (state.currentUser?.username || '');
+  const localData = localStorage.getItem(localKey);
+  if (localData) {
+    try {
+      const parsed = JSON.parse(localData);
+      state.profile = parsed.profile || null;
+      state.posts = parsed.posts || [];
+      state.collabs = parsed.collabs || [];
+      state.profileCode = parsed.profileCode || '';
+      state.profileCodePublished = parsed.profileCodePublished || false;
+      state.profileViews = parsed.profileViews || {};
+      save();
+    } catch (e) {
+      console.error('loadUserData local fallback error:', e);
+    }
+  }
+}
+
+function resetUserData() {
+  state.profile = null;
+  state.posts = [];
+  state.collabs = [];
+  state.chats = {};
+  state.profileCode = '';
+  state.profileCodePublished = false;
+  state.profileViews = {};
+}
 
 
 // ============================================================
@@ -1688,8 +1766,13 @@ function renderAuthAccounts() {
 
 
 
-auth.onAuthStateChanged(user => {
-  if (!user) return;
+auth.onAuthStateChanged(async user => {
+  if (!user) {
+    state.currentUser = null;
+    save();
+    showAuth();
+    return;
+  }
 
   state.currentUser = {
     uid: user.uid,
@@ -1699,7 +1782,14 @@ auth.onAuthStateChanged(user => {
     logo: user.photoURL
   };
 
+  if (!state.accounts.some(a => a.uid === user.uid)) {
+    state.accounts.push(state.currentUser);
+  }
+
+  resetUserData();
+  await loadUserData(user.uid);
   save();
+  toast('Signed in!');
 
   if (state.profile) enterApp();
   else showBizProfile();
@@ -1707,27 +1797,6 @@ auth.onAuthStateChanged(user => {
 
 function handleGoogleSignIn() {
   auth.signInWithPopup(provider)
-    .then(result => {
-      const user = result.user;
-
-      state.currentUser = {
-        uid: user.uid,
-        name: user.displayName,
-        username: (user.email || "").split("@")[0],
-        email: user.email,
-        logo: user.photoURL
-      };
-
-      if (!state.accounts.some(a => a.uid === user.uid)) {
-        state.accounts.push(state.currentUser);
-      }
-
-      save();
-      toast("Signed in!");
-
-      if (!state.profile) showBizProfile();
-      else enterApp();
-    })
     .catch(err => {
       console.error(err);
       toast("Login failed");
@@ -1736,9 +1805,12 @@ function handleGoogleSignIn() {
 
 
 
-function signOut() {
+async function signOut() {
+  await auth.signOut();   // clears Firebase session
+
   state.currentUser = null;
   save();
+
   showAuth();
 }
 
@@ -1845,6 +1917,7 @@ function saveAccountData() {
     profileViews: state.profileViews
   };
   localStorage.setItem('sailorx_acct_' + state.currentUser.username, JSON.stringify(acctData));
+  void saveUserData();
 }
 
 function openEditBizProfile() {
@@ -2689,67 +2762,119 @@ function joinCollab(id, btn) {
 // ============================================================
 // CHATS
 // ============================================================
-function renderChats() {
+async function renderChats() {
   const list = document.getElementById('chat-list');
-  if (!list) return;
-  const chatUsers = Object.keys(state.chats);
-  if (!chatUsers.length) {
-    list.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px 0">No messages yet</div>`;
-    return;
+  const me = state.currentUser?.username;
+  if (!me) return;
+
+  try {
+    const snap = await db.collection("chats")
+      .where("participants", "array-contains", me)
+      .get();
+
+    if (snap.empty) {
+      list.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px">No messages yet</div>`;
+      return;
+    }
+
+    list.innerHTML = snap.docs.map(doc => {
+      const data = doc.data();
+      const other = (data.participants || []).find(u => u !== me) || '?';
+      const messages = data.messages || [];
+      const last = messages.length ? messages[messages.length - 1] : null;
+
+      return `
+        <div class="chat-item" onclick="openChat('${escHtml(other)}')">
+          <div class="chat-av">${other[0].toUpperCase()}</div>
+          <div style="flex:1;min-width:0">
+            <div class="chat-name">@${escHtml(other)}</div>
+            ${last ? `<div class="chat-preview">${last.from === me ? 'You: ' : ''}${escHtml(last.text)}</div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  } catch (err) {
+    console.error('renderChats error:', err);
+    list.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px">Could not load chats</div>`;
   }
-  const username = state.currentUser?.username || 'user';
-  list.innerHTML = chatUsers.map(user => {
-    const msgs = state.chats[user] || [];
-    const last = msgs[msgs.length-1];
-    return `<div class="chat-item ${state.activeChatUser===user?'active':''}" onclick="openChat('${user}')">
-      <div class="chat-av">${user[0].toUpperCase()}</div>
-      <div style="flex:1;min-width:0">
-        <div class="chat-name">@${escHtml(user)}</div>
-        ${last?`<div class="chat-preview">${last.from===username?'You: ':''}${escHtml(last.text)}</div>`:''}
-      </div>
-    </div>`;
-  }).join('');
 }
 
-function openChat(user) {
+function openChat(otherUsername) {
   navigate('chats');
-  state.activeChatUser = user;
-  if (!state.chats[user]) state.chats[user] = [];
-  document.getElementById('chat-empty').style.display='none';
-  const active = document.getElementById('chat-active');
-  active.style.display='flex';
-  document.getElementById('chat-active-av').textContent = user[0].toUpperCase();
-  document.getElementById('chat-active-name').textContent = '@'+user;
-  const username = state.currentUser?.username || 'user';
-  const messages = document.getElementById('chat-messages');
-  messages.innerHTML = state.chats[user].map(m => `
-    <div class="msg-wrap ${m.from===username?'self':''}">
-      ${m.from!==username?`<div class="msg-av">${m.from[0].toUpperCase()}</div>`:''}
-      <div class="msg-bubble">${escHtml(m.text)}</div>
-    </div>`).join('');
-  messages.scrollTop = messages.scrollHeight;
-  renderChats();
+  state.activeChatUser = otherUsername;
+  state.activeChatName = otherUsername;
+
+  const me = state.currentUser?.username;
+  if (!me || !otherUsername) return;
+
+  const chatId = getChatId(me, otherUsername);
+
+  document.getElementById('chat-empty').style.display = 'none';
+  const chatActive = document.getElementById('chat-active');
+  chatActive.style.display = 'flex';
+
+  document.getElementById('chat-active-av').textContent = otherUsername[0].toUpperCase();
+  document.getElementById('chat-active-name').textContent = '@' + otherUsername;
+
+  const messagesEl = document.getElementById('chat-messages');
+
+  if (unsubscribeChat) unsubscribeChat();
+
+  unsubscribeChat = db.collection("chats").doc(chatId)
+    .onSnapshot(doc => {
+      const data = doc.exists ? doc.data() : null;
+      const messages = (data && data.messages) ? data.messages : [];
+
+      messagesEl.innerHTML = messages.map(m => `
+        <div class="msg-wrap ${m.from === me ? 'self' : ''}">
+          <div class="msg-bubble">${escHtml(m.text)}</div>
+        </div>`).join('');
+
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }, err => {
+      console.error('Chat listener error:', err);
+    });
 }
 
-function sendMsg() {
-  const user = state.activeChatUser;
-  if (!user) return;
+async function sendMsg() {
+
+  const otherUser = state.activeChatUser; // ✅ ADD THIS
+  if (!otherUser) return;
+
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if (!text) return;
-  if (!state.chats[user]) state.chats[user] = [];
-  const username = state.currentUser?.username || 'user';
-  const msg = { from: username, text, time: new Date().toISOString() };
-  state.chats[user].push(msg);
-  save(); saveAccountData();
+
+  const me = state.currentUser?.username;
+  if (!me) return;
+
+  const chatId = getChatId(me, otherUser);
   input.value = '';
-  const messages = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'msg-wrap self';
-  div.innerHTML = `<div class="msg-bubble">${escHtml(text)}</div>`;
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-  renderChats();
+
+  try {
+    const chatRef = db.collection("chats").doc(chatId);
+    const doc = await chatRef.get();
+
+    const newMsg = { from: me, text, time: Date.now() };
+
+    if (doc.exists) {
+      const existing = doc.data().messages || [];
+      await chatRef.update({
+        messages: [...existing, newMsg]
+      });
+    } else {
+      await chatRef.set({
+        participants: [me, otherUser],
+        messages: [newMsg]
+      });
+    }
+
+    renderChats();
+
+  } catch (err) {
+    console.error('sendMsg error:', err);
+    toast('Failed to send message');
+    input.value = text;
+  }
 }
 
 // ============================================================
@@ -2764,6 +2889,7 @@ function changeUsername() {
   const idx = state.accounts.findIndex(a => a.email === state.currentUser?.email);
   if (idx >= 0) state.accounts[idx].username = clean;
   save();
+  saveAccountData();
   updateSidebar();
   toast('Username updated!');
   document.getElementById('current-username-disp').textContent = '@'+clean;
