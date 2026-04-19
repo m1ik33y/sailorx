@@ -1569,8 +1569,9 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db = firebase.firestore();
 const provider = new firebase.auth.GoogleAuthProvider();
-  const db = firebase.firestore();
+
 provider.setCustomParameters({
   prompt: "select_account"
 });
@@ -2723,7 +2724,8 @@ async function renderChats() {
     const data = doc.data();
 
     const other = data.participants.find(u => u !== me);
-    const last = data.messages?.[data.messages.length - 1];
+    const messages = data.messages || [];
+const last = messages.length ? messages[messages.length - 1] : null;
 
     return `
       <div class="chat-item" onclick="openChat('${other}')">
@@ -2757,20 +2759,21 @@ function openChat(user) {
   // stop previous listener (IMPORTANT)
   if (unsubscribeChat) unsubscribeChat();
 
-  // 🔥 REAL-TIME LISTENER STARTS HERE
-  unsubscribeChat = db.collection("chats").doc(chatId)
-    .onSnapshot(doc => {
-      const data = doc.data();
-      const messages = data?.messages || [];
+unsubscribeChat = db.collection("chats").doc(chatId)
+  .onSnapshot(doc => {
+    const data = doc.data();
 
-      messagesEl.innerHTML = messages.map(m => `
-        <div class="msg-wrap ${m.from === me ? 'self' : ''}">
-          <div class="msg-bubble">${escHtml(m.text)}</div>
-        </div>
-      `).join('');
+    // ✅ IMPORTANT FIX: prevent crash when doc doesn't exist yet
+    const messages = (data && data.messages) ? data.messages : [];
 
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    });
+    messagesEl.innerHTML = messages.map(m => `
+      <div class="msg-wrap ${m.from === me ? 'self' : ''}">
+        <div class="msg-bubble">${escHtml(m.text)}</div>
+      </div>
+    `).join('');
+
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  });
 }
 
 async function sendMsg() {
@@ -2781,7 +2784,7 @@ async function sendMsg() {
   const text = input.value.trim();
   if (!text) return;
 
-  const me = state.currentUser.username;
+  const me = state.currentUser?.username;
   const chatId = getChatId(me, otherUser);
 
   const msg = {
@@ -2793,12 +2796,9 @@ async function sendMsg() {
   const chatRef = db.collection("chats").doc(chatId);
 
   await chatRef.set({
-    participants: [me, otherUser]
-  }, { merge: true });
-
-  await chatRef.update({
+    participants: [me, otherUser],
     messages: firebase.firestore.FieldValue.arrayUnion(msg)
-  });
+  }, { merge: true });
 
   input.value = '';
 }
