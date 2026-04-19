@@ -1579,8 +1579,8 @@ provider.setCustomParameters({
   prompt: 'select_account'
 });
 
-function getChatId(a, b) {
-  return [a, b].sort().join("_");
+function getChatId(uidA, uidB) {
+  return [uidA, uidB].sort().join("_");
 }
 
 
@@ -2747,7 +2747,7 @@ function openChat(user) {
   navigate('chats');
   state.activeChatUser = user;
 
-  const me = state.currentUser?.username;
+  const me = state.currentUser?.uid;
   if (!me) return;
 
   const chatId = getChatId(me, user);
@@ -2787,7 +2787,7 @@ async function sendMsg() {
   const text = input.value.trim();
   if (!text) return;
 
-  const me = state.currentUser?.username;
+  const me = state.currentUser?.uid;
   if (!me) return;
 
   const chatId = getChatId(me, otherUser);
