@@ -1567,6 +1567,12 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
+provider.setCustomParameters({
+  prompt: "select_account"
+});
+provider.setCustomParameters({
+  prompt: 'select_account'
+});
 
 
 // ============================================================
@@ -1736,9 +1742,12 @@ function handleGoogleSignIn() {
 
 
 
-function signOut() {
+async function signOut() {
+  await auth.signOut();   // clears Firebase session
+
   state.currentUser = null;
   save();
+
   showAuth();
 }
 
