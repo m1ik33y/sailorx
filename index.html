@@ -1767,12 +1767,14 @@ function renderAuthAccounts() {
 
 
 auth.onAuthStateChanged(async user => {
+
   if (!user) {
     state.currentUser = null;
-    save();
     showAuth();
     return;
   }
+
+  await user.reload(); // 🔥 ensures fresh session
 
   state.currentUser = {
     uid: user.uid,
@@ -1788,12 +1790,17 @@ auth.onAuthStateChanged(async user => {
 
   resetUserData();
   await loadUserData(user.uid);
-  save();
-  toast('Signed in!');
 
-  if (state.profile) enterApp();
-  else showBizProfile();
+  save();
+  enterApp();
 });
+
+setInterval(() => {
+  if (auth.currentUser && !state.currentUser) {
+    console.warn("Auth mismatch detected, forcing sync");
+    location.reload();
+  }
+}, 5000);
 
 function handleGoogleSignIn() {
   auth.signInWithPopup(provider)
@@ -2837,29 +2844,36 @@ function openChat(otherUsername) {
 
 async function sendMsg() {
 
-  const otherUser = state.activeChatUser; // ✅ ADD THIS
+  const user = auth.currentUser; // 🔥 real source
+  if (!user) {
+    toast("Not signed in");
+    return;
+  }
+
+  const me = user.email?.split("@")[0];
+  const otherUser = state.activeChatUser;
   if (!otherUser) return;
 
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
+  const text = document.getElementById('chat-input').value.trim();
   if (!text) return;
 
-  const me = state.currentUser?.username;
-  if (!me) return;
-
   const chatId = getChatId(me, otherUser);
-  input.value = '';
+  document.getElementById('chat-input').value = '';
 
   try {
     const chatRef = db.collection("chats").doc(chatId);
+
+    const newMsg = {
+      from: me,
+      text,
+      time: Date.now()
+    };
+
     const doc = await chatRef.get();
 
-    const newMsg = { from: me, text, time: Date.now() };
-
     if (doc.exists) {
-      const existing = doc.data().messages || [];
       await chatRef.update({
-        messages: [...existing, newMsg]
+        messages: firebase.firestore.FieldValue.arrayUnion(newMsg)
       });
     } else {
       await chatRef.set({
@@ -2871,9 +2885,8 @@ async function sendMsg() {
     renderChats();
 
   } catch (err) {
-    console.error('sendMsg error:', err);
-    toast('Failed to send message');
-    input.value = text;
+    console.error(err);
+    toast("Failed to send message");
   }
 }
 
