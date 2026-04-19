@@ -1550,8 +1550,11 @@ input[type=range]{accent-color:var(--text);height:4px}
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
 <script>
+  let unsubscribeChat = null;
+
 // ============================================================
 //AUTH CONFIG (Firebase)
 // ============================================================
@@ -1567,12 +1570,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
+  const db = firebase.firestore();
 provider.setCustomParameters({
   prompt: "select_account"
 });
 provider.setCustomParameters({
   prompt: 'select_account'
 });
+
+function getChatId(a, b) {
+  return [a, b].sort().join("_");
+}
 
 
 // ============================================================
@@ -2698,67 +2706,101 @@ function joinCollab(id, btn) {
 // ============================================================
 // CHATS
 // ============================================================
-function renderChats() {
+async function renderChats() {
   const list = document.getElementById('chat-list');
-  if (!list) return;
-  const chatUsers = Object.keys(state.chats);
-  if (!chatUsers.length) {
-    list.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px 0">No messages yet</div>`;
+  const me = state.currentUser.username;
+
+  const snap = await db.collection("chats")
+    .where("participants", "array-contains", me)
+    .get();
+
+  if (snap.empty) {
+    list.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px">No messages yet</div>`;
     return;
   }
-  const username = state.currentUser?.username || 'user';
-  list.innerHTML = chatUsers.map(user => {
-    const msgs = state.chats[user] || [];
-    const last = msgs[msgs.length-1];
-    return `<div class="chat-item ${state.activeChatUser===user?'active':''}" onclick="openChat('${user}')">
-      <div class="chat-av">${user[0].toUpperCase()}</div>
-      <div style="flex:1;min-width:0">
-        <div class="chat-name">@${escHtml(user)}</div>
-        ${last?`<div class="chat-preview">${last.from===username?'You: ':''}${escHtml(last.text)}</div>`:''}
+
+  list.innerHTML = snap.docs.map(doc => {
+    const data = doc.data();
+
+    const other = data.participants.find(u => u !== me);
+    const last = data.messages?.[data.messages.length - 1];
+
+    return `
+      <div class="chat-item" onclick="openChat('${other}')">
+        <div class="chat-av">${other[0].toUpperCase()}</div>
+        <div style="flex:1;min-width:0">
+          <div class="chat-name">@${other}</div>
+          ${last ? `<div class="chat-preview">
+            ${last.from === me ? 'You: ' : ''}${escHtml(last.text)}
+          </div>` : ''}
+        </div>
       </div>
-    </div>`;
+    `;
   }).join('');
 }
 
 function openChat(user) {
   navigate('chats');
   state.activeChatUser = user;
-  if (!state.chats[user]) state.chats[user] = [];
-  document.getElementById('chat-empty').style.display='none';
-  const active = document.getElementById('chat-active');
-  active.style.display='flex';
+
+  const me = state.currentUser.username;
+  const chatId = getChatId(me, user);
+
+  document.getElementById('chat-empty').style.display = 'none';
+  document.getElementById('chat-active').style.display = 'flex';
+
   document.getElementById('chat-active-av').textContent = user[0].toUpperCase();
-  document.getElementById('chat-active-name').textContent = '@'+user;
-  const username = state.currentUser?.username || 'user';
-  const messages = document.getElementById('chat-messages');
-  messages.innerHTML = state.chats[user].map(m => `
-    <div class="msg-wrap ${m.from===username?'self':''}">
-      ${m.from!==username?`<div class="msg-av">${m.from[0].toUpperCase()}</div>`:''}
-      <div class="msg-bubble">${escHtml(m.text)}</div>
-    </div>`).join('');
-  messages.scrollTop = messages.scrollHeight;
-  renderChats();
+  document.getElementById('chat-active-name').textContent = '@' + user;
+
+  const messagesEl = document.getElementById('chat-messages');
+
+  // stop previous listener (IMPORTANT)
+  if (unsubscribeChat) unsubscribeChat();
+
+  // 🔥 REAL-TIME LISTENER STARTS HERE
+  unsubscribeChat = db.collection("chats").doc(chatId)
+    .onSnapshot(doc => {
+      const data = doc.data();
+      const messages = data?.messages || [];
+
+      messagesEl.innerHTML = messages.map(m => `
+        <div class="msg-wrap ${m.from === me ? 'self' : ''}">
+          <div class="msg-bubble">${escHtml(m.text)}</div>
+        </div>
+      `).join('');
+
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    });
 }
 
-function sendMsg() {
-  const user = state.activeChatUser;
-  if (!user) return;
+async function sendMsg() {
+  const otherUser = state.activeChatUser;
+  if (!otherUser) return;
+
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if (!text) return;
-  if (!state.chats[user]) state.chats[user] = [];
-  const username = state.currentUser?.username || 'user';
-  const msg = { from: username, text, time: new Date().toISOString() };
-  state.chats[user].push(msg);
-  save(); saveAccountData();
+
+  const me = state.currentUser.username;
+  const chatId = getChatId(me, otherUser);
+
+  const msg = {
+    from: me,
+    text,
+    time: Date.now()
+  };
+
+  const chatRef = db.collection("chats").doc(chatId);
+
+  await chatRef.set({
+    participants: [me, otherUser]
+  }, { merge: true });
+
+  await chatRef.update({
+    messages: firebase.firestore.FieldValue.arrayUnion(msg)
+  });
+
   input.value = '';
-  const messages = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'msg-wrap self';
-  div.innerHTML = `<div class="msg-bubble">${escHtml(text)}</div>`;
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-  renderChats();
 }
 
 // ============================================================
