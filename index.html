@@ -16,6 +16,7 @@
   --text3: #9e9891;
   --accent: #1a1714;
   --accent2: #f0ede8;
+  --interest: #1a1714;
   --chat-self: #1a1714;
   --chat-other: #f0ede8;
   --chat-self-text: #ffffff;
@@ -35,6 +36,7 @@
   --text3: #6b6560;
   --accent: #f0ede8;
   --accent2: #252422;
+  --interest: #f0ede8;
   --chat-self: #f0ede8;
   --chat-other: #252422;
   --chat-self-text: #1a1714;
@@ -56,85 +58,423 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
-/* AUTH SCREEN */
-#auth-screen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-#auth-screen.hidden{display:none}
-.auth-shell{width:100%;max-width:380px;display:flex;flex-direction:column;gap:0;animation:authFadeIn .35s ease both}
-@keyframes authFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.auth-brand{text-align:center;margin-bottom:36px}
-.auth-brand-logo{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;background:var(--text);color:var(--bg);margin-bottom:12px}
-.auth-brand-name{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1}
-.auth-brand-sub{font-size:11px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-top:3px}
-.auth-card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:28px 28px 24px;box-shadow:var(--shadow-md)}
-.auth-heading{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:6px;color:var(--text)}
-.auth-subheading{font-size:13px;color:var(--text3);margin-bottom:24px;line-height:1.5}
-.auth-accounts{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
-.auth-account-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;transition:border-color .15s,background .15s}
-.auth-account-row:hover{border-color:var(--text);background:var(--bg)}
-.auth-account-av{width:36px;height:36px;border-radius:10px;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;flex-shrink:0;overflow:hidden}
-.auth-account-av img{width:100%;height:100%;object-fit:cover}
-.auth-account-info{flex:1;min-width:0}
-.auth-account-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.auth-account-email{font-size:12px;color:var(--text3)}
-.auth-no-accounts{text-align:center;padding:24px 16px;border:1px dashed var(--border);border-radius:10px;margin-bottom:20px}
-.auth-no-accounts-icon{font-size:28px;margin-bottom:8px;opacity:.4}
-.auth-no-accounts-text{font-size:13px;color:var(--text3)}
-.auth-divider{display:flex;align-items:center;gap:10px;margin:16px 0}
-.auth-divider span{font-size:12px;color:var(--text3);white-space:nowrap}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
-.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:11px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;font-weight:500;cursor:pointer;transition:border-color .15s,background .15s;margin-bottom:10px}
-.btn-google:hover{border-color:var(--text);background:var(--bg)}
-.btn-create-account{display:flex;align-items:center;justify-content:center;width:100%;padding:11px 16px;border-radius:10px;border:none;background:var(--text);color:var(--bg);font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s}
-.btn-create-account:hover{opacity:.85}
-.auth-footer-brand{text-align:center;margin-top:28px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text3);letter-spacing:0.5px}
-.auth-footer-brand span{font-weight:400;font-size:10px;letter-spacing:2px}
+/* ============================================================
+   AUTH SCREEN
+   ============================================================ */
+#auth-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+#auth-screen.hidden { display: none; }
 
-/* SIGNUP SCREEN */
-#signup-screen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-#signup-screen.visible{display:flex}
-.signup-shell{width:100%;max-width:400px;animation:authFadeIn .3s ease both}
-.signup-back{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);cursor:pointer;margin-bottom:24px;width:fit-content;transition:color .15s}
-.signup-back:hover{color:var(--text)}
+.auth-shell {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  animation: authFadeIn .35s ease both;
+}
+@keyframes authFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-/* BIZ PROFILE SCREEN */
-#bizprofile-screen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:none;overflow-y:auto}
-#bizprofile-screen.visible{display:block}
-.bizprofile-wrap{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px 60px}
-.bizprofile-shell{width:100%;max-width:500px;animation:authFadeIn .3s ease both}
-.bizprofile-header{margin-bottom:28px}
-.bizprofile-step-indicator{display:flex;gap:6px;margin-bottom:20px}
-.bizprofile-step-dot{height:3px;border-radius:2px;background:var(--border);flex:1;transition:background .25s}
-.bizprofile-step-dot.done{background:var(--text)}
-.bizprofile-heading{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:4px}
-.bizprofile-subheading{font-size:13px;color:var(--text3)}
-.bizprofile-card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:16px}
-.bp-form-group{margin-bottom:16px}
-.bp-form-group:last-child{margin-bottom:0}
-.bp-label{font-size:13px;font-weight:500;color:var(--text2);margin-bottom:5px;display:flex;align-items:center;gap:6px}
-.bp-optional{font-size:11px;color:var(--text3);font-weight:400}
-.bp-word-count{font-size:11px;color:var(--text3);text-align:right;margin-top:4px}
-.bp-stage-opts{display:flex;gap:8px}
-.bp-stage-opt{flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:500;text-align:center;cursor:pointer;transition:all .15s;color:var(--text2)}
-.bp-stage-opt.selected{border-color:var(--text);background:var(--text);color:var(--bg)}
-.bp-upload-area{border:2px dashed var(--border);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;position:relative;overflow:hidden}
-.bp-upload-area:hover{border-color:var(--text3);background:var(--bg3)}
-.bp-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0;width:100%;height:100%;background:none;border:none;padding:0}
-.bp-upload-icon{font-size:32px;margin-bottom:10px;opacity:.5}
-.bp-upload-text{font-size:13px;color:var(--text3);line-height:1.5}
-.bp-upload-preview{width:100px;height:100px;border-radius:16px;object-fit:cover;margin:0 auto 12px;display:block;border:1px solid var(--border)}
-.bp-default-avatar{width:100px;height:100px;border-radius:16px;background:var(--bg3);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border:1px solid var(--border);font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:var(--text2)}
-.btn-full{width:100%;padding:13px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s;border:none;font-family:'DM Sans',sans-serif}
-.btn-full-primary{background:var(--text);color:var(--bg)}
-.btn-full-primary:hover{opacity:.85}
-.btn-full-ghost{background:transparent;border:1px solid var(--border);color:var(--text2);margin-top:8px}
-.btn-full-ghost:hover{background:var(--bg3)}
+/* Branding at top */
+.auth-brand {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.auth-brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--text);
+  color: var(--bg);
+  margin-bottom: 12px;
+}
+.auth-brand-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.auth-brand-sub {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-top: 3px;
+}
 
-/* MAIN APP */
+/* Card */
+.auth-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px 28px 24px;
+  box-shadow: var(--shadow-md);
+}
+.auth-heading {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.auth-subheading {
+  font-size: 13px;
+  color: var(--text3);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* Saved accounts list */
+.auth-accounts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.auth-account-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.auth-account-row:hover {
+  border-color: var(--text);
+  background: var(--bg);
+}
+.auth-account-av {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.auth-account-av img { width: 100%; height: 100%; object-fit: cover; }
+.auth-account-info { flex: 1; min-width: 0; }
+.auth-account-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.auth-account-email { font-size: 12px; color: var(--text3); }
+.auth-no-accounts {
+  text-align: center;
+  padding: 24px 16px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.auth-no-accounts-icon { font-size: 28px; margin-bottom: 8px; opacity: .4; }
+.auth-no-accounts-text { font-size: 13px; color: var(--text3); }
+
+/* Auth divider */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+}
+.auth-divider span { font-size: 12px; color: var(--text3); white-space: nowrap; }
+.auth-divider::before, .auth-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* Google btn */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  margin-bottom: 10px;
+}
+.btn-google:hover { border-color: var(--text); background: var(--bg); }
+.btn-google svg { flex-shrink: 0; }
+
+/* Create account btn */
+.btn-create-account {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: none;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.btn-create-account:hover { opacity: .85; }
+
+.auth-footer-brand {
+  text-align: center;
+  margin-top: 28px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text3);
+  letter-spacing: 0.5px;
+}
+.auth-footer-brand span { font-weight: 400; font-size: 10px; letter-spacing: 2px; }
+
+/* ============================================================
+   SIGNUP SCREEN
+   ============================================================ */
+#signup-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+#signup-screen.visible { display: flex; }
+
+.signup-shell {
+  width: 100%;
+  max-width: 400px;
+  animation: authFadeIn .3s ease both;
+}
+.signup-back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text3);
+  cursor: pointer;
+  margin-bottom: 24px;
+  width: fit-content;
+  transition: color .15s;
+}
+.signup-back:hover { color: var(--text); }
+
+/* ============================================================
+   BUSINESS PROFILE SETUP SCREEN  
+   ============================================================ */
+#bizprofile-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 1000;
+  display: none;
+  overflow-y: auto;
+}
+#bizprofile-screen.visible { display: block; }
+
+.bizprofile-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 20px 60px;
+}
+.bizprofile-shell {
+  width: 100%;
+  max-width: 500px;
+  animation: authFadeIn .3s ease both;
+}
+.bizprofile-header {
+  margin-bottom: 28px;
+}
+.bizprofile-step-indicator {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.bizprofile-step-dot {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border);
+  flex: 1;
+  transition: background .25s;
+}
+.bizprofile-step-dot.done { background: var(--text); }
+.bizprofile-heading {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.bizprofile-subheading {
+  font-size: 13px;
+  color: var(--text3);
+}
+.bizprofile-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 16px;
+}
+.bp-form-group { margin-bottom: 16px; }
+.bp-form-group:last-child { margin-bottom: 0; }
+.bp-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.bp-optional {
+  font-size: 11px;
+  color: var(--text3);
+  font-weight: 400;
+}
+.bp-word-count {
+  font-size: 11px;
+  color: var(--text3);
+  text-align: right;
+  margin-top: 4px;
+}
+.bp-stage-opts {
+  display: flex;
+  gap: 8px;
+}
+.bp-stage-opt {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s;
+  color: var(--text2);
+}
+.bp-stage-opt.selected {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* Image upload step */
+.bp-upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 36px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  position: relative;
+  overflow: hidden;
+}
+.bp-upload-area:hover { border-color: var(--text3); background: var(--bg3); }
+.bp-upload-area input[type=file] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.bp-upload-icon { font-size: 32px; margin-bottom: 10px; opacity: .5; }
+.bp-upload-text { font-size: 13px; color: var(--text3); line-height: 1.5; }
+.bp-upload-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 16px;
+  object-fit: cover;
+  margin: 0 auto 12px;
+  display: block;
+  border: 1px solid var(--border);
+}
+.bp-upload-change { font-size: 12px; color: var(--text3); cursor: pointer; text-decoration: underline; }
+.bp-default-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 16px;
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  border: 1px solid var(--border);
+  font-family: 'Syne', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text2);
+}
+
+/* Buttons */
+.btn-full {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-full-primary { background: var(--text); color: var(--bg); }
+.btn-full-primary:hover { opacity: .85; }
+.btn-full-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  margin-top: 8px;
+}
+.btn-full-ghost:hover { background: var(--bg3); }
+
+/* ============================================================
+   MAIN APP LAYOUT (hidden until authed)
+   ============================================================ */
 #app{display:flex;height:100vh;overflow:hidden}
-#app.hidden{display:none}
+#app.hidden { display: none; }
+
+/* Layout */
 #sidebar{width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:50}
 #main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
 #content{flex:1;padding:24px;max-width:680px;margin:0 auto;width:100%}
+
+/* Sidebar */
 .brand{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
 .brand-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.5px;line-height:1}
 .brand-sub{font-size:10px;font-weight:400;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-top:2px}
@@ -153,14 +493,20 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .nav-item svg{flex-shrink:0;opacity:.8}
 .nav-item.active svg{opacity:1}
 .sidebar-bottom{padding:12px;border-top:1px solid var(--border)}
+
+/* Mobile bottom bar */
 #bottombar{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:100;padding:8px 0 max(8px,env(safe-area-inset-bottom))}
 .bb-items{display:flex;justify-content:space-around;align-items:center}
 .bb-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;border-radius:8px;font-size:10px;color:var(--text3);cursor:pointer;transition:color .15s}
 .bb-item.active{color:var(--text)}
 .bb-item svg{width:22px;height:22px}
+
+/* Top bar */
 #topbar{padding:16px 24px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40}
 .page-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
 .topbar-actions{display:flex;gap:8px;align-items:center}
+
+/* Buttons */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;border:none;font-family:'DM Sans',sans-serif}
 .btn-primary{background:var(--text);color:var(--bg)}
 .btn-primary:hover{opacity:.85}
@@ -169,18 +515,24 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .btn-sm{padding:5px 12px;font-size:12px}
 .btn-icon{width:36px;height:36px;padding:0;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border)}
 .btn-icon:hover{background:var(--border)}
+
+/* FAB */
 #fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:14px;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-md);z-index:90;transition:transform .15s}
 #fab:hover{transform:scale(1.05)}
 #fab-menu{position:fixed;bottom:86px;right:24px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:6px;box-shadow:var(--shadow-md);z-index:91;display:none;flex-direction:column;gap:2px;min-width:160px}
 #fab-menu.open{display:flex}
 .fab-opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s}
 .fab-opt:hover{background:var(--bg3)}
+
+/* Pages */
 .page{display:none}
 .page.active{display:block}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.card+.card{margin-top:12px}
 
-/* FEED */
+/* Cards */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.card + .card{margin-top:12px}
+
+/* Feed post */
 .post-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}
 .post-header{padding:14px 16px 0;display:flex;align-items:center;gap:10px}
 .post-av{width:34px;height:34px;border-radius:9px;background:var(--bg3);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;cursor:pointer}
@@ -210,6 +562,7 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .action-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .15s;border:1px solid transparent}
 .action-btn:hover{background:var(--bg3);color:var(--text)}
 .action-btn.interested{color:var(--text)}
+.interest-icon svg{width:18px;height:18px}
 .comment-section{border-top:1px solid var(--border);padding:12px 16px}
 .comment-input-wrap{display:flex;gap:8px;align-items:flex-start;margin-bottom:12px}
 .comment-input-wrap input{flex:1;padding:8px 12px;font-size:13px}
@@ -220,7 +573,7 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .comment-bubble{background:var(--bg3);border-radius:8px;padding:7px 10px;font-size:13px;flex:1}
 .comment-author{font-size:11px;font-weight:600;margin-bottom:2px}
 
-/* PROFILE */
+/* Profile page */
 .profile-header{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
 .profile-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px}
 .profile-av-lg{width:72px;height:72px;border-radius:16px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;font-family:'Syne',sans-serif;flex-shrink:0;overflow:hidden}
@@ -235,8 +588,10 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .stat-label{font-size:11px;color:var(--text3);font-weight:500}
 .profile-actions{display:flex;gap:8px;margin-top:16px}
 .profile-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px}
-.section-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;margin-bottom:12px;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
+.section-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;font-size:11px}
 .section-content{font-size:14px;line-height:1.6;color:var(--text)}
+
+/* Code editor */
 .editor-wrap{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-top:12px}
 .editor-tabs{display:flex;background:var(--bg3);border-bottom:1px solid var(--border)}
 .editor-tab{padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;transition:all .15s}
@@ -245,7 +600,7 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 #code-preview-frame{width:100%;height:300px;border:none;background:white}
 .editor-actions{padding:10px 12px;background:var(--bg3);border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
 
-/* MODAL */
+/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
 .modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-md)}
 .modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1}
@@ -258,7 +613,7 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .char-count{font-size:11px;color:var(--text3);text-align:right;margin-top:4px}
 
-/* SETTINGS */
+/* Settings */
 .setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
 .setting-row:last-child{border-bottom:none}
 .setting-label{font-size:14px;font-weight:500}
@@ -268,7 +623,7 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:9px;background:white;top:3px;left:3px;transition:left .2s}
 .toggle.on::after{left:23px}
 
-/* CHAT */
+/* Chat */
 .chat-list{display:flex;flex-direction:column;gap:2px}
 .chat-item{display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;cursor:pointer;transition:background .15s}
 .chat-item:hover{background:var(--bg3)}
@@ -277,7 +632,7 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .chat-av img{width:100%;height:100%;object-fit:cover}
 .chat-name{font-size:14px;font-weight:600}
 .chat-preview{font-size:12px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chat-layout{display:flex;height:calc(100vh - 60px)}
+.chat-layout{display:flex;gap:0;height:calc(100vh - 60px)}
 .chat-sidebar{width:280px;border-right:1px solid var(--border);padding:16px;overflow-y:auto;flex-shrink:0}
 .chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .chat-header{padding:14px 20px;border-bottom:1px solid var(--border);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
@@ -291,14 +646,17 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .chat-input-wrap{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px}
 .chat-input-wrap input{flex:1;padding:10px 14px}
 
-/* COLLAB */
+/* Collab */
 .collab-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:10px}
 .collab-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
 .collab-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
 .collab-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px}
 .collab-meta{font-size:11px;color:var(--text3);margin-top:8px}
 
-/* CANVAS */
+/* Canvas */
+#canvas-modal .modal{max-width:800px;width:95vw}
+#canvas-wrap{position:relative;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;touch-action:none}
+#drawing-canvas{display:block;cursor:crosshair}
 .canvas-toolbar{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;align-items:center}
 .tool-btn{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);background:var(--bg3);cursor:pointer;font-size:14px;transition:all .15s}
 .tool-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
@@ -307,72 +665,261 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 input[type=color]{width:32px;height:32px;border:1px solid var(--border);border-radius:7px;cursor:pointer;padding:2px;background:var(--bg3)}
 input[type=range]{accent-color:var(--text);height:4px}
 
-/* SAILOR AI */
-#page-sailor{height:100%;display:none}
-#page-sailor.active{display:flex;flex-direction:column;height:calc(100vh - 61px)}
-.sailor-topbar{padding:20px 24px 16px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;gap:12px;flex-shrink:0}
-.sailor-avatar{width:38px;height:38px;border-radius:10px;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sailor-title-wrap{flex:1}
-.sailor-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;line-height:1.2}
-.sailor-subtitle{font-size:11px;color:var(--text3);margin-top:1px}
-.sailor-status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);flex-shrink:0}
-.sailor-status-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;flex-shrink:0}
-.sailor-messages{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:4px;background:#ffffff}
-[data-theme="dark"] .sailor-messages{background:var(--bg)}
-.sailor-divider{display:flex;align-items:center;gap:10px;margin:12px 0 8px}
-.sailor-divider span{font-size:11px;color:var(--text3);white-space:nowrap}
-.sailor-divider::before,.sailor-divider::after{content:'';flex:1;height:1px;background:var(--border)}
-.sailor-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:2px}
-.sailor-row.user-row{flex-direction:row-reverse}
-.sailor-bot-av{width:28px;height:28px;border-radius:8px;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:2px}
-.sailor-bubble{max-width:520px;width:fit-content;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-word;display:inline-block}
-.bot-bubble{background:#f0f0f0;color:#1a1a1a;border-bottom-left-radius:4px}
-[data-theme="dark"] .bot-bubble{background:var(--bg3);color:var(--text)}
-.user-bubble{background:#1a1714;color:#ffffff;border-bottom-right-radius:4px}
-[data-theme="dark"] .user-bubble{background:var(--text);color:var(--bg)}
-.sailor-ts{font-size:10px;color:var(--text3);margin-top:2px;padding:0 2px}
-.user-row .sailor-ts{text-align:right}
-.typing-bubble{background:#f0f0f0;color:#1a1a1a;border-radius:14px;border-bottom-left-radius:4px;padding:12px 16px;display:inline-flex;align-items:center;gap:5px}
-[data-theme="dark"] .typing-bubble{background:var(--bg3)}
-.typing-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:typingBounce 1.2s infinite ease-in-out}
+/* Sailor AI */
+#page-sailor {
+  height: 100%;
+  display: none;
+}
+#page-sailor.active {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 61px);
+}
+.sailor-topbar {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.sailor-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.sailor-avatar svg { display: block; }
+.sailor-title-wrap { flex: 1 }
+.sailor-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.sailor-subtitle {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 1px;
+}
+.sailor-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+.sailor-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+}
+.sailor-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #ffffff;
+}
+[data-theme="dark"] .sailor-messages { background: var(--bg); }
+.sailor-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 8px;
+}
+.sailor-divider span { font-size: 11px; color: var(--text3); white-space: nowrap; }
+.sailor-divider::before, .sailor-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.sailor-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.sailor-row.user-row { flex-direction: row-reverse; }
+.sailor-bot-av {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--text);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
+.sailor-bot-av svg { display: block; }
+.sailor-bubble {
+  max-width: 520px;
+  width: fit-content;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  display: inline-block;
+}
+.bot-bubble {
+  background: #f0f0f0;
+  color: #1a1a1a;
+  border-bottom-left-radius: 4px;
+}
+[data-theme="dark"] .bot-bubble { background: var(--bg3); color: var(--text); }
+.user-bubble {
+  background: #1a1714;
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+[data-theme="dark"] .user-bubble { background: var(--text); color: var(--bg); }
+.sailor-ts {
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 2px;
+  padding: 0 2px;
+}
+.user-row .sailor-ts { text-align: right; }
+.typing-bubble {
+  background: #f0f0f0;
+  color: #1a1a1a;
+  border-radius: 14px;
+  border-bottom-left-radius: 4px;
+  padding: 12px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+[data-theme="dark"] .typing-bubble { background: var(--bg3); }
+.typing-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text3);
+  animation: typingBounce 1.2s infinite ease-in-out;
+}
 .typing-dot:nth-child(1){animation-delay:0s}
 .typing-dot:nth-child(2){animation-delay:.2s}
 .typing-dot:nth-child(3){animation-delay:.4s}
-@keyframes typingBounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
-.sailor-welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 24px;text-align:center}
-.sailor-welcome-icon{width:52px;height:52px;border-radius:14px;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;margin-bottom:4px}
-.sailor-welcome h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text)}
-.sailor-welcome p{font-size:13px;color:var(--text3);max-width:260px;line-height:1.6}
-.sailor-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px}
-.sailor-chip{font-size:12px;padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
-.sailor-chip:hover{background:var(--text);color:var(--bg);border-color:var(--text)}
-.sailor-input-bar{padding:14px 16px;border-top:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;gap:8px;flex-shrink:0}
-.sailor-input{flex:1;padding:10px 14px;font-size:14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);outline:none;transition:border-color .2s;font-family:'DM Sans',sans-serif}
-.sailor-input:focus{border-color:var(--text)}
-.sailor-send-btn{width:38px;height:38px;border-radius:10px;background:var(--text);color:var(--bg);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity .15s}
+@keyframes typingBounce {
+  0%,60%,100%{transform:translateY(0);opacity:.4}
+  30%{transform:translateY(-5px);opacity:1}
+}
+.sailor-welcome {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 24px;
+  text-align: center;
+}
+.sailor-welcome-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--text);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.sailor-welcome h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); }
+.sailor-welcome p { font-size: 13px; color: var(--text3); max-width: 260px; line-height: 1.6; }
+.sailor-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 6px; }
+.sailor-chip {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.sailor-chip:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+.sailor-input-bar {
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.sailor-input {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.sailor-input:focus { border-color: var(--text); }
+.sailor-send-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity .15s;
+}
 .sailor-send-btn:hover{opacity:.8}
 .sailor-send-btn:disabled{opacity:.35;cursor:default}
 
-/* EMPTY STATE */
+/* Empty state */
 .empty-state{text-align:center;padding:48px 24px;color:var(--text3)}
 .empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
 .empty-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text2);margin-bottom:6px}
 .empty-desc{font-size:13px;line-height:1.6}
 
-/* TOAST */
+/* Toast */
 #toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:all .3s;z-index:999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Views badge */
 .views-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text3);margin-top:4px}
+
+/* Code post preview in feed */
 .code-post-frame-wrap{border-radius:8px;overflow:hidden;position:relative;background:#fff}
 .code-post-frame-wrap iframe{width:100%;height:200px;border:none;pointer-events:none}
 .code-overlay{position:absolute;inset:0;cursor:pointer}
 .expand-hint{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.6);color:white;font-size:11px;padding:4px 8px;border-radius:6px}
+
+/* Image upload in canvas */
 .img-upload-btn{position:relative;overflow:hidden}
 .img-upload-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
 
-/* RESPONSIVE */
+/* Notification dot */
+.notif-dot{width:7px;height:7px;border-radius:50%;background:#e85d4a;flex-shrink:0}
+
+/* Responsive */
 @media(max-width:768px){
-  .sailor-bubble{max-width:85vw}
+  .sailor-bubble { max-width: 85vw; }
   #sidebar{display:none}
   #bottombar{display:block}
   #main{padding-bottom:72px}
@@ -385,19 +932,27 @@ input[type=range]{accent-color:var(--text);height:4px}
   .form-row{grid-template-columns:1fr}
   .profile-stats{flex-wrap:wrap;gap:12px}
   .profile-top{flex-direction:column}
-  #page-sailor.active{height:calc(100vh - 61px - 72px)}
-  .auth-card{padding:22px 18px 20px}
-  .auth-shell,.signup-shell,.bizprofile-shell{max-width:100%}
-  .bizprofile-wrap{padding:24px 16px 80px}
-  .bp-stage-opts{flex-wrap:wrap}
-  .bp-stage-opt{min-width:calc(50% - 4px)}
+  #page-sailor.active { height: calc(100vh - 61px - 72px); }
+
+  /* Auth responsive */
+  .auth-card { padding: 22px 18px 20px; }
+  .auth-shell { max-width: 100%; }
+  .signup-shell { max-width: 100%; }
+  .bizprofile-shell { max-width: 100%; }
+  .bizprofile-wrap { padding: 24px 16px 80px; }
+  .bp-stage-opts { flex-wrap: wrap; }
+  .bp-stage-opt { min-width: calc(50% - 4px); }
 }
-@media(min-width:769px){.chat-main{display:flex!important}}
+@media(min-width:769px){
+  .chat-main{display:flex!important}
+}
 </style>
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
+<!-- ============================================================
+     AUTH SCREEN
+     ============================================================ -->
 <div id="auth-screen">
   <div class="auth-shell">
     <div class="auth-brand">
@@ -407,36 +962,65 @@ input[type=range]{accent-color:var(--text);height:4px}
       <div class="auth-brand-name">SailorX</div>
       <div class="auth-brand-sub">Market</div>
     </div>
+
     <div class="auth-card">
       <div class="auth-heading">Log in to SailorX</div>
       <div class="auth-subheading">Pick an account or sign in to continue.</div>
+
+      <!-- Saved accounts list -->
       <div id="auth-accounts-list"></div>
+
       <button class="btn-google" onclick="handleGoogleSignIn()">
-        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
         Sign in with Google
       </button>
+
       <div class="auth-divider"><span>or</span></div>
+
       <button class="btn-create-account" onclick="showSignup()">Create new account</button>
     </div>
+
     <div class="auth-footer-brand">SailorX <span>MARKET</span></div>
   </div>
 </div>
 
-<!-- SIGNUP SCREEN -->
+<!-- ============================================================
+     SIGNUP SCREEN
+     ============================================================ -->
 <div id="signup-screen">
   <div class="signup-shell">
     <div class="signup-back" onclick="showAuth()">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Back
     </div>
+
     <div class="auth-card">
       <div class="auth-heading">Create account</div>
       <div class="auth-subheading">You'll set up your business profile right after.</div>
-      <div class="bp-form-group"><label class="bp-label">Full Name *</label><input type="text" id="su-name" placeholder="Your name"></div>
-      <div class="bp-form-group"><label class="bp-label">Username *</label><input type="text" id="su-username" placeholder="e.g. rocketfounders" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,20)"></div>
-      <div class="bp-form-group"><label class="bp-label">Email *</label><input type="email" id="su-email" placeholder="you@example.com"></div>
-      <div class="bp-form-group" style="margin-bottom:0"><label class="bp-label">Password *</label><input type="password" id="su-password" placeholder="At least 6 characters"></div>
+
+      <div class="bp-form-group">
+        <label class="bp-label">Full Name *</label>
+        <input type="text" id="su-name" placeholder="Your name">
+      </div>
+      <div class="bp-form-group">
+        <label class="bp-label">Username *</label>
+        <input type="text" id="su-username" placeholder="e.g. rocketfounders" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,20)">
+      </div>
+      <div class="bp-form-group">
+        <label class="bp-label">Email *</label>
+        <input type="email" id="su-email" placeholder="you@example.com">
+      </div>
+      <div class="bp-form-group" style="margin-bottom:0">
+        <label class="bp-label">Password *</label>
+        <input type="password" id="su-password" placeholder="At least 6 characters">
+      </div>
     </div>
+
     <div style="margin-top:12px">
       <button class="btn-full btn-full-primary" onclick="submitSignup()">Save &amp; Continue</button>
       <button class="btn-full btn-full-ghost" onclick="showAuth()">I already have an account</button>
@@ -444,23 +1028,37 @@ input[type=range]{accent-color:var(--text);height:4px}
   </div>
 </div>
 
-<!-- BIZ PROFILE SETUP SCREEN -->
+<!-- ============================================================
+     BUSINESS PROFILE SETUP SCREEN
+     ============================================================ -->
 <div id="bizprofile-screen">
   <div class="bizprofile-wrap">
     <div class="bizprofile-shell">
+
+      <!-- Step 1: Business Info -->
       <div id="bp-step-1">
         <div class="bizprofile-header">
           <div class="bizprofile-step-indicator">
-            <div class="bizprofile-step-dot done"></div>
-            <div class="bizprofile-step-dot"></div>
+            <div class="bizprofile-step-dot done" id="bpd1"></div>
+            <div class="bizprofile-step-dot" id="bpd2"></div>
           </div>
           <div class="bizprofile-heading">Set up your business</div>
           <div class="bizprofile-subheading">Tell the SailorX community what you're building.</div>
         </div>
+
         <div class="bizprofile-card">
-          <div class="bp-form-group"><label class="bp-label">Business Name *</label><input type="text" id="bp-bname" placeholder="Your startup or project name"></div>
-          <div class="bp-form-group"><label class="bp-label">Tagline <span class="bp-optional">optional</span></label><input type="text" id="bp-tagline" placeholder="One line about what you do"></div>
-          <div class="bp-form-group"><label class="bp-label">Industry <span class="bp-optional">optional</span></label><input type="text" id="bp-industry" placeholder="e.g. Fintech, EdTech, Health"></div>
+          <div class="bp-form-group">
+            <label class="bp-label">Business Name *</label>
+            <input type="text" id="bp-bname" placeholder="Your startup or project name">
+          </div>
+          <div class="bp-form-group">
+            <label class="bp-label">Tagline <span class="bp-optional">optional</span></label>
+            <input type="text" id="bp-tagline" placeholder="One line about what you do">
+          </div>
+          <div class="bp-form-group">
+            <label class="bp-label">Industry <span class="bp-optional">optional</span></label>
+            <input type="text" id="bp-industry" placeholder="e.g. Fintech, EdTech, Health">
+          </div>
           <div class="bp-form-group">
             <label class="bp-label">Stage</label>
             <div class="bp-stage-opts">
@@ -469,7 +1067,10 @@ input[type=range]{accent-color:var(--text);height:4px}
               <div class="bp-stage-opt" data-stage="launched" onclick="selectStage(this)">🚀 Launched</div>
             </div>
           </div>
-          <div class="bp-form-group"><label class="bp-label">Unique Selling Point <span class="bp-optional">optional</span></label><input type="text" id="bp-usp" placeholder="What makes you different?"></div>
+          <div class="bp-form-group">
+            <label class="bp-label">Unique Selling Point <span class="bp-optional">optional</span></label>
+            <input type="text" id="bp-usp" placeholder="What makes you different?">
+          </div>
           <div class="bp-form-group">
             <label class="bp-label">Problem <span class="bp-optional">optional · 100 words</span></label>
             <textarea id="bp-problem" rows="3" placeholder="What pain point are you solving?" oninput="bpWordCount(this,'bp-problem-wc',100)"></textarea>
@@ -486,44 +1087,60 @@ input[type=range]{accent-color:var(--text);height:4px}
             <div class="bp-word-count" id="bp-customer-wc">0 / 100 words</div>
           </div>
         </div>
-        <div style="margin-top:12px"><button class="btn-full btn-full-primary" onclick="bpStep1Next()">Next →</button></div>
+
+        <div style="margin-top:12px">
+          <button class="btn-full btn-full-primary" onclick="bpStep1Next()">Next →</button>
+        </div>
       </div>
 
+      <!-- Step 2: Logo / Image -->
       <div id="bp-step-2" style="display:none">
         <div class="bizprofile-header">
           <div class="bizprofile-step-indicator">
-            <div class="bizprofile-step-dot done"></div>
-            <div class="bizprofile-step-dot done"></div>
+            <div class="bizprofile-step-dot done" id="bpd1b"></div>
+            <div class="bizprofile-step-dot done" id="bpd2b"></div>
           </div>
           <div class="bizprofile-heading">Add a logo</div>
           <div class="bizprofile-subheading">Upload a logo or image for your business. You can skip this.</div>
         </div>
+
         <div class="bizprofile-card" style="text-align:center">
           <div id="bp-logo-preview-wrap">
             <div class="bp-default-avatar" id="bp-default-av">?</div>
             <div style="font-size:13px;color:var(--text3);margin-bottom:20px">Default avatar (initial)</div>
           </div>
+
           <div class="bp-upload-area" id="bp-upload-area">
             <input type="file" accept="image/*" onchange="handleLogoUpload(event)" id="bp-logo-file">
             <div class="bp-upload-icon">🖼️</div>
-            <div class="bp-upload-text"><strong>Click to upload</strong> or drag and drop<br><span style="font-size:12px">PNG, JPG, GIF up to 2MB</span></div>
+            <div class="bp-upload-text">
+              <strong>Click to upload</strong> or drag and drop<br>
+              <span style="font-size:12px">PNG, JPG, GIF up to 2MB</span>
+            </div>
           </div>
           <div id="bp-logo-preview-img-wrap" style="display:none;margin-top:16px">
             <img id="bp-logo-preview-img" class="bp-upload-preview" src="" alt="Logo preview">
-            <div style="font-size:13px;color:var(--text3);margin-top:4px">Looking good! <span style="cursor:pointer;text-decoration:underline" onclick="resetLogoUpload()">Change</span></div>
+            <div style="font-size:13px;color:var(--text3);margin-top:4px">
+              Looking good! <span class="bp-upload-change" onclick="resetLogoUpload()">Change</span>
+            </div>
           </div>
         </div>
+
         <div style="margin-top:12px">
           <button class="btn-full btn-full-primary" onclick="bpStep2Finish()">Create Profile 🚀</button>
           <button class="btn-full btn-full-ghost" onclick="showBpStep(1)">← Back</button>
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- ============================================================
+     MAIN APP
+     ============================================================ -->
 <div id="app" class="hidden">
+  <!-- Sidebar -->
   <aside id="sidebar">
     <div class="brand">
       <div class="brand-name">SailorX</div>
@@ -543,7 +1160,7 @@ input[type=range]{accent-color:var(--text);height:4px}
         Feed
       </div>
       <div class="nav-item" data-page="sailor" onclick="navigate('sailor')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v15"/><path d="M7 22a4 4 0 0 1-4-4 1 1 0 0 1 1-1h16a1 1 0 0 1 1 1 4 4 0 0 1-4 4z"/><path d="M9.159 2.46a1 1 0 0 1 1.521-.193l9.977 8.98A1 1 0 0 1 20 13H4a1 1 0 0 1-.824-1.567z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v15"/><path d="M7 22a4 4 0 0 1-4-4 1 1 0 0 1 1-1h16a1 1 0 0 1 1 1 4 4 0 0 1-4 4z"/><path d="M9.159 2.46a1 1 0 0 1 1.521-.193l9.977 8.98A1 1 0 0 1 20 13H4a1 1 0 0 1-.824-1.567z"/></svg>
         Sailor
       </div>
       <div class="nav-item" data-page="collab" onclick="navigate('collab')">
@@ -566,6 +1183,7 @@ input[type=range]{accent-color:var(--text);height:4px}
     </nav>
   </aside>
 
+  <!-- Main content -->
   <div id="main">
     <div id="topbar">
       <div class="page-title" id="topbar-title">Feed</div>
@@ -576,10 +1194,14 @@ input[type=range]{accent-color:var(--text);height:4px}
       </div>
     </div>
 
+    <!-- FEED -->
     <div id="page-feed" class="page active">
-      <div id="content"><div id="feed-list"></div></div>
+      <div id="content">
+        <div id="feed-list"></div>
+      </div>
     </div>
 
+    <!-- COLLAB -->
     <div id="page-collab" class="page">
       <div id="content" style="padding-top:24px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
@@ -590,6 +1212,7 @@ input[type=range]{accent-color:var(--text);height:4px}
       </div>
     </div>
 
+    <!-- SAILOR AI -->
     <div id="page-sailor" class="page">
       <div class="sailor-topbar">
         <div class="sailor-avatar">
@@ -599,7 +1222,10 @@ input[type=range]{accent-color:var(--text);height:4px}
           <div class="sailor-title">Sailor AI</div>
           <div class="sailor-subtitle">Your startup co-pilot</div>
         </div>
-        <div class="sailor-status"><div class="sailor-status-dot"></div>Online</div>
+        <div class="sailor-status">
+          <div class="sailor-status-dot"></div>
+          Online
+        </div>
       </div>
       <div class="sailor-messages" id="sailor-messages">
         <div class="sailor-welcome" id="sailor-welcome">
@@ -624,6 +1250,7 @@ input[type=range]{accent-color:var(--text);height:4px}
       </div>
     </div>
 
+    <!-- CHATS -->
     <div id="page-chats" class="page">
       <div class="chat-layout">
         <div class="chat-sidebar" id="chat-sidebar">
@@ -650,32 +1277,51 @@ input[type=range]{accent-color:var(--text);height:4px}
       </div>
     </div>
 
+    <!-- PROFILE -->
     <div id="page-profile" class="page">
-      <div id="content"><div id="profile-view"></div></div>
+      <div id="content">
+        <div id="profile-view"></div>
+      </div>
     </div>
 
+    <!-- SETTINGS -->
     <div id="page-settings" class="page">
       <div id="content">
         <h2 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px">Settings</h2>
         <div class="card" style="padding:0 20px">
           <div class="setting-row">
-            <div><div class="setting-label">Dark Mode</div><div class="setting-desc">Switch between light and dark theme</div></div>
+            <div class="setting-info">
+              <div class="setting-label">Dark Mode</div>
+              <div class="setting-desc">Switch between light and dark theme</div>
+            </div>
             <div class="toggle" id="dark-toggle" onclick="toggleDark()"></div>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">Username</div><div class="setting-desc" id="current-username-disp">@username</div></div>
+            <div class="setting-info">
+              <div class="setting-label">Username</div>
+              <div class="setting-desc" id="current-username-disp">@username</div>
+            </div>
             <button class="btn btn-ghost btn-sm" onclick="changeUsername()">Change</button>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">Edit Business Profile</div><div class="setting-desc">Update your business information</div></div>
+            <div class="setting-info">
+              <div class="setting-label">Edit Business Profile</div>
+              <div class="setting-desc">Update your business information</div>
+            </div>
             <button class="btn btn-ghost btn-sm" onclick="openEditBizProfile()">Edit</button>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">Sign Out</div><div class="setting-desc">Return to the login screen</div></div>
+            <div class="setting-info">
+              <div class="setting-label">Sign Out</div>
+              <div class="setting-desc">Return to the login screen</div>
+            </div>
             <button class="btn btn-ghost btn-sm" onclick="signOut()">Sign Out</button>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">Clear All Data</div><div class="setting-desc">Resets everything including profile and posts</div></div>
+            <div class="setting-info">
+              <div class="setting-label">Clear All Data</div>
+              <div class="setting-desc">Resets everything including profile and posts</div>
+            </div>
             <button class="btn btn-ghost btn-sm" style="color:#e85d4a;border-color:#e85d4a" onclick="clearAll()">Reset</button>
           </div>
         </div>
@@ -687,6 +1333,7 @@ input[type=range]{accent-color:var(--text);height:4px}
     </div>
   </div>
 
+  <!-- Bottom bar mobile -->
   <div id="bottombar">
     <div class="bb-items">
       <div class="bb-item active" data-page="feed" onclick="navigate('feed')">
@@ -694,7 +1341,7 @@ input[type=range]{accent-color:var(--text);height:4px}
         Feed
       </div>
       <div class="bb-item" data-page="sailor" onclick="navigate('sailor')">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v15"/><path d="M7 22a4 4 0 0 1-4-4 1 1 0 0 1 1-1h16a1 1 0 0 1 1 1 4 4 0 0 1-4 4z"/><path d="M9.159 2.46a1 1 0 0 1 1.521-.193l9.977 8.98A1 1 0 0 1 20 13H4a1 1 0 0 1-.824-1.567z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v15"/><path d="M7 22a4 4 0 0 1-4-4 1 1 0 0 1 1-1h16a1 1 0 0 1 1 1 4 4 0 0 1-4 4z"/><path d="M9.159 2.46a1 1 0 0 1 1.521-.193l9.977 8.98A1 1 0 0 1 20 13H4a1 1 0 0 1-.824-1.567z"/></svg>
         Sailor
       </div>
       <div class="bb-item" data-page="collab" onclick="navigate('collab')">
@@ -732,14 +1379,21 @@ input[type=range]{accent-color:var(--text);height:4px}
   </div>
 </div>
 
+<!-- Toast -->
 <div id="toast"></div>
 
 <!-- POST MODAL (code) -->
 <div id="post-code-modal" class="modal-overlay" style="display:none">
   <div class="modal">
-    <div class="modal-header"><div class="modal-title">Code Post</div><div class="close-btn" onclick="closeModal('post-code-modal')">✕</div></div>
+    <div class="modal-header">
+      <div class="modal-title">Code Post</div>
+      <div class="close-btn" onclick="closeModal('post-code-modal')">✕</div>
+    </div>
     <div class="modal-body">
-      <div class="form-group"><label>Caption (optional)</label><input type="text" id="code-post-caption" placeholder="What's this code about?"></div>
+      <div class="form-group">
+        <label>Caption (optional)</label>
+        <input type="text" id="code-post-caption" placeholder="What's this code about?">
+      </div>
       <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
         <div class="editor-tabs">
           <div class="editor-tab active" onclick="switchEditorTab(this,'code-ta-wrap')">Code</div>
@@ -759,7 +1413,10 @@ input[type=range]{accent-color:var(--text);height:4px}
 <!-- POST MODAL (image/canvas) -->
 <div id="post-image-modal" class="modal-overlay" style="display:none">
   <div class="modal" style="max-width:700px">
-    <div class="modal-header"><div class="modal-title">Canvas Post</div><div class="close-btn" onclick="closeModal('post-image-modal')">✕</div></div>
+    <div class="modal-header">
+      <div class="modal-title">Canvas Post</div>
+      <div class="close-btn" onclick="closeModal('post-image-modal')">✕</div>
+    </div>
     <div class="modal-body">
       <div class="canvas-toolbar">
         <button class="tool-btn active" id="tool-brush" title="Brush" onclick="setTool('brush')">✏️</button>
@@ -767,22 +1424,43 @@ input[type=range]{accent-color:var(--text);height:4px}
         <button class="tool-btn" id="tool-eraser" title="Eraser" onclick="setTool('eraser')">⬜</button>
         <button class="tool-btn" id="tool-text" title="Add Text" onclick="setTool('text')">T</button>
         <div class="tool-sep"></div>
-        <div class="color-picker-wrap"><label style="font-size:11px;color:var(--text3);margin:0">Color</label><input type="color" id="brush-color" value="#000000"></div>
-        <div style="display:flex;align-items:center;gap:6px"><label style="font-size:11px;color:var(--text3);margin:0">Size</label><input type="range" id="brush-size" min="1" max="40" value="5" style="width:80px"></div>
+        <div class="color-picker-wrap">
+          <label style="font-size:11px;color:var(--text3);margin:0">Color</label>
+          <input type="color" id="brush-color" value="#000000">
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <label style="font-size:11px;color:var(--text3);margin:0">Size</label>
+          <input type="range" id="brush-size" min="1" max="40" value="5" style="width:80px">
+        </div>
         <div class="tool-sep"></div>
-        <div class="tool-btn img-upload-btn" title="Upload Image">🖼️<input type="file" accept="image/*" onchange="uploadBgImage(event)"></div>
+        <div class="tool-btn img-upload-btn" title="Upload Image">
+          🖼️<input type="file" accept="image/*" onchange="uploadBgImage(event)">
+        </div>
         <button class="tool-btn" title="Undo" onclick="canvasUndo()">↩️</button>
         <button class="tool-btn" title="Clear" onclick="clearCanvas()">🗑️</button>
       </div>
       <div id="text-tool-opts" style="display:none;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
         <input type="text" id="canvas-text-input" placeholder="Enter text..." style="flex:1;min-width:120px;max-width:200px;padding:6px 10px;font-size:13px">
-        <select id="canvas-font" style="padding:6px 8px;font-size:13px"><option value="DM Sans">DM Sans</option><option value="Syne">Syne</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Courier New">Courier New</option><option value="Impact">Impact</option></select>
+        <select id="canvas-font" style="padding:6px 8px;font-size:13px">
+          <option value="DM Sans">DM Sans</option>
+          <option value="Syne">Syne</option>
+          <option value="Arial">Arial</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Impact">Impact</option>
+        </select>
         <input type="number" id="canvas-font-size" value="24" min="8" max="120" style="width:60px;padding:6px 8px;font-size:13px">
         <input type="color" id="canvas-text-color" value="#000000">
         <button class="tool-btn" onclick="placeText()" style="width:auto;padding:0 10px;font-size:12px">Add</button>
       </div>
-      <canvas id="drawing-canvas" width="640" height="360" style="width:100%;display:block;cursor:crosshair;border-radius:8px"></canvas>
-      <div class="form-group" style="margin-top:12px"><label>Caption (optional)</label><input type="text" id="canvas-caption" placeholder="Add a caption..."></div>
+      <div id="canvas-wrap" style="position:relative">
+        <canvas id="drawing-canvas" width="640" height="360" style="width:100%;display:block;cursor:crosshair;border-radius:8px"></canvas>
+        <div id="text-elements"></div>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label>Caption (optional)</label>
+        <input type="text" id="canvas-caption" placeholder="Add a caption...">
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('post-image-modal')">Cancel</button>
@@ -794,14 +1472,20 @@ input[type=range]{accent-color:var(--text);height:4px}
 <!-- POST MODAL (pitch) -->
 <div id="post-pitch-modal" class="modal-overlay" style="display:none">
   <div class="modal">
-    <div class="modal-header"><div class="modal-title">Pitch Post</div><div class="close-btn" onclick="closeModal('post-pitch-modal')">✕</div></div>
+    <div class="modal-header">
+      <div class="modal-title">Pitch Post</div>
+      <div class="close-btn" onclick="closeModal('post-pitch-modal')">✕</div>
+    </div>
     <div class="modal-body">
       <div class="form-group">
         <label>Your Pitch <span style="color:var(--text3)">(50 words, shown bold)</span></label>
         <textarea id="pitch-main" rows="3" placeholder="Pitch your idea here..." maxlength="350" oninput="countPitchWords()"></textarea>
         <div class="char-count" id="pitch-word-count">0 / 50 words</div>
       </div>
-      <div class="form-group"><label>Additional text <span style="color:var(--text3)">(optional)</span></label><textarea id="pitch-sub" rows="2" placeholder="More context..."></textarea></div>
+      <div class="form-group">
+        <label>Additional text <span style="color:var(--text3)">(optional)</span></label>
+        <textarea id="pitch-sub" rows="2" placeholder="More context..."></textarea>
+      </div>
       <div class="form-group">
         <label>Poll options <span style="color:var(--text3)">(optional, max 5)</span></label>
         <div id="poll-options-wrap"></div>
@@ -818,9 +1502,15 @@ input[type=range]{accent-color:var(--text);height:4px}
 <!-- COLLAB POST MODAL -->
 <div id="collab-post-modal" class="modal-overlay" style="display:none">
   <div class="modal">
-    <div class="modal-header"><div class="modal-title">Post Collab Offer</div><div class="close-btn" onclick="closeModal('collab-post-modal')">✕</div></div>
+    <div class="modal-header">
+      <div class="modal-title">Post Collab Offer</div>
+      <div class="close-btn" onclick="closeModal('collab-post-modal')">✕</div>
+    </div>
     <div class="modal-body">
-      <div class="form-group"><label>Heading</label><input type="text" id="collab-title-input" placeholder="What are you looking for?"></div>
+      <div class="form-group">
+        <label>Heading</label>
+        <input type="text" id="collab-title-input" placeholder="What are you looking for?">
+      </div>
       <div class="form-group">
         <label>Description <span style="color:var(--text3)">(max 100 words)</span></label>
         <textarea id="collab-desc-input" rows="4" placeholder="Describe what you need help with..." oninput="countCollabWords(this)"></textarea>
@@ -834,18 +1524,26 @@ input[type=range]{accent-color:var(--text);height:4px}
   </div>
 </div>
 
-<!-- VIEW CODE MODAL -->
+<!-- VIEW CODE POST MODAL -->
 <div id="view-code-modal" class="modal-overlay" style="display:none">
   <div class="modal" style="max-width:700px">
-    <div class="modal-header"><div class="modal-title">Code Preview</div><div class="close-btn" onclick="closeModal('view-code-modal')">✕</div></div>
-    <div class="modal-body" style="padding:0"><iframe id="view-code-iframe" style="width:100%;height:400px;border:none;border-radius:0 0 16px 16px"></iframe></div>
+    <div class="modal-header">
+      <div class="modal-title">Code Preview</div>
+      <div class="close-btn" onclick="closeModal('view-code-modal')">✕</div>
+    </div>
+    <div class="modal-body" style="padding:0">
+      <iframe id="view-code-iframe" style="width:100%;height:400px;border:none;border-radius:0 0 16px 16px"></iframe>
+    </div>
   </div>
 </div>
 
 <!-- VIEW PROFILE MODAL -->
 <div id="view-profile-modal" class="modal-overlay" style="display:none">
   <div class="modal" style="max-width:600px">
-    <div class="modal-header"><div class="modal-title" id="vpm-name"></div><div class="close-btn" onclick="closeModal('view-profile-modal')">✕</div></div>
+    <div class="modal-header">
+      <div class="modal-title" id="vpm-name"></div>
+      <div class="close-btn" onclick="closeModal('view-profile-modal')">✕</div>
+    </div>
     <div class="modal-body" id="vpm-body"></div>
   </div>
 </div>
@@ -855,28 +1553,44 @@ input[type=range]{accent-color:var(--text);height:4px}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
 <script>
+  let unsubscribeChat = null;
+
 // ============================================================
-// FIREBASE INIT
+//AUTH CONFIG (Firebase)
 // ============================================================
 const firebaseConfig = {
-  apiKey: "AIzaSyCbQI7JIE8WR9tmh0L9i6OWNA1yqXBgiJ4",
-  authDomain: "sailorx.firebaseapp.com",
-  projectId: "sailorx",
-  storageBucket: "sailorx.firebasestorage.app",
-  messagingSenderId: "783649147652",
-  appId: "1:783649147652:web:1807c4cbf8660de1bf1e51"
-};
+    apiKey: "AIzaSyCbQI7JIE8WR9tmh0L9i6OWNA1yqXBgiJ4",
+    authDomain: "sailorx.firebaseapp.com",
+    projectId: "sailorx",
+    storageBucket: "sailorx.firebasestorage.app",
+    messagingSenderId: "783649147652",
+    appId: "1:783649147652:web:1807c4cbf8660de1bf1e51"
+  };
+
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const provider = new firebase.auth.GoogleAuthProvider();
+
+provider.setCustomParameters({
+  prompt: "select_account"
+});
+provider.setCustomParameters({
+  prompt: 'select_account'
+});
+
+function getChatId(uidA, uidB) {
+  return [uidA, uidB].sort().join("_");
+}
+
 
 // ============================================================
 // STATE
 // ============================================================
 let state = {
   theme: 'light',
-  currentUser: null,
-  accounts: [],
+  currentUser: null, // { uid, name, username, email, logo }
+  accounts: [],      // saved accounts array
   profile: null,
   posts: [],
   globalPosts: [],
@@ -888,23 +1602,25 @@ let state = {
   profileViews: {}
 };
 
-// ============================================================
-// KEY FIX: Single-run guard — prevents auth listener re-entry
-// ============================================================
-let hasInitialized = false;
-let unsubscribeChat = null;
-
-function save() { try { localStorage.setItem('sailorx_v3', JSON.stringify(state)); } catch(e){} }
+function save() { localStorage.setItem('sailorx_v3', JSON.stringify(state)); }
 function load() {
-  try { const d = localStorage.getItem('sailorx_v3'); if (d) state = Object.assign(state, JSON.parse(d)); } catch(e){}
+  try {
+    const d = localStorage.getItem('sailorx_v3');
+    if (d) state = Object.assign(state, JSON.parse(d));
+  } catch(e){}
 }
 
+// Biz profile temp data
+let tempBizProfile = {};
+let selectedStage = 'idea';
+let tempLogoDataUrl = '';
+
+// ============================================================
+// INIT
+// ============================================================
 load();
 applyTheme();
 
-// ============================================================
-// FIRESTORE HELPERS
-// ============================================================
 async function saveUserData() {
   if (!state.currentUser?.uid) return;
   try {
@@ -918,7 +1634,9 @@ async function saveUserData() {
       profileViews: state.profileViews || {},
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     }, { merge: true });
-  } catch(err) { console.error('saveUserData:', err); }
+  } catch (err) {
+    console.error('saveUserData error:', err);
+  }
 }
 
 async function savePostGlobally(post) {
@@ -929,19 +1647,22 @@ async function savePostGlobally(post) {
       authorUid: state.currentUser.uid,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     }, { merge: true });
-  } catch(err) { console.error('savePostGlobally:', err); }
-}
-
-async function updatePostGlobally(post) {
-  try { await db.collection('posts').doc(post.id.toString()).set(post, { merge: true }); }
-  catch(err) { console.error('updatePostGlobally:', err); }
+  } catch (err) {
+    console.error('savePostGlobally error:', err);
+  }
 }
 
 async function loadGlobalPosts() {
   try {
-    const snap = await db.collection('posts').orderBy('createdAt', 'desc').get();
-    return snap.docs.map(d => d.data());
-  } catch(err) { console.error('loadGlobalPosts:', err); return []; }
+    const snap = await db.collection('posts')
+      .orderBy('createdAt', 'desc')
+      .get();
+    const posts = snap.docs.map(doc => doc.data());
+    return posts;
+  } catch (err) {
+    console.error('loadGlobalPosts error:', err);
+    return [];
+  }
 }
 
 async function loadUserData(uid) {
@@ -956,9 +1677,14 @@ async function loadUserData(uid) {
       state.profileCode = data.profileCode || '';
       state.profileCodePublished = data.profileCodePublished || false;
       state.profileViews = data.profileViews || {};
+      console.log('✅ Loaded user data from Firestore for UID:', uid);
       save();
+    } else {
+      console.log('📝 No Firestore data yet for UID:', uid, '(new user)');
     }
-  } catch(err) { console.error('loadUserData:', err); }
+  } catch (err) {
+    console.error('❌ loadUserData error:', err);
+  }
 }
 
 function resetUserData() {
@@ -972,7 +1698,6 @@ function resetUserData() {
   state.globalPosts = [];
 }
 
-function getChatId(uidA, uidB) { return [uidA, uidB].sort().join('_'); }
 
 // ============================================================
 // AUTH SCREENS
@@ -982,11 +1707,28 @@ function showAuth() {
   renderAuthAccounts();
   document.getElementById('auth-screen').classList.remove('hidden');
 }
-
-function showSignup() {
-  hideAll();
-  document.getElementById('signup-screen').classList.add('visible');
+function loginAsAccount(i) {
+  const acc = state.accounts[i];
+  if (!acc) return;
+  if (!acc.email) {
+    toast('Account missing email, sign in with Google instead');
+    return;
+  }
+  
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({
+    login_hint: acc.email,
+    prompt: 'select_account'
+  });
+  
+  auth.signInWithPopup(provider)
+    .catch(err => {
+      console.error('Account login failed:', err);
+      toast('Login failed. Try signing in with Google again.');
+    });
 }
+
+
 
 function showBizProfile() {
   hideAll();
@@ -1005,24 +1747,32 @@ function enterApp() {
   hideAll();
   document.getElementById('app').classList.remove('hidden');
   updateSidebar();
-  // Load feed without causing any navigation/reload
-  renderFeed();
+  void renderFeed();
   renderCollab();
   renderChats();
   applyTheme();
 }
 
+// Render saved accounts on auth screen
 function renderAuthAccounts() {
   const container = document.getElementById('auth-accounts-list');
   if (!container) return;
   const accounts = state.accounts || [];
+
   if (!accounts.length) {
-    container.innerHTML = `<div class="auth-no-accounts"><div class="auth-no-accounts-icon">👤</div><div class="auth-no-accounts-text">No accounts saved on this device</div></div>`;
+    container.innerHTML = `
+      <div class="auth-no-accounts">
+        <div class="auth-no-accounts-icon">👤</div>
+        <div class="auth-no-accounts-text">No accounts saved on this device</div>
+      </div>`;
     return;
   }
+
   container.innerHTML = `<div class="auth-accounts">` + accounts.map((acc, i) => {
     const initials = (acc.name || acc.username || '?')[0].toUpperCase();
-    const avatarHtml = acc.logo ? `<img src="${acc.logo}" alt="">` : initials;
+    const avatarHtml = acc.logo
+      ? `<img src="${acc.logo}" alt="">`
+      : initials;
     return `<div class="auth-account-row" onclick="loginAsAccount(${i})">
       <div class="auth-account-av">${avatarHtml}</div>
       <div class="auth-account-info">
@@ -1034,35 +1784,12 @@ function renderAuthAccounts() {
   }).join('') + `</div>`;
 }
 
-function loginAsAccount(i) {
-  const acc = state.accounts[i];
-  if (!acc) return;
-  const p = new firebase.auth.GoogleAuthProvider();
-  p.setCustomParameters({ login_hint: acc.email, prompt: 'select_account' });
-  auth.signInWithPopup(p).catch(err => {
-    console.error('Account login failed:', err);
-    toast('Login failed. Try signing in with Google instead.');
-  });
-}
 
-function handleGoogleSignIn() {
-  const p = new firebase.auth.GoogleAuthProvider();
-  p.setCustomParameters({ prompt: 'select_account' });
-  auth.signInWithPopup(p).catch(err => {
-    console.error('Google sign-in error:', err);
-    toast('Login failed: ' + err.message);
-  });
-}
 
-function submitSignup() { toast('Use Google sign-in to create your account.'); }
-
-// ============================================================
-// KEY FIX: Auth listener — hasInitialized guard prevents loops
-// ============================================================
 auth.onAuthStateChanged(async user => {
+
   if (!user) {
-    // User signed out — reset everything
-    hasInitialized = false;
+    console.log('🔓 User logged out');
     state.currentUser = null;
     resetUserData();
     save();
@@ -1070,64 +1797,92 @@ auth.onAuthStateChanged(async user => {
     return;
   }
 
-  // ✅ If we already fully initialized for this exact user, do nothing.
-  // This prevents Firebase re-firing the listener (on tab focus, token
-  // refresh, etc.) from triggering a full re-render / reload.
-  if (hasInitialized && state.currentUser?.uid === user.uid) {
-    return;
-  }
-
-  hasInitialized = true;
+  console.log('✅ Firebase auth user detected:', user.uid, user.email);
+  await user.reload();
 
   state.currentUser = {
     uid: user.uid,
     name: user.displayName,
-    username: (user.email || '').split('@')[0],
+    username: (user.email || "").split("@")[0],
     email: user.email,
     logo: user.photoURL
   };
 
   const existingIdx = state.accounts.findIndex(a => a.uid === user.uid);
   if (existingIdx < 0) {
-    state.accounts.push({ ...state.currentUser });
+    state.accounts.push(state.currentUser);
+    console.log('📌 Added new account to saved accounts');
   } else {
-    state.accounts[existingIdx] = { ...state.currentUser };
+    state.accounts[existingIdx] = state.currentUser;
+    console.log('🔄 Updated existing account');
   }
 
   resetUserData();
+  console.log('⏳ Loading Firestore data for uid:', user.uid);
   await loadUserData(user.uid);
-  save();
 
-  // Decide which screen to show
+  save();
+  
   if (!state.profile) {
+    console.log('🆕 No profile found, showing setup');
     showBizProfile();
   } else {
+    console.log('✨ Profile loaded, entering app');
     enterApp();
-  }
-
-  // Update URL to /<username> without triggering navigation
-  const myUsername = state.currentUser.username;
-  if (window.location.pathname !== '/' + myUsername) {
-    window.history.replaceState({}, '', '/' + myUsername);
   }
 });
 
+setInterval(() => {
+  if (auth.currentUser && !state.currentUser) {
+    console.warn("⚠️ Auth mismatch detected (Firebase user exists but app not synced), reloading...");
+    location.reload();
+  }
+  if (!auth.currentUser && state.currentUser) {
+    console.warn("⚠️ Auth mismatch detected (app has user but Firebase doesn't), signing out...");
+    state.currentUser = null;
+    resetUserData();
+    save();
+    showAuth();
+  }
+}, 5000);
+
+function handleGoogleSignIn() {
+  console.log('🔐 Initiating Google sign-in...');
+  const p = new firebase.auth.GoogleAuthProvider();
+  p.setCustomParameters({
+    prompt: 'select_account'
+  });
+  
+  auth.signInWithPopup(p)
+    .then(result => {
+      console.log('✅ Google sign-in successful:', result.user.uid);
+    })
+    .catch(err => {
+      console.error('❌ Google sign-in error:', err);
+      toast("Login failed: " + err.message);
+    });
+}
+
+
+
 async function signOut() {
-  hasInitialized = false;
-  try { await auth.signOut(); } catch(err) { console.error('Sign out error:', err); }
+  console.log('🔓 Signing out from Firebase');
+  try {
+    await auth.signOut();
+  } catch (err) {
+    console.error('Sign out error:', err);
+  }
+
   state.currentUser = null;
   resetUserData();
   save();
+
   showAuth();
 }
 
 // ============================================================
 // BIZ PROFILE SETUP
 // ============================================================
-let tempBizProfile = {};
-let selectedStage = 'idea';
-let tempLogoDataUrl = '';
-
 function showBpStep(step) {
   document.getElementById('bp-step-1').style.display = step === 1 ? 'block' : 'none';
   document.getElementById('bp-step-2').style.display = step === 2 ? 'block' : 'none';
@@ -1149,6 +1904,8 @@ function bpWordCount(ta, countId, max) {
 function bpStep1Next() {
   const bname = document.getElementById('bp-bname').value.trim();
   if (!bname) { toast('Business name is required'); return; }
+  
+  // Save step 1 data
   tempBizProfile = {
     businessName: bname,
     tagline: document.getElementById('bp-tagline').value.trim(),
@@ -1159,8 +1916,11 @@ function bpStep1Next() {
     solution: document.getElementById('bp-solution').value.trim(),
     customer: document.getElementById('bp-customer').value.trim(),
   };
+
+  // Update default avatar initial
   const av = document.getElementById('bp-default-av');
   if (av) av.textContent = bname[0].toUpperCase();
+
   tempLogoDataUrl = '';
   resetLogoUpload();
   showBpStep(2);
@@ -1176,6 +1936,7 @@ function handleLogoUpload(e) {
     document.getElementById('bp-upload-area').style.display = 'none';
     document.getElementById('bp-logo-preview-img-wrap').style.display = 'block';
     document.getElementById('bp-logo-preview-img').src = tempLogoDataUrl;
+    // Hide default av
     document.getElementById('bp-logo-preview-wrap').style.display = 'none';
   };
   reader.readAsDataURL(file);
@@ -1186,17 +1947,24 @@ function resetLogoUpload() {
   document.getElementById('bp-upload-area').style.display = 'block';
   document.getElementById('bp-logo-preview-img-wrap').style.display = 'none';
   document.getElementById('bp-logo-preview-wrap').style.display = 'block';
-  const fi = document.getElementById('bp-logo-file');
-  if (fi) fi.value = '';
+  const fileInput = document.getElementById('bp-logo-file');
+  if (fileInput) fileInput.value = '';
 }
 
 function bpStep2Finish() {
-  state.profile = { ...tempBizProfile, logo: tempLogoDataUrl || '' };
+  // Build full profile
+  state.profile = {
+    ...tempBizProfile,
+    logo: tempLogoDataUrl || '',
+  };
+
+  // Update logo on the currentUser account too
   if (state.currentUser) {
     state.currentUser.logo = tempLogoDataUrl || '';
-    const idx = state.accounts.findIndex(a => a.uid === state.currentUser.uid);
+    const idx = state.accounts.findIndex(a => a.username === state.currentUser.username);
     if (idx >= 0) state.accounts[idx].logo = tempLogoDataUrl || '';
   }
+
   save();
   saveAccountData();
   toast('Profile created! 🚀');
@@ -1204,31 +1972,48 @@ function bpStep2Finish() {
 }
 
 function saveAccountData() {
-  if (!state.currentUser?.uid) return;
+  if (!state.currentUser) return;
+  if (!state.currentUser.uid) {
+    console.error('⚠️ saveAccountData: currentUser has no uid, skipping');
+    return;
+  }
+  
+  const acctData = {
+    profile: state.profile,
+    collabs: state.collabs,
+    chats: state.chats,
+    profileCode: state.profileCode,
+    profileCodePublished: state.profileCodePublished,
+    profileViews: state.profileViews
+  };
+  
+  localStorage.setItem('sailorx_acct_' + state.currentUser.username, JSON.stringify(acctData));
   void saveUserData();
 }
 
 function openEditBizProfile() {
   showBizProfile();
+  // Pre-fill existing data
   setTimeout(() => {
-    if (!state.profile) return;
-    const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
-    set('bp-bname', state.profile.businessName);
-    set('bp-tagline', state.profile.tagline);
-    set('bp-industry', state.profile.category);
-    set('bp-usp', state.profile.usp);
-    set('bp-problem', state.profile.problem);
-    set('bp-solution', state.profile.solution);
-    set('bp-customer', state.profile.customer);
-    selectedStage = state.profile.stage || 'idea';
-    document.querySelectorAll('.bp-stage-opt').forEach(o => {
-      o.classList.toggle('selected', o.dataset.stage === selectedStage);
-    });
+    if (state.profile) {
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+      set('bp-bname', state.profile.businessName);
+      set('bp-tagline', state.profile.tagline);
+      set('bp-industry', state.profile.category);
+      set('bp-usp', state.profile.usp);
+      set('bp-problem', state.profile.problem);
+      set('bp-solution', state.profile.solution);
+      set('bp-customer', state.profile.customer);
+      selectedStage = state.profile.stage || 'idea';
+      document.querySelectorAll('.bp-stage-opt').forEach(o => {
+        o.classList.toggle('selected', o.dataset.stage === selectedStage);
+      });
+    }
   }, 50);
 }
 
 // ============================================================
-// NAVIGATION — pure DOM show/hide, no reload, no history push
+// NAVIGATION
 // ============================================================
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1238,10 +2023,12 @@ function navigate(page) {
   const titles = { feed:'Feed', collab:'Collab', chats:'Chats', profile:'Profile', settings:'Settings', sailor:'Sailor AI' };
   document.getElementById('topbar-title').textContent = titles[page] || page;
   if (page === 'profile') renderProfile();
-  if (page === 'sailor') setTimeout(() => { const inp = document.getElementById('sailor-input'); if (inp) inp.focus(); }, 100);
+  if (page === 'sailor') {
+    setTimeout(() => { const inp = document.getElementById('sailor-input'); if (inp) inp.focus(); }, 100);
+  }
   document.getElementById('fab-menu').classList.remove('open');
   const fab = document.getElementById('fab');
-  if (fab) fab.style.display = page === 'sailor' ? 'none' : 'flex';
+  if (fab) fab.style.display = (page === 'sailor') ? 'none' : 'flex';
 }
 
 function goToProfile() { navigate('profile'); }
@@ -1274,7 +2061,12 @@ function updateSidebar() {
   if (p) {
     nm.textContent = p.businessName || username;
     hd.textContent = '@' + username;
-    av.innerHTML = p.logo ? `<img src="${p.logo}" alt="">` : (p.businessName || username)[0].toUpperCase();
+    if (p.logo) {
+      av.innerHTML = `<img src="${p.logo}" alt="">`;
+    } else {
+      const init = (p.businessName || username)[0].toUpperCase();
+      av.textContent = init;
+    }
   } else if (u) {
     nm.textContent = u.name || username;
     hd.textContent = '@' + username;
@@ -1296,10 +2088,13 @@ function toast(msg) {
 // ============================================================
 // FAB
 // ============================================================
-function toggleFab() { document.getElementById('fab-menu').classList.toggle('open'); }
+function toggleFab() {
+  document.getElementById('fab-menu').classList.toggle('open');
+}
 document.addEventListener('click', e => {
-  if (!e.target.closest('#fab') && !e.target.closest('#fab-menu'))
+  if (!e.target.closest('#fab') && !e.target.closest('#fab-menu')) {
     document.getElementById('fab-menu').classList.remove('open');
+  }
 });
 
 // ============================================================
@@ -1307,18 +2102,34 @@ document.addEventListener('click', e => {
 // ============================================================
 let sailorBusy = false;
 
-function sailorNow() { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
-function sailorHideWelcome() { const w = document.getElementById('sailor-welcome'); if (w) w.style.display = 'none'; }
+function sailorNow() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function sailorHideWelcome() {
+  const w = document.getElementById('sailor-welcome');
+  if (w) w.style.display = 'none';
+}
 
 function appendSailorMsg(text, type) {
   const box = document.getElementById('sailor-messages');
   const row = document.createElement('div');
   row.className = 'sailor-row ' + (type === 'user' ? 'user-row' : 'bot-row');
   if (type === 'bot') {
-    row.innerHTML = `<div class="sailor-bot-av"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-      <div><div class="sailor-bubble bot-bubble">${escHtml(text)}</div><div class="sailor-ts">${sailorNow()}</div></div>`;
+    row.innerHTML = `
+      <div class="sailor-bot-av">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <div>
+        <div class="sailor-bubble bot-bubble">${escHtml(text)}</div>
+        <div class="sailor-ts">${sailorNow()}</div>
+      </div>`;
   } else {
-    row.innerHTML = `<div><div class="sailor-bubble user-bubble">${escHtml(text)}</div><div class="sailor-ts">${sailorNow()}</div></div>`;
+    row.innerHTML = `
+      <div>
+        <div class="sailor-bubble user-bubble">${escHtml(text)}</div>
+        <div class="sailor-ts">${sailorNow()}</div>
+      </div>`;
   }
   box.appendChild(row);
   box.scrollTop = box.scrollHeight;
@@ -1327,14 +2138,25 @@ function appendSailorMsg(text, type) {
 function showTypingIndicator() {
   const box = document.getElementById('sailor-messages');
   const row = document.createElement('div');
-  row.className = 'sailor-row bot-row'; row.id = 'sailor-typing';
-  row.innerHTML = `<div class="sailor-bot-av"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-    <div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  row.className = 'sailor-row bot-row';
+  row.id = 'sailor-typing';
+  row.innerHTML = `
+    <div class="sailor-bot-av">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    </div>
+    <div class="typing-bubble">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>`;
   box.appendChild(row);
   box.scrollTop = box.scrollHeight;
 }
 
-function removeTypingIndicator() { const el = document.getElementById('sailor-typing'); if (el) el.remove(); }
+function removeTypingIndicator() {
+  const el = document.getElementById('sailor-typing');
+  if (el) el.remove();
+}
 
 async function sendSailorMsg() {
   if (sailorBusy) return;
@@ -1348,7 +2170,7 @@ async function sendSailorMsg() {
   const sendBtn = document.getElementById('sailor-send-btn');
   if (sendBtn) sendBtn.disabled = true;
   showTypingIndicator();
-  await new Promise(r => setTimeout(r, 1500));
+  await new Promise(r => setTimeout(r, 3000));
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
@@ -1360,7 +2182,7 @@ async function sendSailorMsg() {
     try { data = JSON.parse(raw); } catch { data = { reply: 'Sorry, I had trouble reading that response.' }; }
     removeTypingIndicator();
     appendSailorMsg(data.reply || 'No response received.', 'bot');
-  } catch(err) {
+  } catch (err) {
     removeTypingIndicator();
     appendSailorMsg('Network error — please check your connection.', 'bot');
   }
@@ -1371,13 +2193,20 @@ async function sendSailorMsg() {
 
 function sailorChip(text) {
   const input = document.getElementById('sailor-input');
-  if (input) { input.value = text; sendSailorMsg(); }
+  input.value = text;
+  sendSailorMsg();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('sailor-input');
-  if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendSailorMsg(); } });
+  if (input) {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendSailorMsg(); }
+    });
+  }
 });
+
+window.sendSailorMsg = sendSailorMsg;
 
 // ============================================================
 // PROFILE PAGE
@@ -1387,11 +2216,19 @@ function renderProfile() {
   const p = state.profile;
   const username = state.currentUser?.username || 'user';
   if (!p) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🚀</div><div class="empty-title">No profile yet</div><div class="empty-desc">Set up your business profile to get started</div><button class="btn btn-primary" style="margin-top:16px" onclick="openEditBizProfile()">Set Up Profile</button></div>`;
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">🚀</div>
+      <div class="empty-title">No profile yet</div>
+      <div class="empty-desc">Set up your business profile to get started</div>
+      <button class="btn btn-primary" style="margin-top:16px" onclick="openEditBizProfile()">Set Up Profile</button>
+    </div>`;
     return;
   }
   const initials = (p.businessName || 'U')[0].toUpperCase();
-  const logoHtml = p.logo ? `<img src="${p.logo}" alt="${escHtml(p.businessName)}" style="width:100%;height:100%;object-fit:cover">` : `<span style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif">${initials}</span>`;
+  const logoHtml = p.logo
+    ? `<img src="${p.logo}" alt="${p.businessName}" style="width:100%;height:100%;object-fit:cover">`
+    : `<span style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif">${initials}</span>`;
+
   const myPosts = state.globalPosts.filter(po => po.author === username);
   const tracks = state.profile._tracks || 0;
   const queue = state.profile._queue || 0;
@@ -1417,7 +2254,9 @@ function renderProfile() {
       <div class="stat-item"><div class="stat-num">${tracks}</div><div class="stat-label">Tracks</div></div>
       <div class="stat-item"><div class="stat-num">${queue}</div><div class="stat-label">Queue</div></div>
     </div>
-    <div class="profile-actions"><button class="btn btn-ghost btn-sm" onclick="openEditBizProfile()">Edit Profile</button></div>
+    <div class="profile-actions">
+      <button class="btn btn-ghost btn-sm" onclick="openEditBizProfile()">Edit Profile</button>
+    </div>
   </div>
   ${p.usp ? `<div class="profile-section"><div class="section-title">Unique Selling Point</div><div class="section-content" style="font-weight:600">${escHtml(p.usp)}</div></div>` : ''}
   ${p.problem ? `<div class="profile-section"><div class="section-title">Problem</div><div class="section-content">${escHtml(p.problem)}</div></div>` : ''}
@@ -1430,7 +2269,9 @@ function renderProfile() {
         <div class="editor-tab active" onclick="switchEditorTab(this,'profile-code-tab')">Editor</div>
         <div class="editor-tab" onclick="switchEditorTab(this,'profile-preview-tab');updateProfilePreview()">Preview</div>
       </div>
-      <div id="profile-code-tab"><textarea id="profile-code-ta" style="width:100%;min-height:240px;border:none;padding:14px;font-family:'Courier New',monospace;font-size:13px;background:var(--bg2);color:var(--text);resize:none;outline:none" placeholder="<!-- Paste your HTML/CSS/JS here -->">${escHtml(state.profileCode || '')}</textarea></div>
+      <div id="profile-code-tab">
+        <textarea id="profile-code-ta" style="width:100%;min-height:240px;border:none;padding:14px;font-family:'Courier New',monospace;font-size:13px;background:var(--bg2);color:var(--text);resize:none;outline:none" placeholder="<!-- Paste your HTML/CSS/JS here -->">${escHtml(state.profileCode||'')}</textarea>
+      </div>
       <div id="profile-preview-tab" style="display:none"><iframe id="profile-preview-iframe" style="width:100%;height:240px;border:none"></iframe></div>
     </div>
     <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
@@ -1443,8 +2284,9 @@ function renderProfile() {
     <div id="my-posts-list">${myPosts.length ? '' : '<div style="font-size:13px;color:var(--text3)">No posts yet</div>'}</div>
   </div>`;
 
+  const myPostsEl = document.getElementById('my-posts-list');
   if (myPosts.length) {
-    document.getElementById('my-posts-list').innerHTML = myPosts.map(po => renderPostCard(po, true)).join('');
+    myPostsEl.innerHTML = myPosts.map(po => renderPostCard(po, true)).join('');
   }
 }
 
@@ -1457,7 +2299,8 @@ function updateProfilePreview() {
 function publishProfileCode() {
   state.profileCode = document.getElementById('profile-code-ta')?.value || '';
   state.profileCodePublished = true;
-  save(); saveAccountData();
+  save();
+  saveAccountData();
   toast('Preview published! 🎉');
   renderProfile();
 }
@@ -1467,21 +2310,27 @@ function publishProfileCode() {
 // ============================================================
 function openPostModal(type) {
   document.getElementById('fab-menu').classList.remove('open');
-  if (type === 'code') document.getElementById('post-code-modal').style.display = 'flex';
-  else if (type === 'image') { document.getElementById('post-image-modal').style.display = 'flex'; initCanvas(); }
-  else if (type === 'pitch') { document.getElementById('post-pitch-modal').style.display = 'flex'; initPitchModal(); }
+  if (type === 'code') { document.getElementById('post-code-modal').style.display='flex'; }
+  else if (type === 'image') { document.getElementById('post-image-modal').style.display='flex'; initCanvas(); }
+  else if (type === 'pitch') { document.getElementById('post-pitch-modal').style.display='flex'; initPitchModal(); }
 }
 
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+function closeModal(id) { document.getElementById(id).style.display='none'; }
 
 function switchEditorTab(btn, showId) {
   const parent = btn.parentElement;
   parent.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  ['code-ta-wrap','code-preview-wrap','profile-code-tab','profile-preview-tab'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el && id !== showId) el.style.display = 'none';
-  });
+
+  // Hide sibling tab content
+  const wrap = btn.closest('.editor-wrap,.modal-body,.profile-section');
+  if (wrap) {
+    // Hide both possible tab panels
+    ['code-ta-wrap','code-preview-wrap','profile-code-tab','profile-preview-tab'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el !== document.getElementById(showId)) el.style.display = 'none';
+    });
+  }
   const target = document.getElementById(showId);
   if (target) target.style.display = 'block';
 }
@@ -1496,13 +2345,16 @@ async function submitCodePost() {
   const code = document.getElementById('code-post-ta').value;
   if (!code.trim()) { toast('Paste some code first'); return; }
   const username = state.currentUser?.username || 'user';
-  const post = { id: Date.now(), type: 'code', author: username, caption, code, time: new Date().toISOString(), interests: 0, interestedBy: [], comments: [] };
+  const post = {
+    id: Date.now(), type: 'code', author: username, caption, code,
+    time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
+  };
   await savePostGlobally(post);
   save(); saveAccountData();
   closeModal('post-code-modal');
   document.getElementById('code-post-ta').value = '';
   document.getElementById('code-post-caption').value = '';
-  renderFeed();
+  await renderFeed();
   toast('Code posted! ✨');
 }
 
@@ -1511,9 +2363,11 @@ function initPitchModal() {
   document.getElementById('pitch-main').value = '';
   document.getElementById('pitch-sub').value = '';
   document.getElementById('pitch-word-count').textContent = '0 / 50 words';
-  document.getElementById('poll-options-wrap').innerHTML = '';
+  const wrap = document.getElementById('poll-options-wrap');
+  wrap.innerHTML = '';
   pollCount = 0;
-  addPollOption(); addPollOption();
+  addPollOption();
+  addPollOption();
 }
 
 let pollCount = 0;
@@ -1523,9 +2377,10 @@ function addPollOption() {
   const wrap = document.getElementById('poll-options-wrap');
   const div = document.createElement('div');
   div.style.cssText = 'display:flex;gap:8px;margin-bottom:6px;align-items:center';
-  div.innerHTML = `<input type="text" placeholder="Option ${pollCount}" style="flex:1"><button onclick="this.parentElement.remove();pollCount--" style="color:var(--text3);font-size:18px;background:none;border:none;cursor:pointer;flex-shrink:0">&times;</button>`;
+  div.innerHTML = `<input type="text" placeholder="Option ${pollCount}" style="flex:1"> <button onclick="this.parentElement.remove();pollCount--" style="color:var(--text3);font-size:18px;background:none;border:none;cursor:pointer;flex-shrink:0">&times;</button>`;
   wrap.appendChild(div);
-  document.getElementById('add-poll-btn').style.display = pollCount >= 5 ? 'none' : '';
+  if (pollCount >= 5) document.getElementById('add-poll-btn').style.display = 'none';
+  else document.getElementById('add-poll-btn').style.display = '';
 }
 
 function countPitchWords() {
@@ -1539,25 +2394,30 @@ async function submitPitchPost() {
   if (!pitchText) { toast('Enter your pitch'); return; }
   const sub = document.getElementById('pitch-sub').value.trim();
   const optEls = document.querySelectorAll('#poll-options-wrap input[type=text]');
-  const options = Array.from(optEls).map(el => el.value.trim()).filter(Boolean);
+  const options = Array.from(optEls).map(el=>el.value.trim()).filter(Boolean);
   const username = state.currentUser?.username || 'user';
-  const post = { id: Date.now(), type: 'pitch', author: username, pitchText, sub, options: options.map(o => ({ text: o, votes: 0 })), votedBy: [], time: new Date().toISOString(), interests: 0, interestedBy: [], comments: [] };
+  const post = {
+    id: Date.now(), type: 'pitch', author: username, pitchText, sub,
+    options: options.map(o=>({text:o, votes:0})), votedBy: [],
+    time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
+  };
   await savePostGlobally(post);
   save(); saveAccountData();
   closeModal('post-pitch-modal');
-  renderFeed();
+  await renderFeed();
   toast('Pitched! 🚀');
 }
 
-// CANVAS
-let ctx, canvasTool = 'brush', canvasHistory = [], isDrawing = false, lastX = 0, lastY = 0;
+// IMAGE / CANVAS
+let ctx, canvasTool='brush', canvasHistory=[], isDrawing=false, lastX=0, lastY=0;
 
 function initCanvas() {
   const canvas = document.getElementById('drawing-canvas');
   ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  canvasHistory = [ctx.getImageData(0, 0, canvas.width, canvas.height)];
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  canvasHistory = [ctx.getImageData(0,0,canvas.width,canvas.height)];
+  document.getElementById('text-elements').innerHTML = '';
   canvas.onmousedown = startDraw;
   canvas.onmousemove = draw;
   canvas.onmouseup = endDraw;
@@ -1573,12 +2433,12 @@ function getPos(e) {
 }
 
 function startDraw(e) {
-  if (canvasTool === 'text') return;
-  if (canvasTool === 'fill') { doFill(); return; }
+  if (canvasTool === 'text' || canvasTool === 'fill') { if (canvasTool==='fill') doFill(e); return; }
   isDrawing = true;
   const pos = getPos(e);
   lastX = pos.x; lastY = pos.y;
-  ctx.beginPath(); ctx.moveTo(lastX, lastY);
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
 }
 
 function draw(e) {
@@ -1587,34 +2447,45 @@ function draw(e) {
   ctx.lineWidth = parseInt(document.getElementById('brush-size').value);
   ctx.lineCap = 'round';
   ctx.strokeStyle = canvasTool === 'eraser' ? '#ffffff' : document.getElementById('brush-color').value;
-  ctx.lineTo(pos.x, pos.y); ctx.stroke();
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
   lastX = pos.x; lastY = pos.y;
 }
 
 function endDraw() {
   if (!isDrawing) return;
-  isDrawing = false; ctx.beginPath();
-  canvasHistory.push(ctx.getImageData(0, 0, 640, 360));
+  isDrawing = false;
+  ctx.beginPath();
+  canvasHistory.push(ctx.getImageData(0,0,640,360));
   if (canvasHistory.length > 30) canvasHistory.shift();
 }
 
-function doFill() {
+function doFill(e) {
   ctx.fillStyle = document.getElementById('brush-color').value;
-  ctx.fillRect(0, 0, 640, 360);
-  canvasHistory.push(ctx.getImageData(0, 0, 640, 360));
+  ctx.fillRect(0,0,640,360);
+  canvasHistory.push(ctx.getImageData(0,0,640,360));
 }
 
 function canvasUndo() {
-  if (canvasHistory.length > 1) { canvasHistory.pop(); ctx.putImageData(canvasHistory[canvasHistory.length - 1], 0, 0); }
+  if (canvasHistory.length > 1) {
+    canvasHistory.pop();
+    ctx.putImageData(canvasHistory[canvasHistory.length-1],0,0);
+  }
 }
 
-function clearCanvas() { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 640, 360); canvasHistory.push(ctx.getImageData(0, 0, 640, 360)); }
+function clearCanvas() {
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0,0,640,360);
+  canvasHistory.push(ctx.getImageData(0,0,640,360));
+}
 
 function setTool(t) {
   canvasTool = t;
-  ['brush','fill','eraser','text'].forEach(n => document.getElementById('tool-' + n)?.classList.toggle('active', n === t));
-  document.getElementById('text-tool-opts').style.display = t === 'text' ? 'flex' : 'none';
-  document.getElementById('drawing-canvas').style.cursor = t === 'text' ? 'text' : 'crosshair';
+  ['brush','fill','eraser','text'].forEach(n => {
+    document.getElementById('tool-'+n)?.classList.toggle('active', n===t);
+  });
+  document.getElementById('text-tool-opts').style.display = t==='text'?'flex':'none';
+  document.getElementById('drawing-canvas').style.cursor = t==='text'?'text':'crosshair';
 }
 
 function placeText() {
@@ -1623,7 +2494,7 @@ function placeText() {
   ctx.font = `${document.getElementById('canvas-font-size').value}px ${document.getElementById('canvas-font').value}`;
   ctx.fillStyle = document.getElementById('canvas-text-color').value;
   ctx.fillText(text, 40, 80);
-  canvasHistory.push(ctx.getImageData(0, 0, 640, 360));
+  canvasHistory.push(ctx.getImageData(0,0,640,360));
   document.getElementById('canvas-text-input').value = '';
 }
 
@@ -1633,7 +2504,7 @@ function uploadBgImage(e) {
   const reader = new FileReader();
   reader.onload = ev => {
     const img = new Image();
-    img.onload = () => { ctx.drawImage(img, 0, 0, 640, 360); canvasHistory.push(ctx.getImageData(0, 0, 640, 360)); };
+    img.onload = () => { ctx.drawImage(img,0,0,640,360); canvasHistory.push(ctx.getImageData(0,0,640,360)); };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
@@ -1645,42 +2516,43 @@ async function submitImagePost() {
   const dataUrl = canvas.toDataURL('image/png');
   const caption = document.getElementById('canvas-caption').value.trim();
   const username = state.currentUser?.username || 'user';
-  const post = { id: Date.now(), type: 'image', author: username, imageData: dataUrl, caption, time: new Date().toISOString(), interests: 0, interestedBy: [], comments: [] };
+  const post = {
+    id: Date.now(), type: 'image', author: username, imageData: dataUrl, caption,
+    time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
+  };
   await savePostGlobally(post);
   save(); saveAccountData();
   closeModal('post-image-modal');
   document.getElementById('canvas-caption').value = '';
-  renderFeed();
+  await renderFeed();
   toast('Image posted! 🎨');
 }
 
 // ============================================================
-// FEED — renders in-place, no page reload or navigation
+// FEED
 // ============================================================
 async function renderFeed() {
   const container = document.getElementById('feed-list');
-  if (!container) return;
-
-  // Show skeleton while loading
-  container.innerHTML = `<div style="padding:32px 0;text-align:center;color:var(--text3);font-size:13px">Loading posts…</div>`;
-
   const posts = await loadGlobalPosts();
   state.globalPosts = posts;
-
+  
   if (!posts.length) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📡</div><div class="empty-title">Nothing here yet</div><div class="empty-desc">Be the first to post something. Tap the + button.</div></div>`;
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📡</div>
+      <div class="empty-title">Nothing here yet</div>
+      <div class="empty-desc">Be the first to post something. Tap the + button.</div>
+    </div>`;
     return;
   }
   container.innerHTML = posts.map(p => renderPostCard(p)).join('');
 }
 
-function renderPostCard(post, compact = false) {
+function renderPostCard(post, compact=false) {
   const username = state.currentUser?.username || 'user';
   const p = state.profile;
   const isOwn = post.author === username;
-  const logoSrc = isOwn && p?.logo ? `<img src="${p.logo}" style="width:100%;height:100%;object-fit:cover">` : escHtml(post.author[0].toUpperCase());
+  const logoSrc = isOwn && p?.logo ? `<img src="${p.logo}" style="width:100%;height:100%;object-fit:cover">` : post.author[0].toUpperCase();
   const isInterested = post.interestedBy?.includes(username);
-  const followingThisUser = (state.profile?._following || []).includes(post.author);
 
   let bodyHtml = '';
   if (post.type === 'code') {
@@ -1697,13 +2569,13 @@ function renderPostCard(post, compact = false) {
       ${post.caption ? `<div style="font-size:14px;margin-bottom:10px">${escHtml(post.caption)}</div>` : ''}
       <div class="post-image-wrap"><img src="${post.imageData}" alt="post"></div>`;
   } else if (post.type === 'pitch') {
-    const opts = (post.options || []).map((o, i) => {
-      const totalVotes = (post.options || []).reduce((s, x) => s + x.votes, 0);
-      const pct = totalVotes ? Math.round(o.votes / totalVotes * 100) : 0;
-      const voted = (post.votedBy || []).includes(username);
-      return `<div class="poll-opt ${voted ? 'voted' : ''}" onclick="votePoll('${post.id}',${i})">
-        <div class="poll-bar" style="width:${voted ? pct : 0}%"></div>
-        <span><span>${escHtml(o.text)}</span>${voted ? `<span>${pct}%</span>` : ''}</span>
+    const opts = (post.options||[]).map((o,i) => {
+      const totalVotes = (post.options||[]).reduce((s,x)=>s+x.votes,0);
+      const pct = totalVotes ? Math.round(o.votes/totalVotes*100) : 0;
+      const voted = (post.votedBy||[]).includes(username);
+      return `<div class="poll-opt ${voted?'voted':''}" onclick="votePoll('${post.id}',${i})">
+        <div class="poll-bar" style="width:${voted?pct:0}%"></div>
+        <span><span>${escHtml(o.text)}</span>${voted?`<span>${pct}%</span>`:''}</span>
       </div>`;
     }).join('');
     bodyHtml = `
@@ -1712,26 +2584,29 @@ function renderPostCard(post, compact = false) {
       ${opts ? `<div class="poll-opts">${opts}</div>` : ''}`;
   }
 
+  const followingThisUser = (state.profile?._following||[]).includes(post.author);
   return `<div class="post-card" data-postid="${post.id}">
     <div class="post-header">
-      <div class="post-av" onclick="viewUserProfile('${escHtml(post.author)}')">${logoSrc}</div>
+      <div class="post-av" onclick="viewUserProfile('${post.author}')">${logoSrc}</div>
       <div class="post-meta">
         <div style="display:flex;align-items:center;gap:8px">
-          <div class="post-author" onclick="viewUserProfile('${escHtml(post.author)}')">${escHtml(post.author)}</div>
-          ${!isOwn ? `<button class="follow-btn-sm ${followingThisUser ? 'following' : ''}" onclick="toggleFollow('${escHtml(post.author)}',this)">${followingThisUser ? 'Following' : 'Follow Track'}</button>` : ''}
+          <div class="post-author" onclick="viewUserProfile('${post.author}')">${escHtml(post.author)}</div>
+          ${!isOwn ? `<button class="follow-btn-sm ${followingThisUser?'following':''}" onclick="toggleFollow('${post.author}',this)">${followingThisUser?'Following':'Follow Track'}</button>` : ''}
         </div>
         <div class="post-time">${getTimeAgo(post.time)}</div>
       </div>
     </div>
     <div class="post-body">${bodyHtml}</div>
     <div class="post-actions">
-      <button class="action-btn ${isInterested ? 'interested' : ''}" onclick="toggleInterest('${post.id}',this)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="${isInterested ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.5"><path d="M12 3l3 6h6l-5 4 2 6-6-4-6 4 2-6-5-4h6z" stroke-linejoin="round"/></svg>
-        <span class="interest-count">${post.interests || 0}</span>
+      <button class="action-btn interest-icon ${isInterested?'interested':''}" onclick="toggleInterest('${post.id}',this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="${isInterested?'currentColor':'none'}" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 3l3 6h6l-5 4 2 6-6-4-6 4 2-6-5-4h6z" stroke-linejoin="round"/>
+        </svg>
+        <span class="interest-count">${post.interests||0}</span>
       </button>
-      <button class="action-btn" onclick="toggleComments('${post.id}')">
+      <button class="action-btn" onclick="toggleComments('${post.id}',this)">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        ${(post.comments || []).length}
+        ${(post.comments||[]).length}
       </button>
     </div>
     <div class="comment-section" id="comments-${post.id}" style="display:none">
@@ -1740,8 +2615,8 @@ function renderPostCard(post, compact = false) {
         <button class="btn btn-primary btn-sm" onclick="submitComment('${post.id}')">Post</button>
       </div>
       <div class="comment-list" id="comment-list-${post.id}">
-        ${(post.comments || []).map(c => `<div class="comment-item">
-          <div class="comment-av">${escHtml(c.author[0].toUpperCase())}</div>
+        ${(post.comments||[]).map(c=>`<div class="comment-item">
+          <div class="comment-av">${c.author[0].toUpperCase()}</div>
           <div class="comment-bubble"><div class="comment-author">${escHtml(c.author)}</div>${escHtml(c.text)}</div>
         </div>`).join('')}
       </div>
@@ -1750,36 +2625,44 @@ function renderPostCard(post, compact = false) {
 }
 
 function toggleInterest(postId, btn) {
-  const post = state.globalPosts.find(p => p.id == postId);
+  const post = state.globalPosts.find(p=>p.id==postId);
   if (!post) return;
   const username = state.currentUser?.username || 'user';
   if (!post.interestedBy) post.interestedBy = [];
   const idx = post.interestedBy.indexOf(username);
   if (idx >= 0) {
-    post.interestedBy.splice(idx, 1);
-    post.interests = Math.max(0, (post.interests || 0) - 1);
+    post.interestedBy.splice(idx,1);
+    post.interests = Math.max(0,(post.interests||0)-1);
     btn.classList.remove('interested');
   } else {
     post.interestedBy.push(username);
-    post.interests = (post.interests || 0) + 1;
+    post.interests = (post.interests||0)+1;
     btn.classList.add('interested');
   }
-  btn.querySelector('svg').setAttribute('fill', post.interestedBy.includes(username) ? 'currentColor' : 'none');
+  btn.querySelector('svg').setAttribute('fill', post.interestedBy.includes(username)?'currentColor':'none');
   btn.querySelector('.interest-count').textContent = post.interests;
   void updatePostGlobally(post);
   save();
 }
 
+async function updatePostGlobally(post) {
+  try {
+    await db.collection('posts').doc(post.id.toString()).set(post, { merge: true });
+  } catch (err) {
+    console.error('updatePostGlobally error:', err);
+  }
+}
+
 function toggleComments(postId) {
-  const el = document.getElementById('comments-' + postId);
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  const el = document.getElementById('comments-'+postId);
+  el.style.display = el.style.display==='none' ? 'block' : 'none';
 }
 
 function submitComment(postId) {
-  const input = document.getElementById('comment-input-' + postId);
+  const input = document.getElementById('comment-input-'+postId);
   const text = input.value.trim();
   if (!text) return;
-  const post = state.globalPosts.find(p => p.id == postId);
+  const post = state.globalPosts.find(p=>p.id==postId);
   if (!post) return;
   if (!post.comments) post.comments = [];
   const username = state.currentUser?.username || 'user';
@@ -1788,10 +2671,10 @@ function submitComment(postId) {
   void updatePostGlobally(post);
   save();
   input.value = '';
-  const list = document.getElementById('comment-list-' + postId);
+  const list = document.getElementById('comment-list-'+postId);
   const div = document.createElement('div');
   div.className = 'comment-item';
-  div.innerHTML = `<div class="comment-av">${escHtml(comment.author[0].toUpperCase())}</div>
+  div.innerHTML = `<div class="comment-av">${comment.author[0].toUpperCase()}</div>
     <div class="comment-bubble"><div class="comment-author">${escHtml(comment.author)}</div>${escHtml(comment.text)}</div>`;
   list.appendChild(div);
   const card = document.querySelector(`[data-postid="${postId}"]`);
@@ -1802,8 +2685,8 @@ function submitComment(postId) {
 }
 
 function votePoll(postId, optIdx) {
-  const post = state.globalPosts.find(p => p.id == postId);
-  if (!post?.options) return;
+  const post = state.globalPosts.find(p=>p.id==postId);
+  if (!post || !post.options) return;
   const username = state.currentUser?.username || 'user';
   if (!post.votedBy) post.votedBy = [];
   if (post.votedBy.includes(username)) { toast('Already voted'); return; }
@@ -1811,14 +2694,14 @@ function votePoll(postId, optIdx) {
   post.options[optIdx].votes++;
   void updatePostGlobally(post);
   save();
-  renderFeed();
+  void renderFeed();
 }
 
 function viewCodePost(postId) {
-  const post = state.globalPosts.find(p => p.id == postId);
+  const post = state.globalPosts.find(p=>p.id==postId);
   if (!post) return;
   document.getElementById('view-code-iframe').srcdoc = post.code;
-  document.getElementById('view-code-modal').style.display = 'flex';
+  document.getElementById('view-code-modal').style.display='flex';
 }
 
 function toggleFollow(username, btn) {
@@ -1827,13 +2710,15 @@ function toggleFollow(username, btn) {
   if (!state.profileViews._tracks) state.profileViews._tracks = {};
   const idx = state.profile._following.indexOf(username);
   if (idx >= 0) {
-    state.profile._following.splice(idx, 1);
-    state.profileViews._tracks[username] = Math.max(0, (state.profileViews._tracks[username] || 1) - 1);
-    btn.textContent = 'Follow Track'; btn.classList.remove('following');
+    state.profile._following.splice(idx,1);
+    state.profileViews._tracks[username] = Math.max(0,(state.profileViews._tracks[username]||1)-1);
+    btn.textContent = 'Follow Track';
+    btn.classList.remove('following');
   } else {
     state.profile._following.push(username);
-    state.profileViews._tracks[username] = (state.profileViews._tracks[username] || 0) + 1;
-    btn.textContent = 'Following'; btn.classList.add('following');
+    state.profileViews._tracks[username] = (state.profileViews._tracks[username]||0)+1;
+    btn.textContent = 'Following';
+    btn.classList.add('following');
   }
   save(); saveAccountData();
 }
@@ -1844,25 +2729,28 @@ function viewUserProfile(username) {
   if (!state.profileViews[username]) state.profileViews[username] = 0;
   state.profileViews[username]++;
   save(); saveAccountData();
-  const isFollowing = (state.profile?._following || []).includes(username);
-  const userPosts = state.globalPosts.filter(po => po.author === username);
+  const isFollowing = (state.profile?._following||[]).includes(username);
+  const userPosts = state.globalPosts.filter(po=>po.author===username);
+  const tracks = state.profileViews._tracks?.[username] || 0;
+  const queue = state.profileViews._queue?.[username] || 0;
+  const body = document.getElementById('vpm-body');
   document.getElementById('vpm-name').textContent = username;
-  document.getElementById('vpm-body').innerHTML = `
+  body.innerHTML = `
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-      <div style="width:56px;height:56px;border-radius:14px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;font-family:'Syne',sans-serif">${escHtml(username[0].toUpperCase())}</div>
+      <div style="width:56px;height:56px;border-radius:14px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;font-family:'Syne',sans-serif">${username[0].toUpperCase()}</div>
       <div>
         <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700">@${escHtml(username)}</div>
-        <div style="font-size:12px;color:var(--text3)">${(state.profileViews._tracks?.[username] || 0)} tracks</div>
+        <div style="font-size:12px;color:var(--text3)">${tracks} tracks · ${queue} in queue</div>
       </div>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:20px">
-      <button class="btn ${isFollowing ? 'btn-ghost' : 'btn-primary'} btn-sm" id="vpm-follow-btn" onclick="vpmFollow('${escHtml(username)}')">${isFollowing ? 'Following' : 'Follow Track'}</button>
-      <button class="btn btn-ghost btn-sm" onclick="vpmJoinQueue('${escHtml(username)}')">Join Queue</button>
-      <button class="btn btn-ghost btn-sm" onclick="openChat('${escHtml(username)}');closeModal('view-profile-modal')">Message</button>
+      <button class="btn ${isFollowing?'btn-ghost':'btn-primary'} btn-sm" id="vpm-follow-btn" onclick="vpmFollow('${username}')">${isFollowing?'Following':'Follow Track'}</button>
+      <button class="btn btn-ghost btn-sm" onclick="vpmJoinQueue('${username}')">Join Queue</button>
+      <button class="btn btn-ghost btn-sm" onclick="openChat('${username}');closeModal('view-profile-modal')">Message</button>
     </div>
     <div style="font-size:13px;color:var(--text3);margin-bottom:10px">${userPosts.length} posts</div>
-    ${userPosts.map(po => renderPostCard(po)).join('')}`;
-  document.getElementById('view-profile-modal').style.display = 'flex';
+    ${userPosts.map(po=>renderPostCard(po)).join('')}`;
+  document.getElementById('view-profile-modal').style.display='flex';
 }
 
 function vpmFollow(username) {
@@ -1871,21 +2759,21 @@ function vpmFollow(username) {
   if (!state.profileViews._tracks) state.profileViews._tracks = {};
   const idx = state.profile._following.indexOf(username);
   const btn = document.getElementById('vpm-follow-btn');
-  if (idx >= 0) {
-    state.profile._following.splice(idx, 1);
-    state.profileViews._tracks[username] = Math.max(0, (state.profileViews._tracks[username] || 1) - 1);
-    if (btn) { btn.textContent = 'Follow Track'; btn.className = 'btn btn-primary btn-sm'; }
+  if (idx>=0) {
+    state.profile._following.splice(idx,1);
+    state.profileViews._tracks[username] = Math.max(0,(state.profileViews._tracks[username]||1)-1);
+    if(btn){btn.textContent='Follow Track';btn.className='btn btn-primary btn-sm';}
   } else {
     state.profile._following.push(username);
-    state.profileViews._tracks[username] = (state.profileViews._tracks[username] || 0) + 1;
-    if (btn) { btn.textContent = 'Following'; btn.className = 'btn btn-ghost btn-sm'; }
+    state.profileViews._tracks[username] = (state.profileViews._tracks[username]||0)+1;
+    if(btn){btn.textContent='Following';btn.className='btn btn-ghost btn-sm';}
   }
   save(); saveAccountData();
 }
 
 function vpmJoinQueue(username) {
   if (!state.profileViews._queue) state.profileViews._queue = {};
-  state.profileViews._queue[username] = (state.profileViews._queue[username] || 0) + 1;
+  state.profileViews._queue[username] = (state.profileViews._queue[username]||0)+1;
   save(); saveAccountData();
   toast("Joined queue! You're on the waitlist.");
 }
@@ -1893,7 +2781,9 @@ function vpmJoinQueue(username) {
 // ============================================================
 // COLLAB
 // ============================================================
-function openCollabPost() { document.getElementById('collab-post-modal').style.display = 'flex'; }
+function openCollabPost() {
+  document.getElementById('collab-post-modal').style.display='flex';
+}
 
 function countCollabWords(ta) {
   const wc = ta.value.trim().split(/\s+/).filter(Boolean).length;
@@ -1905,7 +2795,7 @@ function submitCollabPost() {
   const desc = document.getElementById('collab-desc-input').value.trim();
   if (!title || !desc) { toast('Fill in heading and description'); return; }
   const username = state.currentUser?.username || 'user';
-  state.collabs.unshift({ id: Date.now(), author: username, title, desc, joinedBy: [], time: new Date().toISOString() });
+  state.collabs.unshift({ id:Date.now(), author:username, title, desc, joinedBy:[], time:new Date().toISOString() });
   save(); saveAccountData();
   closeModal('collab-post-modal');
   renderCollab();
@@ -1924,8 +2814,11 @@ function renderCollab() {
     const joined = c.joinedBy.includes(username);
     return `<div class="collab-card">
       <div class="collab-card-head">
-        <div><div class="collab-title">${escHtml(c.title)}</div><div style="font-size:12px;color:var(--text3);margin-top:2px">by @${escHtml(c.author)} · ${getTimeAgo(c.time)}</div></div>
-        ${c.author !== username ? `<button class="btn ${joined ? 'btn-ghost' : 'btn-primary'} btn-sm" onclick="joinCollab('${c.id}',this)">${joined ? 'Joined' : 'Join'}</button>` : '<span style="font-size:12px;color:var(--text3)">Your post</span>'}
+        <div>
+          <div class="collab-title">${escHtml(c.title)}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">by @${escHtml(c.author)} · ${getTimeAgo(c.time)}</div>
+        </div>
+        ${c.author !== username ? `<button class="btn ${joined?'btn-ghost':'btn-primary'} btn-sm" onclick="joinCollab('${c.id}',this)">${joined?'Joined':'Join'}</button>` : '<span style="font-size:12px;color:var(--text3)">Your post</span>'}
       </div>
       <div class="collab-desc">${escHtml(c.desc)}</div>
       <div class="collab-meta">${c.joinedBy.length} interested</div>
@@ -1935,17 +2828,17 @@ function renderCollab() {
 
 function joinCollab(id, btn) {
   const username = state.currentUser?.username || 'user';
-  const c = state.collabs.find(x => x.id == id);
+  const c = state.collabs.find(x=>x.id==id);
   if (!c) return;
   const idx = c.joinedBy.indexOf(username);
-  if (idx >= 0) {
-    c.joinedBy.splice(idx, 1);
-    btn.textContent = 'Join'; btn.className = 'btn btn-primary btn-sm';
+  if (idx>=0) {
+    c.joinedBy.splice(idx,1);
+    btn.textContent='Join'; btn.className='btn btn-primary btn-sm';
   } else {
     c.joinedBy.push(username);
-    btn.textContent = 'Joined'; btn.className = 'btn btn-ghost btn-sm';
+    btn.textContent='Joined'; btn.className='btn btn-ghost btn-sm';
     openChat(c.author);
-    toast('Joined! Opening DM with ' + c.author + '…');
+    toast('Joined! Opening DM with '+c.author+'...');
   }
   save(); saveAccountData();
   renderCollab();
@@ -1957,28 +2850,35 @@ function joinCollab(id, btn) {
 async function renderChats() {
   const list = document.getElementById('chat-list');
   const me = state.currentUser?.username;
-  if (!list || !me) return;
+  if (!me) return;
+
   try {
-    const snap = await db.collection('chats').where('participants', 'array-contains', me).get();
+    const snap = await db.collection("chats")
+      .where("participants", "array-contains", me)
+      .get();
+
     if (snap.empty) {
       list.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px">No messages yet</div>`;
       return;
     }
+
     list.innerHTML = snap.docs.map(doc => {
       const data = doc.data();
       const other = (data.participants || []).find(u => u !== me) || '?';
       const messages = data.messages || [];
       const last = messages.length ? messages[messages.length - 1] : null;
-      return `<div class="chat-item" onclick="openChat('${escHtml(other)}')">
-        <div class="chat-av">${escHtml(other[0].toUpperCase())}</div>
-        <div style="flex:1;min-width:0">
-          <div class="chat-name">@${escHtml(other)}</div>
-          ${last ? `<div class="chat-preview">${last.from === me ? 'You: ' : ''}${escHtml(last.text)}</div>` : ''}
-        </div>
-      </div>`;
+
+      return `
+        <div class="chat-item" onclick="openChat('${escHtml(other)}')">
+          <div class="chat-av">${other[0].toUpperCase()}</div>
+          <div style="flex:1;min-width:0">
+            <div class="chat-name">@${escHtml(other)}</div>
+            ${last ? `<div class="chat-preview">${last.from === me ? 'You: ' : ''}${escHtml(last.text)}</div>` : ''}
+          </div>
+        </div>`;
     }).join('');
-  } catch(err) {
-    console.error('renderChats:', err);
+  } catch (err) {
+    console.error('renderChats error:', err);
     list.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px">Could not load chats</div>`;
   }
 }
@@ -1986,48 +2886,86 @@ async function renderChats() {
 function openChat(otherUsername) {
   navigate('chats');
   state.activeChatUser = otherUsername;
+  state.activeChatName = otherUsername;
+
   const me = state.currentUser?.username;
   if (!me || !otherUsername) return;
+
   const chatId = getChatId(me, otherUsername);
+
   document.getElementById('chat-empty').style.display = 'none';
   const chatActive = document.getElementById('chat-active');
   chatActive.style.display = 'flex';
+
   document.getElementById('chat-active-av').textContent = otherUsername[0].toUpperCase();
   document.getElementById('chat-active-name').textContent = '@' + otherUsername;
+
   const messagesEl = document.getElementById('chat-messages');
+
   if (unsubscribeChat) unsubscribeChat();
-  unsubscribeChat = db.collection('chats').doc(chatId).onSnapshot(doc => {
-    const data = doc.exists ? doc.data() : null;
-    const messages = data?.messages || [];
-    messagesEl.innerHTML = messages.map(m => `
-      <div class="msg-wrap ${m.from === me ? 'self' : ''}">
-        <div class="msg-bubble">${escHtml(m.text)}</div>
-      </div>`).join('');
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }, err => console.error('Chat listener:', err));
+
+  unsubscribeChat = db.collection("chats").doc(chatId)
+    .onSnapshot(doc => {
+      const data = doc.exists ? doc.data() : null;
+      const messages = (data && data.messages) ? data.messages : [];
+
+      messagesEl.innerHTML = messages.map(m => `
+        <div class="msg-wrap ${m.from === me ? 'self' : ''}">
+          <div class="msg-bubble">${escHtml(m.text)}</div>
+        </div>`).join('');
+
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }, err => {
+      console.error('Chat listener error:', err);
+    });
 }
 
 async function sendMsg() {
-  const fbUser = auth.currentUser;
-  if (!fbUser) { toast('Not signed in'); return; }
-  const me = fbUser.email?.split('@')[0];
+
+  const user = auth.currentUser; // 🔥 real source
+  if (!user) {
+    toast("Not signed in");
+    return;
+  }
+
+  const me = user.email?.split("@")[0];
   const otherUser = state.activeChatUser;
   if (!otherUser) return;
+
   const text = document.getElementById('chat-input').value.trim();
   if (!text) return;
+
   const chatId = getChatId(me, otherUser);
   document.getElementById('chat-input').value = '';
+
   try {
-    const chatRef = db.collection('chats').doc(chatId);
-    const newMsg = { from: me, text, time: Date.now() };
+    const chatRef = db.collection("chats").doc(chatId);
+
+    const newMsg = {
+      from: me,
+      text,
+      time: Date.now()
+    };
+
     const doc = await chatRef.get();
+
     if (doc.exists) {
-      await chatRef.update({ messages: firebase.firestore.FieldValue.arrayUnion(newMsg) });
+      await chatRef.update({
+        messages: firebase.firestore.FieldValue.arrayUnion(newMsg)
+      });
     } else {
-      await chatRef.set({ participants: [me, otherUser], messages: [newMsg] });
+      await chatRef.set({
+        participants: [me, otherUser],
+        messages: [newMsg]
+      });
     }
+
     renderChats();
-  } catch(err) { console.error(err); toast('Failed to send message'); }
+
+  } catch (err) {
+    console.error(err);
+    toast("Failed to send message");
+  }
 }
 
 // ============================================================
@@ -2036,15 +2974,16 @@ async function sendMsg() {
 function changeUsername() {
   const newName = prompt('Enter new username (letters, numbers, underscore):', state.currentUser?.username || '');
   if (!newName) return;
-  const clean = newName.toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 20);
+  const clean = newName.toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,20);
   if (!clean) { toast('Invalid username'); return; }
   if (state.currentUser) state.currentUser.username = clean;
   const idx = state.accounts.findIndex(a => a.email === state.currentUser?.email);
   if (idx >= 0) state.accounts[idx].username = clean;
-  save(); saveAccountData();
+  save();
+  saveAccountData();
   updateSidebar();
   toast('Username updated!');
-  document.getElementById('current-username-disp').textContent = '@' + clean;
+  document.getElementById('current-username-disp').textContent = '@'+clean;
 }
 
 function clearAll() {
@@ -2057,22 +2996,22 @@ function clearAll() {
 // UTILS
 // ============================================================
 function escHtml(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function escAttr(str) {
-  return String(str || '').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  return String(str||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 function getTimeAgo(iso) {
   const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
+  const mins = Math.floor(diff/60000);
   if (mins < 1) return 'just now';
   if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
+  const hrs = Math.floor(mins/60);
   if (hrs < 24) return `${hrs}h ago`;
-  return `${Math.floor(hrs / 24)}d ago`;
+  return `${Math.floor(hrs/24)}d ago`;
 }
 
-// Apply dark toggle on load
+// Init theme toggle state
 const dt = document.getElementById('dark-toggle');
 if (dt) dt.classList.toggle('on', state.theme === 'dark');
 </script>
