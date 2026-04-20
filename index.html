@@ -1599,8 +1599,7 @@ let state = {
   activeChatUser: null,
   profileCode: '',
   profileCodePublished: false,
-  profileViews: {},
-  _justLoggedIn: false  // 🔥 Flag to trigger page refresh after landing on feed
+  profileViews: {}
 };
 
 function save() { localStorage.setItem('sailorx_v3', JSON.stringify(state)); }
@@ -1621,6 +1620,14 @@ let tempLogoDataUrl = '';
 // ============================================================
 load();
 applyTheme();
+
+// ============================================================
+// URL USERNAME HANDLER
+// ============================================================
+const path = window.location.pathname;
+const urlUsername = path === "/" ? null : path.slice(1).toLowerCase();
+
+console.log("🌐 URL username:", urlUsername);
 
 async function saveUserData() {
   if (!state.currentUser?.uid) return;
@@ -1748,21 +1755,19 @@ function enterApp() {
   hideAll();
   document.getElementById('app').classList.remove('hidden');
   updateSidebar();
-  // 🔥 NAVIGATE TO FEED PAGE ON LOGIN
-  navigate('feed');
   void renderFeed();
   renderCollab();
   renderChats();
   applyTheme();
-  
-  // 🔥 If just logged in, refresh page once to clear previous account data
-  if (state._justLoggedIn) {
-    console.log('🔄 Refreshing page after login to clear previous data...');
-    state._justLoggedIn = false;
-    save();
-    setTimeout(() => {
-      location.reload();
-    }, 800);
+
+  // 👇 ADD THIS
+  if (urlUsername && state.currentUser) {
+    if (urlUsername !== state.currentUser.username) {
+      // visiting someone else's profile
+      setTimeout(() => {
+        viewUserProfile(urlUsername);
+      }, 500);
+    }
   }
 }
 
@@ -1821,6 +1826,12 @@ auth.onAuthStateChanged(async user => {
     logo: user.photoURL
   };
 
+  // 🚀 Redirect user to their own URL
+if (!urlUsername) {
+  const myUsername = state.currentUser.username;
+  window.history.replaceState({}, "", "/" + myUsername);
+}
+
   const existingIdx = state.accounts.findIndex(a => a.uid === user.uid);
   if (existingIdx < 0) {
     state.accounts.push(state.currentUser);
@@ -1841,8 +1852,6 @@ auth.onAuthStateChanged(async user => {
     showBizProfile();
   } else {
     console.log('✨ Profile loaded, entering app');
-    state._justLoggedIn = true;  // 🔥 Mark that we just logged in
-    save();
     enterApp();
   }
 });
@@ -1983,8 +1992,6 @@ function bpStep2Finish() {
   save();
   saveAccountData();
   toast('Profile created! 🚀');
-  state._justLoggedIn = true;  // 🔥 Mark that we just logged in
-  save();
   enterApp();
 }
 
