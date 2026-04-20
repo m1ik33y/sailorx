@@ -1589,10 +1589,11 @@ function getChatId(uidA, uidB) {
 // ============================================================
 let state = {
   theme: 'light',
-  currentUser: null, // { name, username, email, password, logo }
+  currentUser: null, // { uid, name, username, email, logo }
   accounts: [],      // saved accounts array
   profile: null,
   posts: [],
+  globalPosts: [],
   collabs: [],
   chats: {},
   activeChatUser: null,
@@ -1627,7 +1628,6 @@ async function saveUserData() {
       username: state.currentUser.username,
       email: state.currentUser.email,
       profile: state.profile || null,
-      posts: state.posts || [],
       collabs: state.collabs || [],
       profileCode: state.profileCode || '',
       profileCodePublished: state.profileCodePublished || false,
@@ -1639,6 +1639,32 @@ async function saveUserData() {
   }
 }
 
+async function savePostGlobally(post) {
+  if (!state.currentUser?.uid) return;
+  try {
+    await db.collection('posts').doc(post.id.toString()).set({
+      ...post,
+      authorUid: state.currentUser.uid,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+  } catch (err) {
+    console.error('savePostGlobally error:', err);
+  }
+}
+
+async function loadGlobalPosts() {
+  try {
+    const snap = await db.collection('posts')
+      .orderBy('createdAt', 'desc')
+      .get();
+    const posts = snap.docs.map(doc => doc.data());
+    return posts;
+  } catch (err) {
+    console.error('loadGlobalPosts error:', err);
+    return [];
+  }
+}
+
 async function loadUserData(uid) {
   if (!uid) return;
   try {
@@ -1646,7 +1672,7 @@ async function loadUserData(uid) {
     if (doc.exists) {
       const data = doc.data();
       state.profile = data.profile || null;
-      state.posts = data.posts || [];
+      state.posts = [];
       state.collabs = data.collabs || [];
       state.profileCode = data.profileCode || '';
       state.profileCodePublished = data.profileCodePublished || false;
@@ -1669,6 +1695,7 @@ function resetUserData() {
   state.profileCode = '';
   state.profileCodePublished = false;
   state.profileViews = {};
+  state.globalPosts = [];
 }
 
 
@@ -1720,7 +1747,7 @@ function enterApp() {
   hideAll();
   document.getElementById('app').classList.remove('hidden');
   updateSidebar();
-  renderFeed();
+  void renderFeed();
   renderCollab();
   renderChats();
   applyTheme();
@@ -1953,7 +1980,6 @@ function saveAccountData() {
   
   const acctData = {
     profile: state.profile,
-    posts: state.posts,
     collabs: state.collabs,
     chats: state.chats,
     profileCode: state.profileCode,
@@ -2203,7 +2229,7 @@ function renderProfile() {
     ? `<img src="${p.logo}" alt="${p.businessName}" style="width:100%;height:100%;object-fit:cover">`
     : `<span style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif">${initials}</span>`;
 
-  const myPosts = state.posts.filter(po => po.author === username);
+  const myPosts = state.globalPosts.filter(po => po.author === username);
   const tracks = state.profile._tracks || 0;
   const queue = state.profile._queue || 0;
   const views = state.profileViews[username] || 0;
@@ -2314,7 +2340,7 @@ function updateCodePreview() {
   document.getElementById('code-preview-iframe').srcdoc = code;
 }
 
-function submitCodePost() {
+async function submitCodePost() {
   const caption = document.getElementById('code-post-caption').value.trim();
   const code = document.getElementById('code-post-ta').value;
   if (!code.trim()) { toast('Paste some code first'); return; }
@@ -2323,12 +2349,12 @@ function submitCodePost() {
     id: Date.now(), type: 'code', author: username, caption, code,
     time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
   };
-  state.posts.unshift(post);
+  await savePostGlobally(post);
   save(); saveAccountData();
   closeModal('post-code-modal');
   document.getElementById('code-post-ta').value = '';
   document.getElementById('code-post-caption').value = '';
-  renderFeed();
+  await renderFeed();
   toast('Code posted! ✨');
 }
 
@@ -2363,7 +2389,7 @@ function countPitchWords() {
   document.getElementById('pitch-word-count').textContent = `${wc} / 50 words`;
 }
 
-function submitPitchPost() {
+async function submitPitchPost() {
   const pitchText = document.getElementById('pitch-main').value.trim();
   if (!pitchText) { toast('Enter your pitch'); return; }
   const sub = document.getElementById('pitch-sub').value.trim();
@@ -2375,10 +2401,10 @@ function submitPitchPost() {
     options: options.map(o=>({text:o, votes:0})), votedBy: [],
     time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
   };
-  state.posts.unshift(post);
+  await savePostGlobally(post);
   save(); saveAccountData();
   closeModal('post-pitch-modal');
-  renderFeed();
+  await renderFeed();
   toast('Pitched! 🚀');
 }
 
@@ -2485,7 +2511,7 @@ function uploadBgImage(e) {
   e.target.value = '';
 }
 
-function submitImagePost() {
+async function submitImagePost() {
   const canvas = document.getElementById('drawing-canvas');
   const dataUrl = canvas.toDataURL('image/png');
   const caption = document.getElementById('canvas-caption').value.trim();
@@ -2494,20 +2520,23 @@ function submitImagePost() {
     id: Date.now(), type: 'image', author: username, imageData: dataUrl, caption,
     time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
   };
-  state.posts.unshift(post);
+  await savePostGlobally(post);
   save(); saveAccountData();
   closeModal('post-image-modal');
   document.getElementById('canvas-caption').value = '';
-  renderFeed();
+  await renderFeed();
   toast('Image posted! 🎨');
 }
 
 // ============================================================
 // FEED
 // ============================================================
-function renderFeed() {
+async function renderFeed() {
   const container = document.getElementById('feed-list');
-  if (!state.posts.length) {
+  const posts = await loadGlobalPosts();
+  state.globalPosts = posts;
+  
+  if (!posts.length) {
     container.innerHTML = `<div class="empty-state">
       <div class="empty-icon">📡</div>
       <div class="empty-title">Nothing here yet</div>
@@ -2515,7 +2544,7 @@ function renderFeed() {
     </div>`;
     return;
   }
-  container.innerHTML = state.posts.map(p => renderPostCard(p)).join('');
+  container.innerHTML = posts.map(p => renderPostCard(p)).join('');
 }
 
 function renderPostCard(post, compact=false) {
@@ -2596,7 +2625,7 @@ function renderPostCard(post, compact=false) {
 }
 
 function toggleInterest(postId, btn) {
-  const post = state.posts.find(p=>p.id==postId);
+  const post = state.globalPosts.find(p=>p.id==postId);
   if (!post) return;
   const username = state.currentUser?.username || 'user';
   if (!post.interestedBy) post.interestedBy = [];
@@ -2612,7 +2641,16 @@ function toggleInterest(postId, btn) {
   }
   btn.querySelector('svg').setAttribute('fill', post.interestedBy.includes(username)?'currentColor':'none');
   btn.querySelector('.interest-count').textContent = post.interests;
-  save(); saveAccountData();
+  void updatePostGlobally(post);
+  save();
+}
+
+async function updatePostGlobally(post) {
+  try {
+    await db.collection('posts').doc(post.id.toString()).set(post, { merge: true });
+  } catch (err) {
+    console.error('updatePostGlobally error:', err);
+  }
 }
 
 function toggleComments(postId) {
@@ -2624,13 +2662,14 @@ function submitComment(postId) {
   const input = document.getElementById('comment-input-'+postId);
   const text = input.value.trim();
   if (!text) return;
-  const post = state.posts.find(p=>p.id==postId);
+  const post = state.globalPosts.find(p=>p.id==postId);
   if (!post) return;
   if (!post.comments) post.comments = [];
   const username = state.currentUser?.username || 'user';
   const comment = { author: username, text, time: new Date().toISOString() };
   post.comments.push(comment);
-  save(); saveAccountData();
+  void updatePostGlobally(post);
+  save();
   input.value = '';
   const list = document.getElementById('comment-list-'+postId);
   const div = document.createElement('div');
@@ -2646,19 +2685,20 @@ function submitComment(postId) {
 }
 
 function votePoll(postId, optIdx) {
-  const post = state.posts.find(p=>p.id==postId);
+  const post = state.globalPosts.find(p=>p.id==postId);
   if (!post || !post.options) return;
   const username = state.currentUser?.username || 'user';
   if (!post.votedBy) post.votedBy = [];
   if (post.votedBy.includes(username)) { toast('Already voted'); return; }
   post.votedBy.push(username);
   post.options[optIdx].votes++;
-  save(); saveAccountData();
-  renderFeed();
+  void updatePostGlobally(post);
+  save();
+  void renderFeed();
 }
 
 function viewCodePost(postId) {
-  const post = state.posts.find(p=>p.id==postId);
+  const post = state.globalPosts.find(p=>p.id==postId);
   if (!post) return;
   document.getElementById('view-code-iframe').srcdoc = post.code;
   document.getElementById('view-code-modal').style.display='flex';
@@ -2690,7 +2730,7 @@ function viewUserProfile(username) {
   state.profileViews[username]++;
   save(); saveAccountData();
   const isFollowing = (state.profile?._following||[]).includes(username);
-  const userPosts = state.posts.filter(po=>po.author===username);
+  const userPosts = state.globalPosts.filter(po=>po.author===username);
   const tracks = state.profileViews._tracks?.[username] || 0;
   const queue = state.profileViews._queue?.[username] || 0;
   const body = document.getElementById('vpm-body');
