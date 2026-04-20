@@ -1600,7 +1600,7 @@ let state = {
   profileCode: '',
   profileCodePublished: false,
   profileViews: {},
-  _lastUid: null  // 🔥 Track last UID for account switch detection
+  _justLoggedIn: false  // 🔥 Flag to trigger page refresh after landing on feed
 };
 
 function save() { localStorage.setItem('sailorx_v3', JSON.stringify(state)); }
@@ -1697,9 +1697,6 @@ function resetUserData() {
   state.profileCodePublished = false;
   state.profileViews = {};
   state.globalPosts = [];
-  tempBizProfile = {};
-  selectedStage = 'idea';
-  tempLogoDataUrl = '';
 }
 
 
@@ -1757,6 +1754,16 @@ function enterApp() {
   renderCollab();
   renderChats();
   applyTheme();
+  
+  // 🔥 If just logged in, refresh page once to clear previous account data
+  if (state._justLoggedIn) {
+    console.log('🔄 Refreshing page after login to clear previous data...');
+    state._justLoggedIn = false;
+    save();
+    setTimeout(() => {
+      location.reload();
+    }, 800);
+  }
 }
 
 // Render saved accounts on auth screen
@@ -1804,24 +1811,6 @@ auth.onAuthStateChanged(async user => {
   }
 
   console.log('✅ Firebase auth user detected:', user.uid, user.email);
-  
-  // 🔥 CHECK: Is this a DIFFERENT user than before? (account switch detection)
-  const isAccountSwitch = state._lastUid && state._lastUid !== user.uid;
-  
-  if (isAccountSwitch) {
-    console.log('🔄 ACCOUNT SWITCH DETECTED: Previous UID:', state._lastUid, '→ New UID:', user.uid);
-    // Clear everything for the new account login
-    resetUserData();
-    state._lastUid = user.uid;
-    save();
-    // Full page refresh to ensure clean state
-    setTimeout(() => location.reload(), 300);
-    return;
-  }
-
-  // Update the last UID to track account changes
-  state._lastUid = user.uid;
-
   await user.reload();
 
   state.currentUser = {
@@ -1852,11 +1841,9 @@ auth.onAuthStateChanged(async user => {
     showBizProfile();
   } else {
     console.log('✨ Profile loaded, entering app');
-    // 🔥 REFRESH PAGE AND LAND ON FEED
+    state._justLoggedIn = true;  // 🔥 Mark that we just logged in
     save();
-    setTimeout(() => {
-      location.reload();
-    }, 100);
+    enterApp();
   }
 });
 
@@ -1905,7 +1892,6 @@ async function signOut() {
   resetUserData();
   save();
 
-  // 🔥 SHOW AUTH SCREEN (Firebase auth state change will handle the transition)
   showAuth();
 }
 
@@ -1997,10 +1983,9 @@ function bpStep2Finish() {
   save();
   saveAccountData();
   toast('Profile created! 🚀');
-  // 🔥 REFRESH PAGE TO LAND ON FEED
-  setTimeout(() => {
-    location.reload();
-  }, 500);
+  state._justLoggedIn = true;  // 🔥 Mark that we just logged in
+  save();
+  enterApp();
 }
 
 function saveAccountData() {
