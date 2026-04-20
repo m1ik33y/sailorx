@@ -1751,6 +1751,8 @@ function enterApp() {
   renderCollab();
   renderChats();
   applyTheme();
+  // Set initial URL to /<username>/feed
+  updateURLPath('feed');
 }
 
 // Render saved accounts on auth screen
@@ -1794,6 +1796,8 @@ auth.onAuthStateChanged(async user => {
     resetUserData();
     save();
     showAuth();
+    // Reset URL to home on logout
+    window.history.pushState({}, '', '/');
     return;
   }
 
@@ -1829,6 +1833,13 @@ auth.onAuthStateChanged(async user => {
   } else {
     console.log('✨ Profile loaded, entering app');
     enterApp();
+  }
+});
+
+// Handle browser back/forward navigation
+window.addEventListener('popstate', (event) => {
+  if (event.state && event.state.page) {
+    navigate(event.state.page);
   }
 });
 
@@ -2015,6 +2026,14 @@ function openEditBizProfile() {
 // ============================================================
 // NAVIGATION
 // ============================================================
+// Update URL based on current user and page
+function updateURLPath(page) {
+  if (!state.currentUser) return;
+  const username = state.currentUser.username || 'user';
+  const url = `/${username}/${page}`;
+  window.history.pushState({ page, username }, '', url);
+}
+
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
@@ -2029,6 +2048,7 @@ function navigate(page) {
   document.getElementById('fab-menu').classList.remove('open');
   const fab = document.getElementById('fab');
   if (fab) fab.style.display = (page === 'sailor') ? 'none' : 'flex';
+  updateURLPath(page);
 }
 
 function goToProfile() { navigate('profile'); }
