@@ -1829,7 +1829,9 @@ auth.onAuthStateChanged(async user => {
   // 🚀 Redirect user to their own URL
 if (!urlUsername) {
   const myUsername = state.currentUser.username;
-  window.history.replaceState({}, "", "/" + myUsername);
+  if (window.location.pathname !== "/" + myUsername) {
+    window.history.replaceState({}, "", "/" + myUsername);
+  }
 }
 
   const existingIdx = state.accounts.findIndex(a => a.uid === user.uid);
@@ -1858,8 +1860,11 @@ if (!urlUsername) {
 
 setInterval(() => {
   if (auth.currentUser && !state.currentUser) {
-    console.warn("⚠️ Auth mismatch detected (Firebase user exists but app not synced), reloading...");
-    location.reload();
+    console.warn("Auth mismatch - syncing instead of reload");
+    state.currentUser = {
+      uid: auth.currentUser.uid,
+      email: auth.currentUser.email
+    };
   }
   if (!auth.currentUser && state.currentUser) {
     console.warn("⚠️ Auth mismatch detected (app has user but Firebase doesn't), signing out...");
