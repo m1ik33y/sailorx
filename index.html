@@ -1553,6 +1553,7 @@ input[type=range]{accent-color:var(--text);height:4px}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
 <script>
+  let hasInitialized = false;
   let unsubscribeChat = null;
 
 // ============================================================
@@ -1805,15 +1806,22 @@ function renderAuthAccounts() {
 
 
 auth.onAuthStateChanged(async user => {
-
   if (!user) {
     console.log('🔓 User logged out');
     state.currentUser = null;
+    hasInitialized = false;
     resetUserData();
     save();
     showAuth();
     return;
   }
+
+  // ✅ KEY FIX: skip if we've already handled this login session
+  if (hasInitialized && state.currentUser?.uid === user.uid) {
+    console.log('↩️ Auth state re-fired for same user, skipping');
+    return;
+  }
+  hasInitialized = true;
 
   console.log('✅ Firebase auth user detected:', user.uid, user.email);
   await user.reload();
@@ -1826,54 +1834,32 @@ auth.onAuthStateChanged(async user => {
     logo: user.photoURL
   };
 
-  // 🚀 Redirect user to their own URL
-if (!urlUsername) {
+  const existingIdx = state.accounts.findIndex(a => a.uid === user.uid);
+  if (existingIdx < 0) {
+    state.accounts.push(state.currentUser);
+  } else {
+    state.accounts[existingIdx] = state.currentUser;
+  }
+
+  resetUserData();
+  await loadUserData(user.uid);
+  save();
+
+  // ✅ Move replaceState AFTER enterApp, so it doesn't re-trigger anything mid-flow
+  if (!state.profile) {
+    showBizProfile();
+  } else {
+    enterApp();
+  }
+
+  // ✅ Only redirect URL once, after app is ready
   const myUsername = state.currentUser.username;
   if (window.location.pathname !== "/" + myUsername) {
     window.history.replaceState({}, "", "/" + myUsername);
   }
-}
-
-  const existingIdx = state.accounts.findIndex(a => a.uid === user.uid);
-  if (existingIdx < 0) {
-    state.accounts.push(state.currentUser);
-    console.log('📌 Added new account to saved accounts');
-  } else {
-    state.accounts[existingIdx] = state.currentUser;
-    console.log('🔄 Updated existing account');
-  }
-
-  resetUserData();
-  console.log('⏳ Loading Firestore data for uid:', user.uid);
-  await loadUserData(user.uid);
-
-  save();
-  
-  if (!state.profile) {
-    console.log('🆕 No profile found, showing setup');
-    showBizProfile();
-  } else {
-    console.log('✨ Profile loaded, entering app');
-    enterApp();
-  }
 });
 
-setInterval(() => {
-  if (auth.currentUser && !state.currentUser) {
-    console.warn("Auth mismatch - syncing instead of reload");
-    state.currentUser = {
-      uid: auth.currentUser.uid,
-      email: auth.currentUser.email
-    };
-  }
-  if (!auth.currentUser && state.currentUser) {
-    console.warn("⚠️ Auth mismatch detected (app has user but Firebase doesn't), signing out...");
-    state.currentUser = null;
-    resetUserData();
-    save();
-    showAuth();
-  }
-}, 5000);
+
 
 function handleGoogleSignIn() {
   console.log('🔐 Initiating Google sign-in...');
