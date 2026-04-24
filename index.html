@@ -58,421 +58,255 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
-/* ============================================================
-   AUTH SCREEN
-   ============================================================ */
+/* AUTH SCREEN */
 #auth-screen {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  overflow-y: auto;
+  position: fixed; inset: 0; background: var(--bg); z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; overflow-y: auto;
 }
 #auth-screen.hidden { display: none; }
+.auth-shell { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 0; animation: authFadeIn .35s ease both; }
+@keyframes authFadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.auth-brand { text-align: center; margin-bottom: 36px; }
+.auth-brand-logo { display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;background:var(--text);color:var(--bg);margin-bottom:12px; }
+.auth-brand-name { font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1; }
+.auth-brand-sub { font-size:11px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-top:3px; }
+.auth-card { background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:28px 28px 24px;box-shadow:var(--shadow-md); }
+.auth-heading { font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:6px;color:var(--text); }
+.auth-subheading { font-size:13px;color:var(--text3);margin-bottom:24px;line-height:1.5; }
+.auth-accounts { display:flex;flex-direction:column;gap:6px;margin-bottom:20px; }
+.auth-account-row { display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;transition:border-color .15s,background .15s; }
+.auth-account-row:hover { border-color:var(--text);background:var(--bg); }
+.auth-account-av { width:36px;height:36px;border-radius:10px;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;flex-shrink:0;overflow:hidden; }
+.auth-account-av img { width:100%;height:100%;object-fit:cover; }
+.auth-account-info { flex:1;min-width:0; }
+.auth-account-name { font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+.auth-account-email { font-size:12px;color:var(--text3); }
+.auth-no-accounts { text-align:center;padding:24px 16px;border:1px dashed var(--border);border-radius:10px;margin-bottom:20px; }
+.auth-no-accounts-icon { font-size:28px;margin-bottom:8px;opacity:.4; }
+.auth-no-accounts-text { font-size:13px;color:var(--text3); }
+.auth-divider { display:flex;align-items:center;gap:10px;margin:16px 0; }
+.auth-divider span { font-size:12px;color:var(--text3);white-space:nowrap; }
+.auth-divider::before,.auth-divider::after { content:'';flex:1;height:1px;background:var(--border); }
+.btn-google { display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:11px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;font-weight:500;cursor:pointer;transition:border-color .15s,background .15s;margin-bottom:10px; }
+.btn-google:hover { border-color:var(--text);background:var(--bg); }
+.btn-google svg { flex-shrink:0; }
+.btn-create-account { display:flex;align-items:center;justify-content:center;width:100%;padding:11px 16px;border-radius:10px;border:none;background:var(--text);color:var(--bg);font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s; }
+.btn-create-account:hover { opacity:.85; }
+.auth-footer-brand { text-align:center;margin-top:28px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text3);letter-spacing:0.5px; }
+.auth-footer-brand span { font-weight:400;font-size:10px;letter-spacing:2px; }
 
-.auth-shell {
-  width: 100%;
-  max-width: 380px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  animation: authFadeIn .35s ease both;
-}
-@keyframes authFadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* SIGNUP SCREEN */
+#signup-screen { position:fixed;inset:0;background:var(--bg);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto; }
+#signup-screen.visible { display:flex; }
+.signup-shell { width:100%;max-width:400px;animation:authFadeIn .3s ease both; }
+.signup-back { display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);cursor:pointer;margin-bottom:24px;width:fit-content;transition:color .15s; }
+.signup-back:hover { color:var(--text); }
 
-/* Branding at top */
-.auth-brand {
-  text-align: center;
-  margin-bottom: 36px;
-}
-.auth-brand-logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: var(--text);
-  color: var(--bg);
-  margin-bottom: 12px;
-}
-.auth-brand-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  line-height: 1;
-}
-.auth-brand-sub {
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: var(--text3);
-  text-transform: uppercase;
-  margin-top: 3px;
-}
+/* BIZ PROFILE SETUP SCREEN */
+#bizprofile-screen { position:fixed;inset:0;background:var(--bg);z-index:1000;display:none;overflow-y:auto; }
+#bizprofile-screen.visible { display:block; }
+.bizprofile-wrap { min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px 60px; }
+.bizprofile-shell { width:100%;max-width:500px;animation:authFadeIn .3s ease both; }
+.bizprofile-header { margin-bottom:28px; }
+.bizprofile-step-indicator { display:flex;gap:6px;margin-bottom:20px; }
+.bizprofile-step-dot { height:3px;border-radius:2px;background:var(--border);flex:1;transition:background .25s; }
+.bizprofile-step-dot.done { background:var(--text); }
+.bizprofile-heading { font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:4px; }
+.bizprofile-subheading { font-size:13px;color:var(--text3); }
+.bizprofile-card { background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:16px; }
+.bp-form-group { margin-bottom:16px; }
+.bp-form-group:last-child { margin-bottom:0; }
+.bp-label { font-size:13px;font-weight:500;color:var(--text2);margin-bottom:5px;display:flex;align-items:center;gap:6px; }
+.bp-optional { font-size:11px;color:var(--text3);font-weight:400; }
+.bp-word-count { font-size:11px;color:var(--text3);text-align:right;margin-top:4px; }
+.bp-stage-opts { display:flex;gap:8px; }
+.bp-stage-opt { flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:500;text-align:center;cursor:pointer;transition:all .15s;color:var(--text2); }
+.bp-stage-opt.selected { border-color:var(--text);background:var(--text);color:var(--bg); }
+.bp-upload-area { border:2px dashed var(--border);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;position:relative;overflow:hidden; }
+.bp-upload-area:hover { border-color:var(--text3);background:var(--bg3); }
+.bp-upload-area input[type=file] { position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0;width:100%;height:100%;background:none;border:none;padding:0; }
+.bp-upload-icon { font-size:32px;margin-bottom:10px;opacity:.5; }
+.bp-upload-text { font-size:13px;color:var(--text3);line-height:1.5; }
+.bp-upload-preview { width:100px;height:100px;border-radius:16px;object-fit:cover;margin:0 auto 12px;display:block;border:1px solid var(--border); }
+.bp-upload-change { font-size:12px;color:var(--text3);cursor:pointer;text-decoration:underline; }
+.bp-default-avatar { width:100px;height:100px;border-radius:16px;background:var(--bg3);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border:1px solid var(--border);font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:var(--text2); }
+.btn-full { width:100%;padding:13px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s;border:none;font-family:'DM Sans',sans-serif; }
+.btn-full-primary { background:var(--text);color:var(--bg); }
+.btn-full-primary:hover { opacity:.85; }
+.btn-full-ghost { background:transparent;border:1px solid var(--border);color:var(--text2);margin-top:8px; }
+.btn-full-ghost:hover { background:var(--bg3); }
 
-/* Card */
-.auth-card {
+/* MAIN APP LAYOUT */
+#app{display:flex;height:100vh;overflow:hidden}
+#app.hidden { display: none; }
+#sidebar{width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:50}
+#main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
+#content{flex:1;padding:24px;max-width:680px;margin:0 auto;width:100%}
+
+/* People sidebar */
+.people-panel {
+  width: 200px;
+  flex-shrink: 0;
   background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 28px 28px 24px;
-  box-shadow: var(--shadow-md);
-}
-.auth-heading {
-  font-family: 'Syne', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: var(--text);
-}
-.auth-subheading {
-  font-size: 13px;
-  color: var(--text3);
-  margin-bottom: 24px;
-  line-height: 1.5;
-}
-
-/* Saved accounts list */
-.auth-accounts {
+  border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 20px;
+  overflow: hidden;
 }
-.auth-account-row {
+.people-panel-header {
+  padding: 14px 14px 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.people-panel-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px;
+}
+.people-panel-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
+  gap: 5px;
+  padding: 10px 6px;
   border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--bg3);
-  cursor: pointer;
-  transition: border-color .15s, background .15s;
+  text-align: center;
+  transition: background .15s;
+  margin-bottom: 4px;
 }
-.auth-account-row:hover {
-  border-color: var(--text);
-  background: var(--bg);
-}
-.auth-account-av {
+.people-panel-item:hover { background: var(--bg3); }
+.people-panel-av {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: var(--text);
-  color: var(--bg);
+  background: var(--bg3);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
   font-weight: 700;
   font-family: 'Syne', sans-serif;
+  overflow: hidden;
   flex-shrink: 0;
-  overflow: hidden;
 }
-.auth-account-av img { width: 100%; height: 100%; object-fit: cover; }
-.auth-account-info { flex: 1; min-width: 0; }
-.auth-account-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.auth-account-email { font-size: 12px; color: var(--text3); }
-.auth-no-accounts {
-  text-align: center;
-  padding: 24px 16px;
-  border: 1px dashed var(--border);
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-.auth-no-accounts-icon { font-size: 28px; margin-bottom: 8px; opacity: .4; }
-.auth-no-accounts-text { font-size: 13px; color: var(--text3); }
-
-/* Auth divider */
-.auth-divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 16px 0;
-}
-.auth-divider span { font-size: 12px; color: var(--text3); white-space: nowrap; }
-.auth-divider::before, .auth-divider::after {
-  content: ''; flex: 1; height: 1px; background: var(--border);
-}
-
-/* Google btn */
-.btn-google {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  padding: 11px 16px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--bg3);
+.people-panel-av img { width:100%;height:100%;object-fit:cover; }
+.people-panel-name {
+  font-size: 11px;
+  font-weight: 600;
   color: var(--text);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color .15s, background .15s;
-  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
-.btn-google:hover { border-color: var(--text); background: var(--bg); }
-.btn-google svg { flex-shrink: 0; }
-
-/* Create account btn */
-.btn-create-account {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 11px 16px;
-  border-radius: 10px;
-  border: none;
-  background: var(--text);
-  color: var(--bg);
-  font-size: 14px;
+.people-panel-sub {
+  font-size: 10px;
+  color: var(--text3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.people-follow-btn {
+  font-size: 10px;
   font-weight: 600;
-  cursor: pointer;
-  transition: opacity .15s;
-}
-.btn-create-account:hover { opacity: .85; }
-
-.auth-footer-brand {
-  text-align: center;
-  margin-top: 28px;
-  font-family: 'Syne', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text3);
-  letter-spacing: 0.5px;
-}
-.auth-footer-brand span { font-weight: 400; font-size: 10px; letter-spacing: 2px; }
-
-/* ============================================================
-   SIGNUP SCREEN
-   ============================================================ */
-#signup-screen {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 1000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  overflow-y: auto;
-}
-#signup-screen.visible { display: flex; }
-
-.signup-shell {
-  width: 100%;
-  max-width: 400px;
-  animation: authFadeIn .3s ease both;
-}
-.signup-back {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--text3);
-  cursor: pointer;
-  margin-bottom: 24px;
-  width: fit-content;
-  transition: color .15s;
-}
-.signup-back:hover { color: var(--text); }
-
-/* ============================================================
-   BUSINESS PROFILE SETUP SCREEN  
-   ============================================================ */
-#bizprofile-screen {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 1000;
-  display: none;
-  overflow-y: auto;
-}
-#bizprofile-screen.visible { display: block; }
-
-.bizprofile-wrap {
-  min-height: 100vh;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 40px 20px 60px;
-}
-.bizprofile-shell {
-  width: 100%;
-  max-width: 500px;
-  animation: authFadeIn .3s ease both;
-}
-.bizprofile-header {
-  margin-bottom: 28px;
-}
-.bizprofile-step-indicator {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 20px;
-}
-.bizprofile-step-dot {
-  height: 3px;
-  border-radius: 2px;
-  background: var(--border);
-  flex: 1;
-  transition: background .25s;
-}
-.bizprofile-step-dot.done { background: var(--text); }
-.bizprofile-heading {
-  font-family: 'Syne', sans-serif;
-  font-size: 22px;
-  font-weight: 800;
-  margin-bottom: 4px;
-}
-.bizprofile-subheading {
-  font-size: 13px;
-  color: var(--text3);
-}
-.bizprofile-card {
-  background: var(--bg2);
+  padding: 3px 10px;
+  border-radius: 20px;
   border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 28px;
-  margin-bottom: 16px;
-}
-.bp-form-group { margin-bottom: 16px; }
-.bp-form-group:last-child { margin-bottom: 0; }
-.bp-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text2);
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.bp-optional {
-  font-size: 11px;
-  color: var(--text3);
-  font-weight: 400;
-}
-.bp-word-count {
-  font-size: 11px;
-  color: var(--text3);
-  text-align: right;
-  margin-top: 4px;
-}
-.bp-stage-opts {
-  display: flex;
-  gap: 8px;
-}
-.bp-stage-opt {
-  flex: 1;
-  padding: 9px 12px;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  font-size: 13px;
-  font-weight: 500;
-  text-align: center;
+  background: transparent;
   cursor: pointer;
+  color: var(--text);
   transition: all .15s;
-  color: var(--text2);
+  white-space: nowrap;
 }
-.bp-stage-opt.selected {
-  border-color: var(--text);
-  background: var(--text);
-  color: var(--bg);
-}
+.people-follow-btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+.people-follow-btn.following { background: var(--bg3); border-color: var(--border); }
 
-/* Image upload step */
-.bp-upload-area {
-  border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 36px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color .15s, background .15s;
-  position: relative;
+/* Page layout with people panel */
+.page-with-people {
+  display: none;
+  flex: 1;
   overflow: hidden;
 }
-.bp-upload-area:hover { border-color: var(--text3); background: var(--bg3); }
-.bp-upload-area input[type=file] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-  font-size: 0;
+.page-with-people.active {
+  display: flex;
+}
+.page-with-people .page-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+.page-with-people .page-inner {
+  padding: 24px;
+  max-width: 680px;
+  margin: 0 auto;
   width: 100%;
-  height: 100%;
-  background: none;
-  border: none;
-  padding: 0;
 }
-.bp-upload-icon { font-size: 32px; margin-bottom: 10px; opacity: .5; }
-.bp-upload-text { font-size: 13px; color: var(--text3); line-height: 1.5; }
-.bp-upload-preview {
-  width: 100px;
-  height: 100px;
-  border-radius: 16px;
-  object-fit: cover;
-  margin: 0 auto 12px;
-  display: block;
-  border: 1px solid var(--border);
+
+/* Mobile people strip */
+.people-strip {
+  display: none;
+  overflow-x: auto;
+  padding: 10px 16px;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  flex-shrink: 0;
 }
-.bp-upload-change { font-size: 12px; color: var(--text3); cursor: pointer; text-decoration: underline; }
-.bp-default-avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 16px;
+.people-strip::-webkit-scrollbar { height: 0; }
+.people-strip-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  min-width: 60px;
+  text-align: center;
+}
+.people-strip-av {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
   background: var(--bg3);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 12px;
-  border: 1px solid var(--border);
+  font-size: 16px;
+  font-weight: 700;
   font-family: 'Syne', sans-serif;
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--text2);
+  overflow: hidden;
 }
-
-/* Buttons */
-.btn-full {
-  width: 100%;
-  padding: 13px;
-  border-radius: 10px;
-  font-size: 14px;
+.people-strip-av img { width:100%;height:100%;object-fit:cover; }
+.people-strip-name {
+  font-size: 10px;
   font-weight: 600;
-  cursor: pointer;
-  transition: opacity .15s;
-  border: none;
-  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  white-space: nowrap;
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.btn-full-primary { background: var(--text); color: var(--bg); }
-.btn-full-primary:hover { opacity: .85; }
-.btn-full-ghost {
-  background: transparent;
+.people-strip-follow {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
   border: 1px solid var(--border);
-  color: var(--text2);
-  margin-top: 8px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text);
+  transition: all .15s;
+  white-space: nowrap;
 }
-.btn-full-ghost:hover { background: var(--bg3); }
-
-/* ============================================================
-   MAIN APP LAYOUT (hidden until authed)
-   ============================================================ */
-#app{display:flex;height:100vh;overflow:hidden}
-#app.hidden { display: none; }
-
-/* Layout */
-#sidebar{width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:50}
-#main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
-#content{flex:1;padding:24px;max-width:680px;margin:0 auto;width:100%}
+.people-strip-follow:hover, .people-strip-follow.following { background: var(--text); color: var(--bg); border-color: var(--text); }
 
 /* Sidebar */
 .brand{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
@@ -487,12 +321,48 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .user-handle{font-size:12px;color:var(--text3)}
 .nav-section{padding:8px 12px;flex:1;overflow-y:auto}
 .nav-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:8px 8px 4px}
-.nav-item{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:2px;transition:background .15s}
+.nav-item{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:2px;transition:background .15s;position:relative}
 .nav-item:hover{background:var(--bg3)}
 .nav-item.active{background:var(--accent);color:var(--bg)}
 .nav-item svg{flex-shrink:0;opacity:.8}
 .nav-item.active svg{opacity:1}
 .sidebar-bottom{padding:12px;border-top:1px solid var(--border)}
+
+/* Notification badge */
+.notif-badge {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background: #e85d4a;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  font-family: 'DM Sans', sans-serif;
+}
+.bb-item { position: relative; }
+.bb-notif-badge {
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: #e85d4a;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
 
 /* Mobile bottom bar */
 #bottombar{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:100;padding:8px 0 max(8px,env(safe-area-inset-bottom))}
@@ -623,16 +493,33 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:9px;background:white;top:3px;left:3px;transition:left .2s}
 .toggle.on::after{left:23px}
 
-/* Chat */
+/* CHAT */
 .chat-list{display:flex;flex-direction:column;gap:2px}
-.chat-item{display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;cursor:pointer;transition:background .15s}
+.chat-item{display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;cursor:pointer;transition:background .15s;position:relative}
 .chat-item:hover{background:var(--bg3)}
 .chat-item.active{background:var(--bg3)}
 .chat-av{width:40px;height:40px;border-radius:11px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;overflow:hidden}
 .chat-av img{width:100%;height:100%;object-fit:cover}
 .chat-name{font-size:14px;font-weight:600}
 .chat-preview{font-size:12px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chat-layout{display:flex;gap:0;height:calc(100vh - 60px)}
+.chat-item-badge {
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background: #e85d4a;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Desktop chat layout */
+.chat-layout{display:flex;gap:0;height:calc(100vh - 61px)}
 .chat-sidebar{width:280px;border-right:1px solid var(--border);padding:16px;overflow-y:auto;flex-shrink:0}
 .chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .chat-header{padding:14px 20px;border-bottom:1px solid var(--border);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
@@ -645,6 +532,68 @@ h1,h2,h3,h4{font-family:'Syne',sans-serif}
 .msg-wrap:not(.self) .msg-bubble{background:var(--chat-other);color:var(--chat-other-text);border-bottom-left-radius:3px}
 .chat-input-wrap{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px}
 .chat-input-wrap input{flex:1;padding:10px 14px}
+
+/* Mobile full-screen chat layout */
+#mobile-chat-list-view {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+}
+#mobile-chat-dm-view {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+}
+.mobile-chat-list-inner {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+.mobile-chat-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.mobile-chat-back {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text2);
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.mobile-chat-back:hover { background: var(--bg3); }
+.mobile-chat-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  flex: 1;
+}
+.mobile-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mobile-chat-input {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  background: var(--bg2);
+  flex-shrink: 0;
+}
+.mobile-chat-input input { flex: 1; padding: 10px 14px; }
 
 /* Collab */
 .collab-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:10px}
@@ -924,15 +873,38 @@ input[type=range]{accent-color:var(--text);height:4px}
   #bottombar{display:block}
   #main{padding-bottom:72px}
   #content{padding:16px}
-  .chat-sidebar{display:none}
-  .chat-sidebar.visible{display:block;position:fixed;inset:0;z-index:150;background:var(--bg2);overflow-y:auto}
-  .chat-layout{height:calc(100vh - 132px)}
   #fab{bottom:80px}
   #fab-menu{bottom:140px}
   .form-row{grid-template-columns:1fr}
   .profile-stats{flex-wrap:wrap;gap:12px}
   .profile-top{flex-direction:column}
   #page-sailor.active { height: calc(100vh - 61px - 72px); }
+
+  /* Hide desktop chat layout on mobile */
+  .chat-layout { display: none !important; }
+
+  /* Mobile chat full-screen */
+  #page-chats.active {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 61px - 72px);
+  }
+  #mobile-chat-list-view { display: flex; }
+
+  /* Hide desktop people panel on mobile */
+  .people-panel { display: none !important; }
+
+  /* Show mobile people strip */
+  .people-strip { display: flex; }
+
+  /* Page with people: stack vertically on mobile */
+  .page-with-people.active {
+    flex-direction: column;
+  }
+  .page-with-people .page-scroll {
+    flex: 1;
+    overflow-y: auto;
+  }
 
   /* Auth responsive */
   .auth-card { padding: 22px 18px 20px; }
@@ -944,15 +916,17 @@ input[type=range]{accent-color:var(--text);height:4px}
   .bp-stage-opt { min-width: calc(50% - 4px); }
 }
 @media(min-width:769px){
-  .chat-main{display:flex!important}
+  /* Show desktop chat layout on desktop */
+  .chat-layout { display: flex !important; }
+  #mobile-chat-list-view { display: none !important; }
+  #mobile-chat-dm-view { display: none !important; }
+  #page-chats.active { display: block; }
 }
 </style>
 </head>
 <body>
 
-<!-- ============================================================
-     AUTH SCREEN
-     ============================================================ -->
+<!-- AUTH SCREEN -->
 <div id="auth-screen">
   <div class="auth-shell">
     <div class="auth-brand">
@@ -962,14 +936,10 @@ input[type=range]{accent-color:var(--text);height:4px}
       <div class="auth-brand-name">SailorX</div>
       <div class="auth-brand-sub">Market</div>
     </div>
-
     <div class="auth-card">
       <div class="auth-heading">Log in to SailorX</div>
       <div class="auth-subheading">Pick an account or sign in to continue.</div>
-
-      <!-- Saved accounts list -->
       <div id="auth-accounts-list"></div>
-
       <button class="btn-google" onclick="handleGoogleSignIn()">
         <svg width="18" height="18" viewBox="0 0 48 48">
           <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -979,30 +949,23 @@ input[type=range]{accent-color:var(--text);height:4px}
         </svg>
         Sign in with Google
       </button>
-
       <div class="auth-divider"><span>or</span></div>
-
       <button class="btn-create-account" onclick="showSignup()">Create new account</button>
     </div>
-
     <div class="auth-footer-brand">SailorX <span>MARKET</span></div>
   </div>
 </div>
 
-<!-- ============================================================
-     SIGNUP SCREEN
-     ============================================================ -->
+<!-- SIGNUP SCREEN -->
 <div id="signup-screen">
   <div class="signup-shell">
     <div class="signup-back" onclick="showAuth()">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Back
     </div>
-
     <div class="auth-card">
       <div class="auth-heading">Create account</div>
       <div class="auth-subheading">You'll set up your business profile right after.</div>
-
       <div class="bp-form-group">
         <label class="bp-label">Full Name *</label>
         <input type="text" id="su-name" placeholder="Your name">
@@ -1020,7 +983,6 @@ input[type=range]{accent-color:var(--text);height:4px}
         <input type="password" id="su-password" placeholder="At least 6 characters">
       </div>
     </div>
-
     <div style="margin-top:12px">
       <button class="btn-full btn-full-primary" onclick="submitSignup()">Save &amp; Continue</button>
       <button class="btn-full btn-full-ghost" onclick="showAuth()">I already have an account</button>
@@ -1028,14 +990,11 @@ input[type=range]{accent-color:var(--text);height:4px}
   </div>
 </div>
 
-<!-- ============================================================
-     BUSINESS PROFILE SETUP SCREEN
-     ============================================================ -->
+<!-- BIZ PROFILE SETUP SCREEN -->
 <div id="bizprofile-screen">
   <div class="bizprofile-wrap">
     <div class="bizprofile-shell">
-
-      <!-- Step 1: Business Info -->
+      <!-- Step 1 -->
       <div id="bp-step-1">
         <div class="bizprofile-header">
           <div class="bizprofile-step-indicator">
@@ -1045,7 +1004,6 @@ input[type=range]{accent-color:var(--text);height:4px}
           <div class="bizprofile-heading">Set up your business</div>
           <div class="bizprofile-subheading">Tell the SailorX community what you're building.</div>
         </div>
-
         <div class="bizprofile-card">
           <div class="bp-form-group">
             <label class="bp-label">Business Name *</label>
@@ -1087,13 +1045,12 @@ input[type=range]{accent-color:var(--text);height:4px}
             <div class="bp-word-count" id="bp-customer-wc">0 / 100 words</div>
           </div>
         </div>
-
         <div style="margin-top:12px">
           <button class="btn-full btn-full-primary" onclick="bpStep1Next()">Next →</button>
         </div>
       </div>
 
-      <!-- Step 2: Logo / Image -->
+      <!-- Step 2 -->
       <div id="bp-step-2" style="display:none">
         <div class="bizprofile-header">
           <div class="bizprofile-step-indicator">
@@ -1103,13 +1060,11 @@ input[type=range]{accent-color:var(--text);height:4px}
           <div class="bizprofile-heading">Add a logo</div>
           <div class="bizprofile-subheading">Upload a logo or image for your business. You can skip this.</div>
         </div>
-
         <div class="bizprofile-card" style="text-align:center">
           <div id="bp-logo-preview-wrap">
             <div class="bp-default-avatar" id="bp-default-av">?</div>
             <div style="font-size:13px;color:var(--text3);margin-bottom:20px">Default avatar (initial)</div>
           </div>
-
           <div class="bp-upload-area" id="bp-upload-area">
             <input type="file" accept="image/*" onchange="handleLogoUpload(event)" id="bp-logo-file">
             <div class="bp-upload-icon">🖼️</div>
@@ -1125,20 +1080,16 @@ input[type=range]{accent-color:var(--text);height:4px}
             </div>
           </div>
         </div>
-
         <div style="margin-top:12px">
           <button class="btn-full btn-full-primary" onclick="bpStep2Finish()">Create Profile 🚀</button>
           <button class="btn-full btn-full-ghost" onclick="showBpStep(1)">← Back</button>
         </div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- ============================================================
-     MAIN APP
-     ============================================================ -->
+<!-- MAIN APP -->
 <div id="app" class="hidden">
   <!-- Sidebar -->
   <aside id="sidebar">
@@ -1167,9 +1118,10 @@ input[type=range]{accent-color:var(--text);height:4px}
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
         Collab
       </div>
-      <div class="nav-item" data-page="chats" onclick="navigate('chats')">
+      <div class="nav-item" data-page="chats" onclick="navigate('chats')" id="nav-chats">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         Chats
+        <span class="notif-badge" id="nav-chats-badge" style="display:none">0</span>
       </div>
       <div class="nav-label">Account</div>
       <div class="nav-item" data-page="profile" onclick="navigate('profile')">
@@ -1194,21 +1146,39 @@ input[type=range]{accent-color:var(--text);height:4px}
       </div>
     </div>
 
-    <!-- FEED -->
-    <div id="page-feed" class="page active">
-      <div id="content">
-        <div id="feed-list"></div>
+    <!-- FEED (with people panel) -->
+    <div id="page-feed" class="page-with-people active">
+      <!-- Mobile people strip -->
+      <div class="people-strip" id="feed-people-strip"></div>
+      <div class="page-scroll">
+        <div class="page-inner">
+          <div id="feed-list"></div>
+        </div>
+      </div>
+      <!-- Desktop people panel -->
+      <div class="people-panel" id="feed-people-panel">
+        <div class="people-panel-header">People</div>
+        <div class="people-panel-list" id="feed-people-list"></div>
       </div>
     </div>
 
-    <!-- COLLAB -->
-    <div id="page-collab" class="page">
-      <div id="content" style="padding-top:24px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-          <h2 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700">Collaborate</h2>
-          <button class="btn btn-primary btn-sm" onclick="openCollabPost()">+ Post Offer</button>
+    <!-- COLLAB (with people panel) -->
+    <div id="page-collab" class="page-with-people">
+      <!-- Mobile people strip -->
+      <div class="people-strip" id="collab-people-strip"></div>
+      <div class="page-scroll">
+        <div class="page-inner">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <h2 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700">Collaborate</h2>
+            <button class="btn btn-primary btn-sm" onclick="openCollabPost()">+ Post Offer</button>
+          </div>
+          <div id="collab-list"></div>
         </div>
-        <div id="collab-list"></div>
+      </div>
+      <!-- Desktop people panel -->
+      <div class="people-panel" id="collab-people-panel">
+        <div class="people-panel-header">People</div>
+        <div class="people-panel-list" id="collab-people-list"></div>
       </div>
     </div>
 
@@ -1250,8 +1220,9 @@ input[type=range]{accent-color:var(--text);height:4px}
       </div>
     </div>
 
-    <!-- CHATS -->
+    <!-- CHATS (Desktop uses .chat-layout, mobile uses mobile views) -->
     <div id="page-chats" class="page">
+      <!-- Desktop layout -->
       <div class="chat-layout">
         <div class="chat-sidebar" id="chat-sidebar">
           <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:16px">Messages</div>
@@ -1273,6 +1244,32 @@ input[type=range]{accent-color:var(--text);height:4px}
               <button class="btn btn-primary btn-sm" onclick="sendMsg()">Send</button>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Mobile: list view -->
+      <div id="mobile-chat-list-view">
+        <div class="mobile-chat-header" style="border-bottom:1px solid var(--border);padding:14px 16px">
+          <div class="mobile-chat-title">Messages</div>
+        </div>
+        <div class="mobile-chat-list-inner">
+          <div class="chat-list" id="mobile-chat-list"></div>
+        </div>
+      </div>
+
+      <!-- Mobile: DM view -->
+      <div id="mobile-chat-dm-view">
+        <div class="mobile-chat-header">
+          <div class="mobile-chat-back" onclick="closeMobileDM()">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </div>
+          <div style="width:32px;height:32px;border-radius:9px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700" id="mobile-chat-active-av"></div>
+          <div class="mobile-chat-title" id="mobile-chat-active-name" style="margin-left:4px"></div>
+        </div>
+        <div class="mobile-chat-messages" id="mobile-chat-messages"></div>
+        <div class="mobile-chat-input">
+          <input type="text" id="mobile-chat-input" placeholder="Message..." onkeydown="if(event.key==='Enter')sendMobileMsg()">
+          <button class="btn btn-primary btn-sm" onclick="sendMobileMsg()">Send</button>
         </div>
       </div>
     </div>
@@ -1348,9 +1345,10 @@ input[type=range]{accent-color:var(--text);height:4px}
         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         Collab
       </div>
-      <div class="bb-item" data-page="chats" onclick="navigate('chats')">
+      <div class="bb-item" data-page="chats" onclick="navigate('chats')" id="bb-chats" style="position:relative">
         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         Chats
+        <span class="bb-notif-badge" id="bb-chats-badge" style="display:none">0</span>
       </div>
       <div class="bb-item" data-page="profile" onclick="navigate('profile')">
         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1553,44 +1551,39 @@ input[type=range]{accent-color:var(--text);height:4px}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
 <script>
-  let unsubscribeChat = null;
+let unsubscribeChat = null;
+let unsubscribeMobileChat = null;
+let unsubscribePosts = null;
 
 // ============================================================
-//AUTH CONFIG (Firebase)
+// FIREBASE CONFIG
 // ============================================================
 const firebaseConfig = {
-    apiKey: "AIzaSyCbQI7JIE8WR9tmh0L9i6OWNA1yqXBgiJ4",
-    authDomain: "sailorx.firebaseapp.com",
-    projectId: "sailorx",
-    storageBucket: "sailorx.firebasestorage.app",
-    messagingSenderId: "783649147652",
-    appId: "1:783649147652:web:1807c4cbf8660de1bf1e51"
-  };
+  apiKey: "AIzaSyCbQI7JIE8WR9tmh0L9i6OWNA1yqXBgiJ4",
+  authDomain: "sailorx.firebaseapp.com",
+  projectId: "sailorx",
+  storageBucket: "sailorx.firebasestorage.app",
+  messagingSenderId: "783649147652",
+  appId: "1:783649147652:web:1807c4cbf8660de1bf1e51"
+};
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 const provider = new firebase.auth.GoogleAuthProvider();
-
-provider.setCustomParameters({
-  prompt: "select_account"
-});
-provider.setCustomParameters({
-  prompt: 'select_account'
-});
+provider.setCustomParameters({ prompt: 'select_account' });
 
 function getChatId(uidA, uidB) {
   return [uidA, uidB].sort().join("_");
 }
-
 
 // ============================================================
 // STATE
 // ============================================================
 let state = {
   theme: 'light',
-  currentUser: null, // { uid, name, username, email, logo }
-  accounts: [],      // saved accounts array
+  currentUser: null,
+  accounts: [],
   profile: null,
   posts: [],
   globalPosts: [],
@@ -1599,7 +1592,9 @@ let state = {
   activeChatUser: null,
   profileCode: '',
   profileCodePublished: false,
-  profileViews: {}
+  profileViews: {},
+  // Notification badges: { username: unreadCount }
+  chatNotifs: {}
 };
 
 function save() { localStorage.setItem('sailorx_v3', JSON.stringify(state)); }
@@ -1607,10 +1602,10 @@ function load() {
   try {
     const d = localStorage.getItem('sailorx_v3');
     if (d) state = Object.assign(state, JSON.parse(d));
+    if (!state.chatNotifs) state.chatNotifs = {};
   } catch(e){}
 }
 
-// Biz profile temp data
 let tempBizProfile = {};
 let selectedStage = 'idea';
 let tempLogoDataUrl = '';
@@ -1626,6 +1621,7 @@ async function saveUserData() {
   try {
     await db.collection('users').doc(state.currentUser.uid).set({
       username: state.currentUser.username,
+      name: state.currentUser.name,
       email: state.currentUser.email,
       profile: state.profile || null,
       collabs: state.collabs || [],
@@ -1642,9 +1638,12 @@ async function saveUserData() {
 async function savePostGlobally(post) {
   if (!state.currentUser?.uid) return;
   try {
+    // Enrich post with display name
+    const displayName = getDisplayName();
     await db.collection('posts').doc(post.id.toString()).set({
       ...post,
       authorUid: state.currentUser.uid,
+      authorDisplay: displayName,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     }, { merge: true });
   } catch (err) {
@@ -1654,15 +1653,37 @@ async function savePostGlobally(post) {
 
 async function loadGlobalPosts() {
   try {
-    const snap = await db.collection('posts')
-      .orderBy('createdAt', 'desc')
-      .get();
-    const posts = snap.docs.map(doc => doc.data());
-    return posts;
+    const snap = await db.collection('posts').orderBy('createdAt', 'desc').get();
+    return snap.docs.map(doc => doc.data());
   } catch (err) {
     console.error('loadGlobalPosts error:', err);
     return [];
   }
+}
+
+function setupGlobalPostsListener() {
+  if (unsubscribePosts) { unsubscribePosts(); unsubscribePosts = null; }
+  unsubscribePosts = db.collection('posts')
+    .orderBy('createdAt', 'desc')
+    .onSnapshot(snap => {
+      state.globalPosts = snap.docs.map(doc => doc.data());
+      save();
+      const feedPage = document.getElementById('page-feed');
+      if (feedPage && feedPage.classList.contains('active')) {
+        const container = document.getElementById('feed-list');
+        if (container) {
+          if (!state.globalPosts.length) {
+            container.innerHTML = `<div class="empty-state"><div class="empty-icon">📡</div><div class="empty-title">Nothing here yet</div><div class="empty-desc">Be the first to post something.</div></div>`;
+          } else {
+            container.innerHTML = state.globalPosts.map(p => renderPostCard(p)).join('');
+          }
+        }
+      }
+    }, err => console.error('Posts listener error:', err));
+}
+
+function cleanupGlobalPostsListener() {
+  if (unsubscribePosts) { unsubscribePosts(); unsubscribePosts = null; }
 }
 
 async function loadUserData(uid) {
@@ -1677,13 +1698,10 @@ async function loadUserData(uid) {
       state.profileCode = data.profileCode || '';
       state.profileCodePublished = data.profileCodePublished || false;
       state.profileViews = data.profileViews || {};
-      console.log('✅ Loaded user data from Firestore for UID:', uid);
       save();
-    } else {
-      console.log('📝 No Firestore data yet for UID:', uid, '(new user)');
     }
   } catch (err) {
-    console.error('❌ loadUserData error:', err);
+    console.error('loadUserData error:', err);
   }
 }
 
@@ -1696,8 +1714,134 @@ function resetUserData() {
   state.profileCodePublished = false;
   state.profileViews = {};
   state.globalPosts = [];
+  state.chatNotifs = {};
 }
 
+// ============================================================
+// PEOPLE PANEL — load users from Firestore
+// ============================================================
+async function loadAndRenderPeople(panelListId, stripId) {
+  const me = state.currentUser?.username;
+  try {
+    const snap = await db.collection('users').limit(30).get();
+    const users = snap.docs
+      .map(d => d.data())
+      .filter(u => u.username && u.username !== me);
+
+    renderPeoplePanel(panelListId, users);
+    renderPeopleStrip(stripId, users);
+  } catch (err) {
+    console.error('loadAndRenderPeople error:', err);
+  }
+}
+
+function renderPeoplePanel(listId, users) {
+  const el = document.getElementById(listId);
+  if (!el) return;
+  if (!users.length) {
+    el.innerHTML = `<div style="font-size:12px;color:var(--text3);padding:12px;text-align:center">No other users yet</div>`;
+    return;
+  }
+  el.innerHTML = users.map(u => {
+    const name = (u.profile?.businessName) || u.name || u.username;
+    const initials = name[0].toUpperCase();
+    const logoHtml = u.profile?.logo
+      ? `<img src="${escHtml(u.profile.logo)}" alt="">`
+      : initials;
+    const isFollowing = (state.profile?._following || []).includes(u.username);
+    return `<div class="people-panel-item">
+      <div class="people-panel-av" onclick="viewUserProfile('${escHtml(u.username)}')" style="cursor:pointer">${logoHtml}</div>
+      <div class="people-panel-name" title="${escHtml(name)}">${escHtml(name)}</div>
+      <div class="people-panel-sub">@${escHtml(u.username)}</div>
+      <button class="people-follow-btn ${isFollowing ? 'following' : ''}"
+        onclick="toggleFollowPanel('${escHtml(u.username)}', this)">
+        ${isFollowing ? 'Following' : 'Follow Track'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function renderPeopleStrip(stripId, users) {
+  const el = document.getElementById(stripId);
+  if (!el) return;
+  if (!users.length) { el.innerHTML = ''; return; }
+  el.innerHTML = users.map(u => {
+    const name = (u.profile?.businessName) || u.name || u.username;
+    const initials = name[0].toUpperCase();
+    const logoHtml = u.profile?.logo
+      ? `<img src="${escHtml(u.profile.logo)}" alt="">`
+      : initials;
+    const isFollowing = (state.profile?._following || []).includes(u.username);
+    return `<div class="people-strip-item">
+      <div class="people-strip-av" onclick="viewUserProfile('${escHtml(u.username)}')" style="cursor:pointer">${logoHtml}</div>
+      <div class="people-strip-name">${escHtml(name)}</div>
+      <button class="people-strip-follow ${isFollowing ? 'following' : ''}"
+        onclick="toggleFollowPanel('${escHtml(u.username)}', this)">
+        ${isFollowing ? '✓' : '+ Track'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function toggleFollowPanel(username, btn) {
+  if (!state.profile) return;
+  if (!state.profile._following) state.profile._following = [];
+  const idx = state.profile._following.indexOf(username);
+  if (idx >= 0) {
+    state.profile._following.splice(idx, 1);
+    btn.textContent = btn.classList.contains('people-strip-follow') ? '+ Track' : 'Follow Track';
+    btn.classList.remove('following');
+  } else {
+    state.profile._following.push(username);
+    btn.textContent = btn.classList.contains('people-strip-follow') ? '✓' : 'Following';
+    btn.classList.add('following');
+  }
+  save(); saveAccountData();
+}
+
+// ============================================================
+// DISPLAY NAME HELPER (business name > real name > username)
+// ============================================================
+function getDisplayName() {
+  if (state.profile?.businessName) return state.profile.businessName;
+  if (state.currentUser?.name) return state.currentUser.name;
+  return state.currentUser?.username || 'user';
+}
+
+function getDisplayUsername() {
+  return state.currentUser?.username || 'user';
+}
+
+// ============================================================
+// NOTIFICATION BADGES
+// ============================================================
+function updateChatBadge() {
+  const total = Object.values(state.chatNotifs || {}).reduce((s, v) => s + (v || 0), 0);
+  const navBadge = document.getElementById('nav-chats-badge');
+  const bbBadge = document.getElementById('bb-chats-badge');
+  if (navBadge) {
+    navBadge.textContent = total;
+    navBadge.style.display = total > 0 ? 'flex' : 'none';
+  }
+  if (bbBadge) {
+    bbBadge.textContent = total;
+    bbBadge.style.display = total > 0 ? 'flex' : 'none';
+  }
+}
+
+function addChatNotif(fromUsername) {
+  if (!state.chatNotifs) state.chatNotifs = {};
+  state.chatNotifs[fromUsername] = (state.chatNotifs[fromUsername] || 0) + 1;
+  save();
+  updateChatBadge();
+}
+
+function clearChatNotif(fromUsername) {
+  if (!state.chatNotifs) state.chatNotifs = {};
+  state.chatNotifs[fromUsername] = 0;
+  save();
+  updateChatBadge();
+}
 
 // ============================================================
 // AUTH SCREENS
@@ -1707,28 +1851,23 @@ function showAuth() {
   renderAuthAccounts();
   document.getElementById('auth-screen').classList.remove('hidden');
 }
+
+function showSignup() {
+  hideAll();
+  document.getElementById('signup-screen').classList.add('visible');
+}
+
 function loginAsAccount(i) {
   const acc = state.accounts[i];
   if (!acc) return;
-  if (!acc.email) {
-    toast('Account missing email, sign in with Google instead');
-    return;
-  }
-  
-  const provider = new firebase.auth.GoogleAuthProvider();
-  provider.setCustomParameters({
-    login_hint: acc.email,
-    prompt: 'select_account'
+  if (!acc.email) { toast('Account missing email, sign in with Google instead'); return; }
+  const p = new firebase.auth.GoogleAuthProvider();
+  p.setCustomParameters({ login_hint: acc.email, prompt: 'select_account' });
+  auth.signInWithPopup(p).catch(err => {
+    console.error('Account login failed:', err);
+    toast('Login failed. Try signing in with Google again.');
   });
-  
-  auth.signInWithPopup(provider)
-    .catch(err => {
-      console.error('Account login failed:', err);
-      toast('Login failed. Try signing in with Google again.');
-    });
 }
-
-
 
 function showBizProfile() {
   hideAll();
@@ -1747,32 +1886,28 @@ function enterApp() {
   hideAll();
   document.getElementById('app').classList.remove('hidden');
   updateSidebar();
+  updateChatBadge();
+  setupGlobalPostsListener();
   void renderFeed();
   renderCollab();
   renderChats();
   applyTheme();
+  // Load people panels
+  loadAndRenderPeople('feed-people-list', 'feed-people-strip');
+  loadAndRenderPeople('collab-people-list', 'collab-people-strip');
 }
 
-// Render saved accounts on auth screen
 function renderAuthAccounts() {
   const container = document.getElementById('auth-accounts-list');
   if (!container) return;
   const accounts = state.accounts || [];
-
   if (!accounts.length) {
-    container.innerHTML = `
-      <div class="auth-no-accounts">
-        <div class="auth-no-accounts-icon">👤</div>
-        <div class="auth-no-accounts-text">No accounts saved on this device</div>
-      </div>`;
+    container.innerHTML = `<div class="auth-no-accounts"><div class="auth-no-accounts-icon">👤</div><div class="auth-no-accounts-text">No accounts saved on this device</div></div>`;
     return;
   }
-
   container.innerHTML = `<div class="auth-accounts">` + accounts.map((acc, i) => {
     const initials = (acc.name || acc.username || '?')[0].toUpperCase();
-    const avatarHtml = acc.logo
-      ? `<img src="${acc.logo}" alt="">`
-      : initials;
+    const avatarHtml = acc.logo ? `<img src="${acc.logo}" alt="">` : initials;
     return `<div class="auth-account-row" onclick="loginAsAccount(${i})">
       <div class="auth-account-av">${avatarHtml}</div>
       <div class="auth-account-info">
@@ -1784,22 +1919,15 @@ function renderAuthAccounts() {
   }).join('') + `</div>`;
 }
 
-
-
 auth.onAuthStateChanged(async user => {
-
   if (!user) {
-    console.log('🔓 User logged out');
     state.currentUser = null;
     resetUserData();
     save();
     showAuth();
     return;
   }
-
-  console.log('✅ Firebase auth user detected:', user.uid, user.email);
   await user.reload();
-
   state.currentUser = {
     uid: user.uid,
     name: user.displayName,
@@ -1807,76 +1935,36 @@ auth.onAuthStateChanged(async user => {
     email: user.email,
     logo: user.photoURL
   };
-
   const existingIdx = state.accounts.findIndex(a => a.uid === user.uid);
-  if (existingIdx < 0) {
-    state.accounts.push(state.currentUser);
-    console.log('📌 Added new account to saved accounts');
-  } else {
-    state.accounts[existingIdx] = state.currentUser;
-    console.log('🔄 Updated existing account');
-  }
-
+  if (existingIdx < 0) state.accounts.push(state.currentUser);
+  else state.accounts[existingIdx] = state.currentUser;
   resetUserData();
-  console.log('⏳ Loading Firestore data for uid:', user.uid);
   await loadUserData(user.uid);
-
   save();
-  
-  if (!state.profile) {
-    console.log('🆕 No profile found, showing setup');
-    showBizProfile();
-  } else {
-    console.log('✨ Profile loaded, entering app');
-    enterApp();
-  }
+  if (!state.profile) showBizProfile();
+  else enterApp();
 });
 
 setInterval(() => {
-  if (auth.currentUser && !state.currentUser) {
-    console.warn("⚠️ Auth mismatch detected (Firebase user exists but app not synced), reloading...");
-    location.reload();
-  }
+  if (auth.currentUser && !state.currentUser) location.reload();
   if (!auth.currentUser && state.currentUser) {
-    console.warn("⚠️ Auth mismatch detected (app has user but Firebase doesn't), signing out...");
-    state.currentUser = null;
-    resetUserData();
-    save();
-    showAuth();
+    state.currentUser = null; resetUserData(); save(); showAuth();
   }
 }, 5000);
 
 function handleGoogleSignIn() {
-  console.log('🔐 Initiating Google sign-in...');
   const p = new firebase.auth.GoogleAuthProvider();
-  p.setCustomParameters({
-    prompt: 'select_account'
-  });
-  
-  auth.signInWithPopup(p)
-    .then(result => {
-      console.log('✅ Google sign-in successful:', result.user.uid);
-    })
-    .catch(err => {
-      console.error('❌ Google sign-in error:', err);
-      toast("Login failed: " + err.message);
-    });
+  p.setCustomParameters({ prompt: 'select_account' });
+  auth.signInWithPopup(p).catch(err => toast("Login failed: " + err.message));
 }
 
-
-
 async function signOut() {
-  console.log('🔓 Signing out from Firebase');
-  try {
-    await auth.signOut();
-  } catch (err) {
-    console.error('Sign out error:', err);
-  }
-
+  cleanupGlobalPostsListener();
+  closeChatDM();
+  try { await auth.signOut(); } catch(err){}
   state.currentUser = null;
   resetUserData();
   save();
-
   showAuth();
 }
 
@@ -1904,8 +1992,6 @@ function bpWordCount(ta, countId, max) {
 function bpStep1Next() {
   const bname = document.getElementById('bp-bname').value.trim();
   if (!bname) { toast('Business name is required'); return; }
-  
-  // Save step 1 data
   tempBizProfile = {
     businessName: bname,
     tagline: document.getElementById('bp-tagline').value.trim(),
@@ -1916,11 +2002,8 @@ function bpStep1Next() {
     solution: document.getElementById('bp-solution').value.trim(),
     customer: document.getElementById('bp-customer').value.trim(),
   };
-
-  // Update default avatar initial
   const av = document.getElementById('bp-default-av');
   if (av) av.textContent = bname[0].toUpperCase();
-
   tempLogoDataUrl = '';
   resetLogoUpload();
   showBpStep(2);
@@ -1936,7 +2019,6 @@ function handleLogoUpload(e) {
     document.getElementById('bp-upload-area').style.display = 'none';
     document.getElementById('bp-logo-preview-img-wrap').style.display = 'block';
     document.getElementById('bp-logo-preview-img').src = tempLogoDataUrl;
-    // Hide default av
     document.getElementById('bp-logo-preview-wrap').style.display = 'none';
   };
   reader.readAsDataURL(file);
@@ -1947,24 +2029,17 @@ function resetLogoUpload() {
   document.getElementById('bp-upload-area').style.display = 'block';
   document.getElementById('bp-logo-preview-img-wrap').style.display = 'none';
   document.getElementById('bp-logo-preview-wrap').style.display = 'block';
-  const fileInput = document.getElementById('bp-logo-file');
-  if (fileInput) fileInput.value = '';
+  const fi = document.getElementById('bp-logo-file');
+  if (fi) fi.value = '';
 }
 
 function bpStep2Finish() {
-  // Build full profile
-  state.profile = {
-    ...tempBizProfile,
-    logo: tempLogoDataUrl || '',
-  };
-
-  // Update logo on the currentUser account too
+  state.profile = { ...tempBizProfile, logo: tempLogoDataUrl || '' };
   if (state.currentUser) {
     state.currentUser.logo = tempLogoDataUrl || '';
     const idx = state.accounts.findIndex(a => a.username === state.currentUser.username);
     if (idx >= 0) state.accounts[idx].logo = tempLogoDataUrl || '';
   }
-
   save();
   saveAccountData();
   toast('Profile created! 🚀');
@@ -1972,28 +2047,17 @@ function bpStep2Finish() {
 }
 
 function saveAccountData() {
-  if (!state.currentUser) return;
-  if (!state.currentUser.uid) {
-    console.error('⚠️ saveAccountData: currentUser has no uid, skipping');
-    return;
-  }
-  
-  const acctData = {
-    profile: state.profile,
-    collabs: state.collabs,
-    chats: state.chats,
-    profileCode: state.profileCode,
-    profileCodePublished: state.profileCodePublished,
+  if (!state.currentUser?.uid) return;
+  localStorage.setItem('sailorx_acct_' + state.currentUser.username, JSON.stringify({
+    profile: state.profile, collabs: state.collabs, chats: state.chats,
+    profileCode: state.profileCode, profileCodePublished: state.profileCodePublished,
     profileViews: state.profileViews
-  };
-  
-  localStorage.setItem('sailorx_acct_' + state.currentUser.username, JSON.stringify(acctData));
+  }));
   void saveUserData();
 }
 
 function openEditBizProfile() {
   showBizProfile();
-  // Pre-fill existing data
   setTimeout(() => {
     if (state.profile) {
       const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
@@ -2015,17 +2079,45 @@ function openEditBizProfile() {
 // ============================================================
 // NAVIGATION
 // ============================================================
+function closeChatDM() {
+  if (unsubscribeChat) { unsubscribeChat(); unsubscribeChat = null; }
+  state.activeChatUser = null;
+  document.getElementById('chat-empty').style.display = 'flex';
+  document.getElementById('chat-active').style.display = 'none';
+  const m = document.getElementById('chat-messages');
+  if (m) m.innerHTML = '';
+  const i = document.getElementById('chat-input');
+  if (i) i.value = '';
+}
+
 function navigate(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  if (page !== 'chats' && state.activeChatUser) closeChatDM();
+
+  // Feed and collab use page-with-people class
+  const peoplePages = ['feed', 'collab'];
+  document.querySelectorAll('.page, .page-with-people').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
   document.querySelectorAll('.bb-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
   const titles = { feed:'Feed', collab:'Collab', chats:'Chats', profile:'Profile', settings:'Settings', sailor:'Sailor AI' };
   document.getElementById('topbar-title').textContent = titles[page] || page;
+
   if (page === 'profile') renderProfile();
   if (page === 'sailor') {
     setTimeout(() => { const inp = document.getElementById('sailor-input'); if (inp) inp.focus(); }, 100);
   }
+  if (page === 'chats') {
+    renderChats();
+    // On mobile, ensure list view is shown, dm view hidden
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      showMobileChatList();
+    }
+  }
+  // Reload people panels when navigating to feed/collab
+  if (page === 'feed') loadAndRenderPeople('feed-people-list', 'feed-people-strip');
+  if (page === 'collab') loadAndRenderPeople('collab-people-list', 'collab-people-strip');
+
   document.getElementById('fab-menu').classList.remove('open');
   const fab = document.getElementById('fab');
   if (fab) fab.style.display = (page === 'sailor') ? 'none' : 'flex';
@@ -2055,22 +2147,16 @@ function updateSidebar() {
   const p = state.profile;
   const u = state.currentUser;
   const username = u?.username || 'user';
+  const displayName = p?.businessName || u?.name || username;
   const av = document.getElementById('sidebar-av');
   const nm = document.getElementById('sidebar-name');
   const hd = document.getElementById('sidebar-handle');
-  if (p) {
-    nm.textContent = p.businessName || username;
-    hd.textContent = '@' + username;
-    if (p.logo) {
-      av.innerHTML = `<img src="${p.logo}" alt="">`;
-    } else {
-      const init = (p.businessName || username)[0].toUpperCase();
-      av.textContent = init;
-    }
-  } else if (u) {
-    nm.textContent = u.name || username;
-    hd.textContent = '@' + username;
-    av.textContent = (u.name || username)[0].toUpperCase();
+  nm.textContent = displayName;
+  hd.textContent = '@' + username;
+  if (p?.logo) {
+    av.innerHTML = `<img src="${p.logo}" alt="">`;
+  } else {
+    av.textContent = displayName[0].toUpperCase();
   }
   document.getElementById('current-username-disp').textContent = '@' + username;
 }
@@ -2092,9 +2178,8 @@ function toggleFab() {
   document.getElementById('fab-menu').classList.toggle('open');
 }
 document.addEventListener('click', e => {
-  if (!e.target.closest('#fab') && !e.target.closest('#fab-menu')) {
+  if (!e.target.closest('#fab') && !e.target.closest('#fab-menu'))
     document.getElementById('fab-menu').classList.remove('open');
-  }
 });
 
 // ============================================================
@@ -2117,9 +2202,7 @@ function appendSailorMsg(text, type) {
   row.className = 'sailor-row ' + (type === 'user' ? 'user-row' : 'bot-row');
   if (type === 'bot') {
     row.innerHTML = `
-      <div class="sailor-bot-av">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-      </div>
+      <div class="sailor-bot-av"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
       <div>
         <div class="sailor-bubble bot-bubble">${escHtml(text)}</div>
         <div class="sailor-ts">${sailorNow()}</div>
@@ -2141,13 +2224,9 @@ function showTypingIndicator() {
   row.className = 'sailor-row bot-row';
   row.id = 'sailor-typing';
   row.innerHTML = `
-    <div class="sailor-bot-av">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-    </div>
+    <div class="sailor-bot-av"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
     <div class="typing-bubble">
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
+      <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
     </div>`;
   box.appendChild(row);
   box.scrollTop = box.scrollHeight;
@@ -2215,10 +2294,10 @@ function renderProfile() {
   const container = document.getElementById('profile-view');
   const p = state.profile;
   const username = state.currentUser?.username || 'user';
+  const displayName = getDisplayName();
   if (!p) {
     container.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">🚀</div>
-      <div class="empty-title">No profile yet</div>
+      <div class="empty-icon">🚀</div><div class="empty-title">No profile yet</div>
       <div class="empty-desc">Set up your business profile to get started</div>
       <button class="btn btn-primary" style="margin-top:16px" onclick="openEditBizProfile()">Set Up Profile</button>
     </div>`;
@@ -2228,7 +2307,6 @@ function renderProfile() {
   const logoHtml = p.logo
     ? `<img src="${p.logo}" alt="${p.businessName}" style="width:100%;height:100%;object-fit:cover">`
     : `<span style="font-size:28px;font-weight:800;font-family:'Syne',sans-serif">${initials}</span>`;
-
   const myPosts = state.globalPosts.filter(po => po.author === username);
   const tracks = state.profile._tracks || 0;
   const queue = state.profile._queue || 0;
@@ -2239,10 +2317,11 @@ function renderProfile() {
     <div class="profile-top">
       <div class="profile-av-lg">${logoHtml}</div>
       <div class="profile-info">
-        <div class="profile-name">${escHtml(p.businessName)}</div>
+        <div class="profile-name">${escHtml(displayName)}</div>
         ${p.category ? `<div style="font-size:12px;color:var(--text3);margin-top:2px">${escHtml(p.category)}</div>` : ''}
         <span class="profile-stage">${p.stage}</span>
         ${p.tagline ? `<div class="profile-tagline">${escHtml(p.tagline)}</div>` : ''}
+        <div style="font-size:12px;color:var(--text3);margin-top:4px">@${escHtml(username)}</div>
         <div class="views-badge" style="margin-top:6px">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           ${views} views
@@ -2285,9 +2364,7 @@ function renderProfile() {
   </div>`;
 
   const myPostsEl = document.getElementById('my-posts-list');
-  if (myPosts.length) {
-    myPostsEl.innerHTML = myPosts.map(po => renderPostCard(po, true)).join('');
-  }
+  if (myPosts.length) myPostsEl.innerHTML = myPosts.map(po => renderPostCard(po, true)).join('');
 }
 
 function updateProfilePreview() {
@@ -2310,7 +2387,7 @@ function publishProfileCode() {
 // ============================================================
 function openPostModal(type) {
   document.getElementById('fab-menu').classList.remove('open');
-  if (type === 'code') { document.getElementById('post-code-modal').style.display='flex'; }
+  if (type === 'code') document.getElementById('post-code-modal').style.display='flex';
   else if (type === 'image') { document.getElementById('post-image-modal').style.display='flex'; initCanvas(); }
   else if (type === 'pitch') { document.getElementById('post-pitch-modal').style.display='flex'; initPitchModal(); }
 }
@@ -2321,33 +2398,27 @@ function switchEditorTab(btn, showId) {
   const parent = btn.parentElement;
   parent.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-
-  // Hide sibling tab content
-  const wrap = btn.closest('.editor-wrap,.modal-body,.profile-section');
-  if (wrap) {
-    // Hide both possible tab panels
-    ['code-ta-wrap','code-preview-wrap','profile-code-tab','profile-preview-tab'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el && el !== document.getElementById(showId)) el.style.display = 'none';
-    });
-  }
+  ['code-ta-wrap','code-preview-wrap','profile-code-tab','profile-preview-tab'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el !== document.getElementById(showId)) el.style.display = 'none';
+  });
   const target = document.getElementById(showId);
   if (target) target.style.display = 'block';
 }
 
 function updateCodePreview() {
-  const code = document.getElementById('code-post-ta').value;
-  document.getElementById('code-preview-iframe').srcdoc = code;
+  document.getElementById('code-preview-iframe').srcdoc = document.getElementById('code-post-ta').value;
 }
 
 async function submitCodePost() {
   const caption = document.getElementById('code-post-caption').value.trim();
   const code = document.getElementById('code-post-ta').value;
   if (!code.trim()) { toast('Paste some code first'); return; }
-  const username = state.currentUser?.username || 'user';
+  const username = getDisplayUsername();
+  const displayName = getDisplayName();
   const post = {
-    id: Date.now(), type: 'code', author: username, caption, code,
-    time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
+    id: Date.now(), type: 'code', author: username, authorDisplay: displayName,
+    caption, code, time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
   };
   await savePostGlobally(post);
   save(); saveAccountData();
@@ -2377,10 +2448,9 @@ function addPollOption() {
   const wrap = document.getElementById('poll-options-wrap');
   const div = document.createElement('div');
   div.style.cssText = 'display:flex;gap:8px;margin-bottom:6px;align-items:center';
-  div.innerHTML = `<input type="text" placeholder="Option ${pollCount}" style="flex:1"> <button onclick="this.parentElement.remove();pollCount--" style="color:var(--text3);font-size:18px;background:none;border:none;cursor:pointer;flex-shrink:0">&times;</button>`;
+  div.innerHTML = `<input type="text" placeholder="Option ${pollCount}" style="flex:1"><button onclick="this.parentElement.remove();pollCount--" style="color:var(--text3);font-size:18px;background:none;border:none;cursor:pointer;flex-shrink:0">&times;</button>`;
   wrap.appendChild(div);
-  if (pollCount >= 5) document.getElementById('add-poll-btn').style.display = 'none';
-  else document.getElementById('add-poll-btn').style.display = '';
+  document.getElementById('add-poll-btn').style.display = pollCount >= 5 ? 'none' : '';
 }
 
 function countPitchWords() {
@@ -2395,11 +2465,12 @@ async function submitPitchPost() {
   const sub = document.getElementById('pitch-sub').value.trim();
   const optEls = document.querySelectorAll('#poll-options-wrap input[type=text]');
   const options = Array.from(optEls).map(el=>el.value.trim()).filter(Boolean);
-  const username = state.currentUser?.username || 'user';
+  const username = getDisplayUsername();
+  const displayName = getDisplayName();
   const post = {
-    id: Date.now(), type: 'pitch', author: username, pitchText, sub,
-    options: options.map(o=>({text:o, votes:0})), votedBy: [],
-    time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
+    id: Date.now(), type: 'pitch', author: username, authorDisplay: displayName,
+    pitchText, sub, options: options.map(o=>({text:o, votes:0})),
+    votedBy: [], time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
   };
   await savePostGlobally(post);
   save(); saveAccountData();
@@ -2460,7 +2531,7 @@ function endDraw() {
   if (canvasHistory.length > 30) canvasHistory.shift();
 }
 
-function doFill(e) {
+function doFill() {
   ctx.fillStyle = document.getElementById('brush-color').value;
   ctx.fillRect(0,0,640,360);
   canvasHistory.push(ctx.getImageData(0,0,640,360));
@@ -2515,10 +2586,11 @@ async function submitImagePost() {
   const canvas = document.getElementById('drawing-canvas');
   const dataUrl = canvas.toDataURL('image/png');
   const caption = document.getElementById('canvas-caption').value.trim();
-  const username = state.currentUser?.username || 'user';
+  const username = getDisplayUsername();
+  const displayName = getDisplayName();
   const post = {
-    id: Date.now(), type: 'image', author: username, imageData: dataUrl, caption,
-    time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
+    id: Date.now(), type: 'image', author: username, authorDisplay: displayName,
+    imageData: dataUrl, caption, time: new Date().toISOString(), interests: 0, interestedBy: [], comments: []
   };
   await savePostGlobally(post);
   save(); saveAccountData();
@@ -2535,24 +2607,35 @@ async function renderFeed() {
   const container = document.getElementById('feed-list');
   const posts = await loadGlobalPosts();
   state.globalPosts = posts;
-  
   if (!posts.length) {
-    container.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">📡</div>
-      <div class="empty-title">Nothing here yet</div>
-      <div class="empty-desc">Be the first to post something. Tap the + button.</div>
-    </div>`;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📡</div><div class="empty-title">Nothing here yet</div><div class="empty-desc">Be the first to post something. Tap the + button.</div></div>`;
     return;
   }
   container.innerHTML = posts.map(p => renderPostCard(p)).join('');
 }
 
+function getAuthorDisplay(post) {
+  // Use authorDisplay (business name) if present, otherwise username
+  return post.authorDisplay || post.author;
+}
+
 function renderPostCard(post, compact=false) {
-  const username = state.currentUser?.username || 'user';
+  const username = getDisplayUsername();
   const p = state.profile;
   const isOwn = post.author === username;
-  const logoSrc = isOwn && p?.logo ? `<img src="${p.logo}" style="width:100%;height:100%;object-fit:cover">` : post.author[0].toUpperCase();
+  const authorLabel = getAuthorDisplay(post);
+  const authorInitial = authorLabel[0].toUpperCase();
+
+  // Logo: for own posts use profile logo, for others use initial
+  let logoSrc;
+  if (isOwn && p?.logo) {
+    logoSrc = `<img src="${p.logo}" style="width:100%;height:100%;object-fit:cover">`;
+  } else {
+    logoSrc = authorInitial;
+  }
+
   const isInterested = post.interestedBy?.includes(username);
+  const followingThisUser = (state.profile?._following||[]).includes(post.author);
 
   let bodyHtml = '';
   if (post.type === 'code') {
@@ -2584,13 +2667,15 @@ function renderPostCard(post, compact=false) {
       ${opts ? `<div class="poll-opts">${opts}</div>` : ''}`;
   }
 
-  const followingThisUser = (state.profile?._following||[]).includes(post.author);
   return `<div class="post-card" data-postid="${post.id}">
     <div class="post-header">
       <div class="post-av" onclick="viewUserProfile('${post.author}')">${logoSrc}</div>
       <div class="post-meta">
         <div style="display:flex;align-items:center;gap:8px">
-          <div class="post-author" onclick="viewUserProfile('${post.author}')">${escHtml(post.author)}</div>
+          <div>
+            <div class="post-author" onclick="viewUserProfile('${post.author}')">${escHtml(authorLabel)}</div>
+            ${!isOwn ? `<div style="font-size:11px;color:var(--text3)">@${escHtml(post.author)}</div>` : ''}
+          </div>
           ${!isOwn ? `<button class="follow-btn-sm ${followingThisUser?'following':''}" onclick="toggleFollow('${post.author}',this)">${followingThisUser?'Following':'Follow Track'}</button>` : ''}
         </div>
         <div class="post-time">${getTimeAgo(post.time)}</div>
@@ -2617,7 +2702,7 @@ function renderPostCard(post, compact=false) {
       <div class="comment-list" id="comment-list-${post.id}">
         ${(post.comments||[]).map(c=>`<div class="comment-item">
           <div class="comment-av">${c.author[0].toUpperCase()}</div>
-          <div class="comment-bubble"><div class="comment-author">${escHtml(c.author)}</div>${escHtml(c.text)}</div>
+          <div class="comment-bubble"><div class="comment-author">${escHtml(c.authorDisplay || c.author)}</div>${escHtml(c.text)}</div>
         </div>`).join('')}
       </div>
     </div>
@@ -2627,7 +2712,7 @@ function renderPostCard(post, compact=false) {
 function toggleInterest(postId, btn) {
   const post = state.globalPosts.find(p=>p.id==postId);
   if (!post) return;
-  const username = state.currentUser?.username || 'user';
+  const username = getDisplayUsername();
   if (!post.interestedBy) post.interestedBy = [];
   const idx = post.interestedBy.indexOf(username);
   if (idx >= 0) {
@@ -2648,9 +2733,7 @@ function toggleInterest(postId, btn) {
 async function updatePostGlobally(post) {
   try {
     await db.collection('posts').doc(post.id.toString()).set(post, { merge: true });
-  } catch (err) {
-    console.error('updatePostGlobally error:', err);
-  }
+  } catch (err) { console.error('updatePostGlobally error:', err); }
 }
 
 function toggleComments(postId) {
@@ -2665,8 +2748,9 @@ function submitComment(postId) {
   const post = state.globalPosts.find(p=>p.id==postId);
   if (!post) return;
   if (!post.comments) post.comments = [];
-  const username = state.currentUser?.username || 'user';
-  const comment = { author: username, text, time: new Date().toISOString() };
+  const username = getDisplayUsername();
+  const displayName = getDisplayName();
+  const comment = { author: username, authorDisplay: displayName, text, time: new Date().toISOString() };
   post.comments.push(comment);
   void updatePostGlobally(post);
   save();
@@ -2674,8 +2758,8 @@ function submitComment(postId) {
   const list = document.getElementById('comment-list-'+postId);
   const div = document.createElement('div');
   div.className = 'comment-item';
-  div.innerHTML = `<div class="comment-av">${comment.author[0].toUpperCase()}</div>
-    <div class="comment-bubble"><div class="comment-author">${escHtml(comment.author)}</div>${escHtml(comment.text)}</div>`;
+  div.innerHTML = `<div class="comment-av">${displayName[0].toUpperCase()}</div>
+    <div class="comment-bubble"><div class="comment-author">${escHtml(displayName)}</div>${escHtml(text)}</div>`;
   list.appendChild(div);
   const card = document.querySelector(`[data-postid="${postId}"]`);
   if (card) {
@@ -2687,7 +2771,7 @@ function submitComment(postId) {
 function votePoll(postId, optIdx) {
   const post = state.globalPosts.find(p=>p.id==postId);
   if (!post || !post.options) return;
-  const username = state.currentUser?.username || 'user';
+  const username = getDisplayUsername();
   if (!post.votedBy) post.votedBy = [];
   if (post.votedBy.includes(username)) { toast('Already voted'); return; }
   post.votedBy.push(username);
@@ -2707,16 +2791,13 @@ function viewCodePost(postId) {
 function toggleFollow(username, btn) {
   if (!state.profile) return;
   if (!state.profile._following) state.profile._following = [];
-  if (!state.profileViews._tracks) state.profileViews._tracks = {};
   const idx = state.profile._following.indexOf(username);
   if (idx >= 0) {
     state.profile._following.splice(idx,1);
-    state.profileViews._tracks[username] = Math.max(0,(state.profileViews._tracks[username]||1)-1);
     btn.textContent = 'Follow Track';
     btn.classList.remove('following');
   } else {
     state.profile._following.push(username);
-    state.profileViews._tracks[username] = (state.profileViews._tracks[username]||0)+1;
     btn.textContent = 'Following';
     btn.classList.add('following');
   }
@@ -2724,7 +2805,7 @@ function toggleFollow(username, btn) {
 }
 
 function viewUserProfile(username) {
-  const myUsername = state.currentUser?.username || 'user';
+  const myUsername = getDisplayUsername();
   if (username === myUsername) { navigate('profile'); return; }
   if (!state.profileViews[username]) state.profileViews[username] = 0;
   state.profileViews[username]++;
@@ -2756,16 +2837,13 @@ function viewUserProfile(username) {
 function vpmFollow(username) {
   if (!state.profile) return;
   if (!state.profile._following) state.profile._following = [];
-  if (!state.profileViews._tracks) state.profileViews._tracks = {};
   const idx = state.profile._following.indexOf(username);
   const btn = document.getElementById('vpm-follow-btn');
   if (idx>=0) {
     state.profile._following.splice(idx,1);
-    state.profileViews._tracks[username] = Math.max(0,(state.profileViews._tracks[username]||1)-1);
     if(btn){btn.textContent='Follow Track';btn.className='btn btn-primary btn-sm';}
   } else {
     state.profile._following.push(username);
-    state.profileViews._tracks[username] = (state.profileViews._tracks[username]||0)+1;
     if(btn){btn.textContent='Following';btn.className='btn btn-ghost btn-sm';}
   }
   save(); saveAccountData();
@@ -2794,8 +2872,12 @@ function submitCollabPost() {
   const title = document.getElementById('collab-title-input').value.trim();
   const desc = document.getElementById('collab-desc-input').value.trim();
   if (!title || !desc) { toast('Fill in heading and description'); return; }
-  const username = state.currentUser?.username || 'user';
-  state.collabs.unshift({ id:Date.now(), author:username, title, desc, joinedBy:[], time:new Date().toISOString() });
+  const username = getDisplayUsername();
+  const displayName = getDisplayName();
+  state.collabs.unshift({
+    id: Date.now(), author: username, authorDisplay: displayName,
+    title, desc, joinedBy:[], time:new Date().toISOString()
+  });
   save(); saveAccountData();
   closeModal('collab-post-modal');
   renderCollab();
@@ -2805,18 +2887,19 @@ function submitCollabPost() {
 function renderCollab() {
   const container = document.getElementById('collab-list');
   if (!container) return;
-  const username = state.currentUser?.username || 'user';
+  const username = getDisplayUsername();
   if (!state.collabs.length) {
     container.innerHTML = `<div class="empty-state"><div class="empty-icon">🤝</div><div class="empty-title">No collab offers yet</div><div class="empty-desc">Post an offer to find collaborators</div></div>`;
     return;
   }
   container.innerHTML = state.collabs.map(c => {
     const joined = c.joinedBy.includes(username);
+    const authorLabel = c.authorDisplay || c.author;
     return `<div class="collab-card">
       <div class="collab-card-head">
         <div>
           <div class="collab-title">${escHtml(c.title)}</div>
-          <div style="font-size:12px;color:var(--text3);margin-top:2px">by @${escHtml(c.author)} · ${getTimeAgo(c.time)}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">by ${escHtml(authorLabel)} · ${getTimeAgo(c.time)}</div>
         </div>
         ${c.author !== username ? `<button class="btn ${joined?'btn-ghost':'btn-primary'} btn-sm" onclick="joinCollab('${c.id}',this)">${joined?'Joined':'Join'}</button>` : '<span style="font-size:12px;color:var(--text3)">Your post</span>'}
       </div>
@@ -2827,7 +2910,7 @@ function renderCollab() {
 }
 
 function joinCollab(id, btn) {
-  const username = state.currentUser?.username || 'user';
+  const username = getDisplayUsername();
   const c = state.collabs.find(x=>x.id==id);
   if (!c) return;
   const idx = c.joinedBy.indexOf(username);
@@ -2848,7 +2931,6 @@ function joinCollab(id, btn) {
 // CHATS
 // ============================================================
 async function renderChats() {
-  const list = document.getElementById('chat-list');
   const me = state.currentUser?.username;
   if (!me) return;
 
@@ -2857,111 +2939,182 @@ async function renderChats() {
       .where("participants", "array-contains", me)
       .get();
 
-    if (snap.empty) {
-      list.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px">No messages yet</div>`;
-      return;
-    }
+    const renderItems = (listEl, isMobile) => {
+      if (!listEl) return;
+      if (snap.empty) {
+        listEl.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px">No messages yet</div>`;
+        return;
+      }
+      listEl.innerHTML = snap.docs.map(doc => {
+        const data = doc.data();
+        const other = (data.participants || []).find(u => u !== me) || '?';
+        const messages = data.messages || [];
+        const last = messages.length ? messages[messages.length - 1] : null;
+        const unread = state.chatNotifs?.[other] || 0;
+        const badgeHtml = unread > 0 ? `<span class="chat-item-badge">${unread}</span>` : '';
 
-    list.innerHTML = snap.docs.map(doc => {
-      const data = doc.data();
-      const other = (data.participants || []).find(u => u !== me) || '?';
-      const messages = data.messages || [];
-      const last = messages.length ? messages[messages.length - 1] : null;
+        const clickHandler = isMobile
+          ? `openMobileChat('${escHtml(other)}')`
+          : `openChat('${escHtml(other)}')`;
 
-      return `
-        <div class="chat-item" onclick="openChat('${escHtml(other)}')">
-          <div class="chat-av">${other[0].toUpperCase()}</div>
-          <div style="flex:1;min-width:0">
-            <div class="chat-name">@${escHtml(other)}</div>
-            ${last ? `<div class="chat-preview">${last.from === me ? 'You: ' : ''}${escHtml(last.text)}</div>` : ''}
-          </div>
-        </div>`;
-    }).join('');
+        return `
+          <div class="chat-item" onclick="${clickHandler}">
+            <div class="chat-av">${other[0].toUpperCase()}</div>
+            <div style="flex:1;min-width:0">
+              <div class="chat-name">@${escHtml(other)}</div>
+              ${last ? `<div class="chat-preview">${last.from === me ? 'You: ' : ''}${escHtml(last.text)}</div>` : ''}
+            </div>
+            ${badgeHtml}
+          </div>`;
+      }).join('');
+    };
+
+    renderItems(document.getElementById('chat-list'), false);
+    renderItems(document.getElementById('mobile-chat-list'), true);
+
   } catch (err) {
     console.error('renderChats error:', err);
-    list.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:12px">Could not load chats</div>`;
+  }
+}
+
+// Mobile chat flow
+function showMobileChatList() {
+  document.getElementById('mobile-chat-list-view').style.display = 'flex';
+  document.getElementById('mobile-chat-dm-view').style.display = 'none';
+  if (unsubscribeMobileChat) { unsubscribeMobileChat(); unsubscribeMobileChat = null; }
+}
+
+function closeMobileDM() {
+  if (unsubscribeMobileChat) { unsubscribeMobileChat(); unsubscribeMobileChat = null; }
+  state.activeChatUser = null;
+  showMobileChatList();
+  renderChats();
+}
+
+function openMobileChat(otherUsername) {
+  const me = state.currentUser?.username;
+  if (!me) return;
+
+  // Clear notifs for this user
+  clearChatNotif(otherUsername);
+  renderChats();
+
+  state.activeChatUser = otherUsername;
+  const chatId = getChatId(me, otherUsername);
+
+  document.getElementById('mobile-chat-list-view').style.display = 'none';
+  document.getElementById('mobile-chat-dm-view').style.display = 'flex';
+  document.getElementById('mobile-chat-active-av').textContent = otherUsername[0].toUpperCase();
+  document.getElementById('mobile-chat-active-name').textContent = '@' + otherUsername;
+
+  const messagesEl = document.getElementById('mobile-chat-messages');
+
+  if (unsubscribeMobileChat) unsubscribeMobileChat();
+
+  unsubscribeMobileChat = db.collection("chats").doc(chatId)
+    .onSnapshot(doc => {
+      const data = doc.exists ? doc.data() : null;
+      const messages = (data && data.messages) ? data.messages : [];
+      messagesEl.innerHTML = messages.map(m => `
+        <div class="msg-wrap ${m.from === me ? 'self' : ''}">
+          <div class="msg-bubble">${escHtml(m.text)}</div>
+        </div>`).join('');
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }, err => console.error('Mobile chat listener error:', err));
+}
+
+async function sendMobileMsg() {
+  const user = auth.currentUser;
+  if (!user) { toast("Not signed in"); return; }
+  const me = user.email?.split("@")[0];
+  const otherUser = state.activeChatUser;
+  if (!otherUser) return;
+  const text = document.getElementById('mobile-chat-input').value.trim();
+  if (!text) return;
+  const chatId = getChatId(me, otherUser);
+  document.getElementById('mobile-chat-input').value = '';
+  try {
+    const chatRef = db.collection("chats").doc(chatId);
+    const newMsg = { from: me, text, time: Date.now() };
+    const doc = await chatRef.get();
+    if (doc.exists) {
+      await chatRef.update({ messages: firebase.firestore.FieldValue.arrayUnion(newMsg) });
+    } else {
+      await chatRef.set({ participants: [me, otherUser], messages: [newMsg] });
+    }
+    // Add notif for the recipient (tracked locally for current session)
+    addChatNotif(otherUser);
+  } catch (err) {
+    console.error(err);
+    toast("Failed to send message");
   }
 }
 
 function openChat(otherUsername) {
-  navigate('chats');
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    navigate('chats');
+    setTimeout(() => openMobileChat(otherUsername), 50);
+    return;
+  }
+
+  // Desktop
+  const currentPage = document.querySelector('.page.active, .page-with-people.active');
+  if (currentPage?.id !== 'page-chats') navigate('chats');
+
   state.activeChatUser = otherUsername;
-  state.activeChatName = otherUsername;
+
+  // Clear notifs
+  clearChatNotif(otherUsername);
+  renderChats();
 
   const me = state.currentUser?.username;
   if (!me || !otherUsername) return;
-
   const chatId = getChatId(me, otherUsername);
 
   document.getElementById('chat-empty').style.display = 'none';
   const chatActive = document.getElementById('chat-active');
   chatActive.style.display = 'flex';
-
   document.getElementById('chat-active-av').textContent = otherUsername[0].toUpperCase();
   document.getElementById('chat-active-name').textContent = '@' + otherUsername;
 
   const messagesEl = document.getElementById('chat-messages');
-
   if (unsubscribeChat) unsubscribeChat();
 
   unsubscribeChat = db.collection("chats").doc(chatId)
     .onSnapshot(doc => {
       const data = doc.exists ? doc.data() : null;
       const messages = (data && data.messages) ? data.messages : [];
-
       messagesEl.innerHTML = messages.map(m => `
         <div class="msg-wrap ${m.from === me ? 'self' : ''}">
           <div class="msg-bubble">${escHtml(m.text)}</div>
         </div>`).join('');
-
       messagesEl.scrollTop = messagesEl.scrollHeight;
-    }, err => {
-      console.error('Chat listener error:', err);
-    });
+    }, err => console.error('Chat listener error:', err));
 }
 
 async function sendMsg() {
-
-  const user = auth.currentUser; // 🔥 real source
-  if (!user) {
-    toast("Not signed in");
-    return;
-  }
-
+  const user = auth.currentUser;
+  if (!user) { toast("Not signed in"); return; }
   const me = user.email?.split("@")[0];
   const otherUser = state.activeChatUser;
   if (!otherUser) return;
-
   const text = document.getElementById('chat-input').value.trim();
   if (!text) return;
-
   const chatId = getChatId(me, otherUser);
   document.getElementById('chat-input').value = '';
-
   try {
     const chatRef = db.collection("chats").doc(chatId);
-
-    const newMsg = {
-      from: me,
-      text,
-      time: Date.now()
-    };
-
+    const newMsg = { from: me, text, time: Date.now() };
     const doc = await chatRef.get();
-
     if (doc.exists) {
-      await chatRef.update({
-        messages: firebase.firestore.FieldValue.arrayUnion(newMsg)
-      });
+      await chatRef.update({ messages: firebase.firestore.FieldValue.arrayUnion(newMsg) });
     } else {
-      await chatRef.set({
-        participants: [me, otherUser],
-        messages: [newMsg]
-      });
+      await chatRef.set({ participants: [me, otherUser], messages: [newMsg] });
     }
-
+    // Add notif for recipient
+    addChatNotif(otherUser);
     renderChats();
-
   } catch (err) {
     console.error(err);
     toast("Failed to send message");
@@ -2979,9 +3132,7 @@ function changeUsername() {
   if (state.currentUser) state.currentUser.username = clean;
   const idx = state.accounts.findIndex(a => a.email === state.currentUser?.email);
   if (idx >= 0) state.accounts[idx].username = clean;
-  save();
-  saveAccountData();
-  updateSidebar();
+  save(); saveAccountData(); updateSidebar();
   toast('Username updated!');
   document.getElementById('current-username-disp').textContent = '@'+clean;
 }
@@ -3011,7 +3162,7 @@ function getTimeAgo(iso) {
   return `${Math.floor(hrs/24)}d ago`;
 }
 
-// Init theme toggle state
+// Init theme
 const dt = document.getElementById('dark-toggle');
 if (dt) dt.classList.toggle('on', state.theme === 'dark');
 </script>
